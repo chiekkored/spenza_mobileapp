@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/common/buttons.dart';
+import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/forgot_password/new_password/newPassword.dart';
 
 class PasswordVerificationScreen extends StatefulWidget {
@@ -25,14 +29,14 @@ class _PasswordVerificationScreenState
               CustomTextBold(
                 text: "Check your email",
                 size: 22,
-                color: Colors.black,
+                color: CColors.PrimaryText,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: CustomTextMedium(
                   text: "We've sent the code to your email",
                   size: 15,
-                  color: Colors.grey,
+                  color: CColors.SecondaryText,
                 ),
               ),
               Padding(
@@ -52,7 +56,7 @@ class _PasswordVerificationScreenState
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     selectedFieldDecoration: BoxDecoration(
-                      border: Border.all(color: Colors.green),
+                      border: Border.all(color: CColors.PrimaryColor),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     submittedFieldDecoration: BoxDecoration(
@@ -66,34 +70,21 @@ class _PasswordVerificationScreenState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomTextMedium(
-                      text: "code expires in: ", size: 15, color: Colors.black),
+                      text: "code expires in: ",
+                      size: 15,
+                      color: CColors.PrimaryText),
                   CustomTextMedium(text: "03:12", size: 15, color: Colors.red),
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
-                child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => NewPasswordScreen()),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.green[700],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(vertical: 19.0),
-                      child: Center(
-                        child: CustomTextBold(
-                            text: "Verify", size: 15, color: Colors.white),
-                      ),
-                    )),
+                child: CustomPrimaryButton(
+                    text: "Next",
+                    doOnPressed: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => NewPasswordScreen()),
+                        )),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
@@ -115,7 +106,9 @@ class _PasswordVerificationScreenState
                       padding: EdgeInsets.symmetric(vertical: 19.0),
                       child: Center(
                         child: CustomTextBold(
-                            text: "Send again", size: 15, color: Colors.grey),
+                            text: "Send again",
+                            size: 15,
+                            color: CColors.SecondaryText),
                       ),
                     )),
               ),
@@ -123,50 +116,6 @@ class _PasswordVerificationScreenState
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomTextBold extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextBold(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w700,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
-    );
-  }
-}
-
-class CustomTextMedium extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextMedium(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w500,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
     );
   }
 }

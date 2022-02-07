@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:spenza/utilities/constants/colors.dart';
+
+import 'package:spenza/views/common/texts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 56.0,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: CColors.Form,
                       borderRadius: BorderRadius.circular(32.0),
                     ),
                     child: Row(
@@ -34,17 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(
                           padding:
                               const EdgeInsets.only(left: 27.0, right: 11.0),
-                          child: Icon(Icons.search),
+                          child: SvgPicture.asset("assets/svg/search.svg"),
                         ),
                         CustomTextMedium(
-                            text: "Search", size: 15, color: Colors.grey)
+                            text: "Search",
+                            size: 15,
+                            color: CColors.SecondaryText)
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 24.0),
                     child: CustomTextBold(
-                        text: "Tags", size: 17.0, color: Colors.black),
+                        text: "Tags", size: 17.0, color: CColors.PrimaryText),
                   )
                 ],
               ),
@@ -53,66 +59,55 @@ class _HomeScreenState extends State<HomeScreen> {
         )),
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: 0,
+            selectedLabelStyle: TextStyle(
+              fontFamily: "Inter",
+              fontWeight: FontWeight.w500,
+              fontSize: 12,
+              letterSpacing: 0.5,
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontFamily: "Inter",
+              fontWeight: FontWeight.w500,
+              fontSize: 12,
+              letterSpacing: 0.5,
+            ),
+            selectedItemColor: CColors.PrimaryColor,
+            unselectedItemColor: CColors.SecondaryText,
             type: BottomNavigationBarType.fixed,
             items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(icon: Icon(Icons.edit), label: "Recipe"),
+              BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, top: 5.0),
+                    child: SvgPicture.asset("assets/svg/home.svg"),
+                  ),
+                  label: "Home"),
+              BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, top: 5.0),
+                    child: SvgPicture.asset("assets/svg/recipe.svg"),
+                  ),
+                  label: "Recipe"),
               BottomNavigationBarItem(icon: Icon(null), label: "Scan"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.alarm), label: "Notification"),
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, top: 5.0),
+                    child: SvgPicture.asset("assets/svg/notification.svg"),
+                  ),
+                  label: "Notification"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: "Profile"),
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, top: 5.0),
+                    child: SvgPicture.asset("assets/svg/profile.svg"),
+                  ),
+                  label: "Profile"),
             ]),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: CColors.SecondaryColor,
           onPressed: () {},
-          child: Icon(Icons.document_scanner),
+          child: SvgPicture.asset("assets/svg/scan.svg"),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-    );
-  }
-}
-
-class CustomTextBold extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextBold(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w700,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
-    );
-  }
-}
-
-class CustomTextMedium extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextMedium(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w500,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
     );
   }
 }

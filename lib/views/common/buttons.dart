@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/fonts.dart';
+import 'package:spenza/views/common/texts.dart';
 
 class CustomPrimaryButton extends StatelessWidget {
   final String text;
@@ -13,23 +14,21 @@ class CustomPrimaryButton extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: CFonts.Inter,
-          fontSize: 15.0,
-          fontWeight: FontWeight.w700,
-          color: CColors.White,
-          letterSpacing: 0.7,
+    return OutlinedButton(
+      onPressed: doOnPressed,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: CColors.PrimaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
         ),
       ),
-      style: ElevatedButton.styleFrom(
-        primary: CColors.PrimaryColor,
-        padding: EdgeInsets.symmetric(vertical: 19),
-        shape: StadiumBorder(),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 19.0),
+        child: Center(
+          child: CustomTextBold(text: text, size: 15, color: Colors.white),
+        ),
       ),
-      onPressed: doOnPressed,
     );
   }
 }

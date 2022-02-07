@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/common/buttons.dart';
+import 'package:spenza/views/common/inputs.dart';
 
+import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/verification/verification.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -23,65 +27,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
               CustomTextBold(
                 text: "Welcome!",
                 size: 22,
-                color: Colors.black,
+                color: CColors.PrimaryText,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: CustomTextMedium(
                   text: "Please enter your account here",
                   size: 15,
-                  color: Colors.grey,
+                  color: CColors.SecondaryText,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 32.0),
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.only(left: 26.0, right: 12.0),
-                      child: Icon(
-                        Icons.email_outlined,
-                        color: Colors.black,
-                      ),
-                    ),
-                    hintText: "Email or phone number",
-                    hintStyle: TextStyle(
-                        fontFamily: "Inter",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        letterSpacing: 0.5,
-                        color: Colors.grey),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                  ),
-                ),
+                child: CustomAuthInput(
+                    obscureText: false,
+                    keyboardType: TextInputType.emailAddress,
+                    icon: Icons.email_outlined,
+                    hintText: "Email or phone number"),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.only(left: 26.0, right: 12.0),
-                      child: Icon(
-                        Icons.lock_outline,
-                        color: Colors.black,
-                      ),
-                    ),
-                    hintText: "Password",
-                    hintStyle: TextStyle(
-                        fontFamily: "Inter",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        letterSpacing: 0.5,
-                        color: Colors.grey),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                  ),
-                ),
+                child: CustomAuthInput(
+                    obscureText: true,
+                    keyboardType: TextInputType.visiblePassword,
+                    icon: Icons.lock_outline,
+                    hintText: "Password"),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -90,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: CustomTextMedium(
                       text: "Your Password must contain:",
                       size: 17,
-                      color: Colors.black),
+                      color: CColors.PrimaryText),
                 ),
               ),
               Align(
@@ -100,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: CustomTextMedium(
                       text: "Atleast 6 characters",
                       size: 15,
-                      color: Colors.black),
+                      color: CColors.MainText),
                 ),
               ),
               Align(
@@ -108,82 +78,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: CustomTextMedium(
-                      text: "Contains a number", size: 15, color: Colors.black),
+                    text: "Contains a number",
+                    size: 15,
+                    color: CColors.SecondaryText,
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 23.0),
-                child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => VerificationCodeScreen()),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.green[700],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(vertical: 19.0),
-                      child: Center(
-                        child: CustomTextBold(
-                            text: "Sign Up", size: 15, color: Colors.white),
-                      ),
-                    )),
+                child: CustomPrimaryButton(
+                    text: "Sign Up",
+                    doOnPressed: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => VerificationCodeScreen()),
+                        )),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomTextBold extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextBold(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w700,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
-    );
-  }
-}
-
-class CustomTextMedium extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextMedium(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w500,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
     );
   }
 }

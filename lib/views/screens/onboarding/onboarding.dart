@@ -58,6 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         margin: const EdgeInsets.only(bottom: 70.0),
+        height: 56.0,
         child: CustomPrimaryButton(
           text: "Get Started",
           doOnPressed: () => Navigator.push(

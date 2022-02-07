@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/common/buttons.dart';
+import 'package:spenza/views/common/inputs.dart';
 
+import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/forgot_password/password_verification/passwordVerification.dart';
 
 class PasswordRecoveryScreen extends StatefulWidget {
@@ -23,112 +27,36 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
           CustomTextBold(
             text: "Password recovery",
             size: 22,
-            color: Colors.black,
+            color: CColors.PrimaryText,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: CustomTextMedium(
               text: "Enter yor email to recover ourr password",
               size: 15,
-              color: Colors.grey,
+              color: CColors.SecondaryText,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 32.0),
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 26.0, right: 12.0),
-                  child: Icon(
-                    Icons.email_outlined,
-                    color: Colors.black,
-                  ),
-                ),
-                hintText: "Email or phone number",
-                hintStyle: TextStyle(
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    letterSpacing: 0.5,
-                    color: Colors.grey),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(32.0),
-                ),
-              ),
-            ),
+            child: CustomAuthInput(
+                obscureText: false,
+                keyboardType: TextInputType.emailAddress,
+                icon: Icons.email_outlined,
+                hintText: "Email or phone number"),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 32.0),
-            child: OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => PasswordVerificationScreen()),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.green[700],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
-                  ),
-                ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 19.0),
-                  child: Center(
-                    child: CustomTextBold(
-                        text: "Sign In", size: 15, color: Colors.white),
-                  ),
-                )),
+            child: CustomPrimaryButton(
+                text: "Sign In",
+                doOnPressed: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => PasswordVerificationScreen()),
+                    )),
           ),
         ],
       ),
     )));
-  }
-}
-
-class CustomTextBold extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextBold(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w700,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
-    );
-  }
-}
-
-class CustomTextMedium extends StatelessWidget {
-  final String text;
-  final double size;
-  final Color color;
-  const CustomTextMedium(
-      {Key? key, required this.text, required this.size, required this.color})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w500,
-          fontSize: size,
-          letterSpacing: 0.5,
-          color: color),
-    );
   }
 }
