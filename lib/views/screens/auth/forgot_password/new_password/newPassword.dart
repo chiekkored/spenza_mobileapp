@@ -5,7 +5,7 @@ import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
 
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/home/home.dart';
+import 'package:spenza/views/screens/home/navigation.dart';
 
 class NewPasswordScreen extends StatefulWidget {
   const NewPasswordScreen({Key? key}) : super(key: key);
@@ -82,7 +82,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     doOnPressed: () => Navigator.push(
                           context,
                           CupertinoPageRoute(
-                              builder: (context) => HomeScreen()),
+                              builder: (context) => Navigation()),
                         )),
               ),
             ],

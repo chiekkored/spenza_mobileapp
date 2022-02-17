@@ -7,7 +7,7 @@ import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/forgot_password/password_recovery/passwordRecovery.dart';
 import 'package:spenza/views/screens/auth/sign_up/signup.dart';
-import 'package:spenza/views/screens/home/home.dart';
+import 'package:spenza/views/screens/home/navigation.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -78,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: CustomPrimaryButton(
                     text: "Login",
                     doOnPressed: () => Navigator.push(context,
-                        CupertinoPageRoute(builder: (context) => HomeScreen())),
+                        CupertinoPageRoute(builder: (context) => Navigation())),
                   )),
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),

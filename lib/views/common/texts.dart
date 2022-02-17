@@ -43,3 +43,25 @@ class CustomTextMedium extends StatelessWidget {
     );
   }
 }
+
+class CustomTextSemiBold extends StatelessWidget {
+  final String text;
+  final double size;
+  final Color color;
+  const CustomTextSemiBold(
+      {Key? key, required this.text, required this.size, required this.color})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w600,
+          fontSize: size,
+          letterSpacing: 0.5,
+          color: color),
+    );
+  }
+}

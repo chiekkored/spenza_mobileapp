@@ -5,7 +5,7 @@ import 'package:spenza/views/common/buttons.dart';
 
 import 'package:spenza/views/common/texts.dart';
 import 'package:pinput/pin_put/pin_put.dart';
-import 'package:spenza/views/screens/home/home.dart';
+import 'package:spenza/views/screens/home/navigation.dart';
 
 class VerificationCodeScreen extends StatefulWidget {
   const VerificationCodeScreen({Key? key}) : super(key: key);
@@ -81,7 +81,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                     doOnPressed: () => Navigator.push(
                           context,
                           CupertinoPageRoute(
-                              builder: (context) => HomeScreen()),
+                              builder: (context) => Navigation()),
                         )),
               ),
               Padding(
