@@ -80,8 +80,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                     text: "Verify",
                     doOnPressed: () => Navigator.push(
                           context,
-                          CupertinoPageRoute(
-                              builder: (context) => Navigation()),
+                          MaterialPageRoute(builder: (context) => Navigation()),
                         )),
               ),
               Padding(

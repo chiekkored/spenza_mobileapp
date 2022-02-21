@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
+import 'package:spenza/views/common/popovers.dart';
 
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/profile.dart';
@@ -67,6 +68,7 @@ class _NavigationState extends State<Navigation> {
           inactiveColorPrimary: CColors.SecondaryText,
         ),
         PersistentBottomNavBarItem(
+          onPressed: (_) => scanTabBottomSheet(context),
           icon: Padding(
             padding: const EdgeInsets.only(right: 5.0),
             child: Icon(CIcons.scan),

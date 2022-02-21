@@ -81,8 +81,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     text: "Done",
                     doOnPressed: () => Navigator.push(
                           context,
-                          CupertinoPageRoute(
-                              builder: (context) => Navigation()),
+                          MaterialPageRoute(builder: (context) => Navigation()),
                         )),
               ),
             ],

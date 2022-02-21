@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
+import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/tabs/home/home.dart';
@@ -29,8 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   color: CColors.White,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 23.0),
+                    padding: const EdgeInsets.fromLTRB(0.0, 23.0, 24.0, 23.0),
                     child: Row(
                       children: [
                         Padding(
@@ -45,6 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         Expanded(
                           child: TextField(
+                            // autofocus: true,
                             style: TextStyle(
                                 fontFamily: "Inter",
                                 fontWeight: FontWeight.w500,
@@ -78,7 +78,19 @@ class _SearchScreenState extends State<SearchScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 24.0),
                           child: GestureDetector(
-                            onTap: () => showCustomBottomSheet(context),
+                            onTap: () => showModalBottomSheet(
+                                isScrollControlled: true,
+                                useRootNavigator: true,
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: const Radius.circular(32.0),
+                                    topRight: const Radius.circular(32.0),
+                                  ),
+                                ),
+                                builder: (BuildContext builder) {
+                                  return ModalBottomSheet();
+                                }),
                             child: SvgPicture.asset(
                               "assets/svg/settings.svg",
                               height: 24,

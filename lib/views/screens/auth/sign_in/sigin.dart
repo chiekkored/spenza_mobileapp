@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/Material.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
@@ -63,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: GestureDetector(
                       onTap: () => Navigator.push(
                         context,
-                        CupertinoPageRoute(
+                        MaterialPageRoute(
                             builder: (context) => PasswordRecoveryScreen()),
                       ),
                       child: CustomTextMedium(
@@ -78,7 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: CustomPrimaryButton(
                     text: "Login",
                     doOnPressed: () => Navigator.push(context,
-                        CupertinoPageRoute(builder: (context) => Navigation())),
+                        MaterialPageRoute(builder: (context) => Navigation())),
                   )),
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
@@ -114,7 +113,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 padding: const EdgeInsets.only(top: 24.0),
                 child: GestureDetector(
                   onTap: () => Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => SignUpScreen())),
+                      MaterialPageRoute(builder: (context) => SignUpScreen())),
                   child: RichText(
                     text: TextSpan(
                         style: TextStyle(

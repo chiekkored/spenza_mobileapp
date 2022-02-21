@@ -82,7 +82,7 @@ class _PasswordVerificationScreenState
                     text: "Next",
                     doOnPressed: () => Navigator.push(
                           context,
-                          CupertinoPageRoute(
+                          MaterialPageRoute(
                               builder: (context) => NewPasswordScreen()),
                         )),
               ),

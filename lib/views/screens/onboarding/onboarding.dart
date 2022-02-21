@@ -62,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: CustomPrimaryButton(
           text: "Get Started",
           doOnPressed: () => Navigator.push(
-              context, CupertinoPageRoute(builder: (_) => SignInScreen())),
+              context, MaterialPageRoute(builder: (_) => SignInScreen())),
         ),
       ),
     );

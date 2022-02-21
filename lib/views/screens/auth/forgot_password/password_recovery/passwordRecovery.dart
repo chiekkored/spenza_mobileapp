@@ -51,7 +51,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                 text: "Sign In",
                 doOnPressed: () => Navigator.push(
                       context,
-                      CupertinoPageRoute(
+                      MaterialPageRoute(
                           builder: (context) => PasswordVerificationScreen()),
                     )),
           ),

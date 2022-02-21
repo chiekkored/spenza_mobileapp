@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     text: "Sign Up",
                     doOnPressed: () => Navigator.push(
                           context,
-                          CupertinoPageRoute(
+                          MaterialPageRoute(
                               builder: (context) => VerificationCodeScreen()),
                         )),
               ),

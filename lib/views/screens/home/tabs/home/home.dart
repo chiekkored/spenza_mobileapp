@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -152,38 +152,6 @@ class _HomeTabState extends State<HomeTab> {
               )
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomRadioButton extends StatelessWidget {
-  final String text;
-  final Color color;
-  final Color fontColor;
-  const CustomRadioButton({
-    Key? key,
-    required this.text,
-    required this.color,
-    required this.fontColor,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: () {},
-      style: OutlinedButton.styleFrom(
-        side: BorderSide.none,
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(32.0),
-        ),
-      ),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 19.0, horizontal: 12.0),
-        child: Center(
-          child: CustomTextBold(text: text, size: 15, color: fontColor),
         ),
       ),
     );

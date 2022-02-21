@@ -20,6 +20,13 @@ class CustomAuthInput extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          borderSide: const BorderSide(
+            color: CColors.Outline,
+            width: 1.0,
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
             borderSide: BorderSide(color: CColors.PrimaryColor)),
@@ -43,4 +50,42 @@ class CustomAuthInput extends StatelessWidget {
       ),
     );
   }
+}
+
+TextStyle customTextFieldTextStyle() {
+  return TextStyle(
+      fontFamily: "Inter",
+      fontWeight: FontWeight.w500,
+      fontSize: 15,
+      letterSpacing: 0.5,
+      color: CColors.MainText);
+}
+
+InputDecoration customTextFieldInputDecoration({required String hint}) {
+  return InputDecoration(
+    hintText: hint,
+    hintStyle: TextStyle(
+        fontFamily: "Inter",
+        fontWeight: FontWeight.w500,
+        fontSize: 15,
+        letterSpacing: 0.5,
+        color: CColors.SecondaryText),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(32.0),
+      borderSide: const BorderSide(
+        color: CColors.Outline,
+        width: 1.0,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(32.0),
+      borderSide: const BorderSide(
+        color: CColors.PrimaryColor,
+        width: 2.0,
+      ),
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(32.0),
+    ),
+  );
 }
