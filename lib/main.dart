@@ -1,18 +1,36 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/utilities/config/firebase_config.dart';
+import 'package:spenza/views/screens/home/navigation.dart';
 
 import 'views/screens/onboarding/onboarding.dart';
 
 List<CameraDescription> cameras = [];
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Firebase Initialization
+  await Firebase.initializeApp(
+    options: SpenzaFirebaseConfig.platformOptions,
+  );
   try {
-    WidgetsFlutterBinding.ensureInitialized();
+    // Camera Initialization
     cameras = await availableCameras();
   } on CameraException catch (e) {
     print('Error in fetching the cameras: $e');
   }
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<UserProvider>.value(
+        value: UserProvider(),
+      ),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,11 +40,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SafeArea(child: const OnboardingScreen()),
+      // theme: ThemeData(
+      //   primarySwatch: Colors.green,
+      // ),
+      home: SafeArea(
+          child: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.userChanges(),
+              builder: (context, user) {
+                if (user.hasData) {
+                  return const Navigation();
+                } else {
+                  return const OnboardingScreen();
+                }
+              })),
     );
   }
 }

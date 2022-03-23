@@ -15,6 +15,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  late TextEditingController emailTextController;
+  late TextEditingController passwordTextController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 32.0),
                 child: CustomAuthInput(
+                    controller: emailTextController,
                     obscureText: false,
                     keyboardType: TextInputType.emailAddress,
                     icon: Icons.email_outlined,
@@ -48,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: CustomAuthInput(
+                    controller: passwordTextController,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     icon: Icons.lock_outline,

@@ -1,10 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
 import 'package:spenza/views/screens/home/scan/camera.dart';
-import 'package:spenza/views/screens/home/upload/upload.dart';
+import 'package:spenza/views/screens/home/upload/uploadStep1.dart';
 
 import 'buttons.dart';
 
@@ -42,7 +45,7 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                     Expanded(
                       child: GestureDetector(
                         onTap: () => pushNewScreen(context,
-                            withNavBar: false, screen: UploadScreen()),
+                            withNavBar: false, screen: UploadStep1Screen()),
                         child: Container(
                           height: 186.0,
                           decoration: BoxDecoration(
@@ -294,5 +297,98 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
         ],
       ),
     );
+  }
+}
+
+Future<void> showCustomDialog(BuildContext context, String title,
+    String content, String buttonText, dynamic page) async {
+  if (Platform.isIOS) {
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: CustomTextMedium(
+                text: content, size: 15, color: CColors.MainText),
+            actions: <Widget>[
+              TextButton(
+                child: Text(buttonText),
+                onPressed: () {
+                  if (page != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => page),
+                    );
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  } else {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: CustomTextMedium(
+                text: content, size: 15, color: CColors.MainText),
+            actions: <Widget>[
+              TextButton(
+                child: Text(buttonText),
+                onPressed: () {
+                  if (page != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => page),
+                    );
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+}
+
+Future<void> showErrorDialog(BuildContext context) async {
+  if (Platform.isIOS) {
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text("Error"),
+            content: CustomTextMedium(
+                text: "Something went wrong. Contact our support",
+                size: 15,
+                color: CColors.MainText),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Okay"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        });
+  } else {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: CustomTextMedium(
+                text: "Something went wrong. Contact our support",
+                size: 15,
+                color: CColors.MainText),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Okay"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        });
   }
 }

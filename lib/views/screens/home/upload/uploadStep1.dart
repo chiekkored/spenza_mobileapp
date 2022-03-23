@@ -5,15 +5,16 @@ import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/texts.dart';
+import 'package:spenza/views/screens/home/upload/uploadStep2.dart';
 
-class UploadScreen extends StatefulWidget {
-  const UploadScreen({Key? key}) : super(key: key);
+class UploadStep1Screen extends StatefulWidget {
+  const UploadStep1Screen({Key? key}) : super(key: key);
 
   @override
-  _UploadScreenState createState() => _UploadScreenState();
+  _UploadStep1ScreenState createState() => _UploadStep1ScreenState();
 }
 
-class _UploadScreenState extends State<UploadScreen> {
+class _UploadStep1ScreenState extends State<UploadStep1Screen> {
   double _cookingDurationSlider = 0.0;
   @override
   Widget build(BuildContext context) {
@@ -197,7 +198,12 @@ class _UploadScreenState extends State<UploadScreen> {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-              child: CustomPrimaryButton(text: "Next", doOnPressed: () {}),
+              child: CustomPrimaryButton(
+                  text: "Next",
+                  doOnPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => UploadStep2Screen()));
+                  }),
             ),
           ),
         ),

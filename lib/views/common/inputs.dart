@@ -6,17 +6,20 @@ class CustomAuthInput extends StatelessWidget {
   final TextInputType keyboardType;
   final IconData icon;
   final String hintText;
+  final TextEditingController controller;
   const CustomAuthInput({
     Key? key,
     required this.obscureText,
     required this.keyboardType,
     required this.icon,
     required this.hintText,
+    required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
       decoration: InputDecoration(

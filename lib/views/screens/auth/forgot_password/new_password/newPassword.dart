@@ -15,6 +15,7 @@ class NewPasswordScreen extends StatefulWidget {
 }
 
 class _NewPasswordScreenState extends State<NewPasswordScreen> {
+  late TextEditingController passwordTextController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +41,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
                 child: CustomAuthInput(
+                    controller: passwordTextController,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     icon: Icons.lock_outline,

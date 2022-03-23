@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
@@ -16,6 +21,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  AuthViewModel _authVM = AuthViewModel();
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 32.0),
                 child: CustomAuthInput(
+                    controller: emailTextController,
                     obscureText: false,
                     keyboardType: TextInputType.emailAddress,
                     icon: Icons.email_outlined,
@@ -50,6 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: CustomAuthInput(
+                    controller: passwordTextController,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     icon: Icons.lock_outline,
@@ -76,8 +86,21 @@ class _SignInScreenState extends State<SignInScreen> {
                   padding: const EdgeInsets.only(top: 72.0),
                   child: CustomPrimaryButton(
                     text: "Login",
-                    doOnPressed: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Navigation())),
+                    doOnPressed: () async {
+                      dynamic doc = await _authVM.signInEmailAndPassword(
+                          context,
+                          emailTextController.text,
+                          passwordTextController.text);
+                      var userProvider = context.read<UserProvider>();
+                      if (doc != null) {
+                        await userProvider.setUser(doc.user!.uid);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Navigation()),
+                          (Route<dynamic> route) => false,
+                        );
+                      }
+                    },
                   )),
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
@@ -89,7 +112,9 @@ class _SignInScreenState extends State<SignInScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _authVM.logout();
+                  },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(

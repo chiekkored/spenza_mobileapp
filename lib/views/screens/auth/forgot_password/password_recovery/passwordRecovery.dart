@@ -15,6 +15,7 @@ class PasswordRecoveryScreen extends StatefulWidget {
 }
 
 class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
+  late TextEditingController passwordTextController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +41,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 32.0),
             child: CustomAuthInput(
+                controller: passwordTextController,
                 obscureText: false,
                 keyboardType: TextInputType.emailAddress,
                 icon: Icons.email_outlined,

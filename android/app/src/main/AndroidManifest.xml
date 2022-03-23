@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.spenza">
+    package="com.pocketdevs.spenza">
    <application
-        android:label="spenza"
+        android:label="Spenza"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
