@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/utilities/config/firebase_config.dart';
+import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/screens/home/navigation.dart';
 
 import 'views/screens/onboarding/onboarding.dart';
 
+// List Available Cameras
 List<CameraDescription> cameras = [];
 
 Future<void> main() async {
@@ -40,19 +42,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(
-      //   primarySwatch: Colors.green,
-      // ),
-      home: SafeArea(
-          child: StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.userChanges(),
-              builder: (context, user) {
-                if (user.hasData) {
-                  return const Navigation();
-                } else {
-                  return const OnboardingScreen();
-                }
-              })),
+      theme:
+          ThemeData(primarySwatch: Colors.green, splashColor: CColors.MainText),
+      home: Container(
+        color: CColors.White,
+        child: SafeArea(
+            child: StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.userChanges(),
+                builder: (context, user) {
+                  if (user.hasData) {
+                    return const Navigation();
+                  } else {
+                    return const OnboardingScreen();
+                  }
+                })),
+      ),
     );
   }
 }

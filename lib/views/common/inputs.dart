@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 
+/// For inputs with icons
+/// Commonly used on authentication pages
 class CustomAuthInput extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
@@ -55,6 +57,7 @@ class CustomAuthInput extends StatelessWidget {
   }
 }
 
+/// Outlined text fields: Input character style
 TextStyle customTextFieldTextStyle() {
   return TextStyle(
       fontFamily: "Inter",
@@ -64,6 +67,9 @@ TextStyle customTextFieldTextStyle() {
       color: CColors.MainText);
 }
 
+/// Outlined text fields: Text field decoration
+///
+/// @param hint Text hint
 InputDecoration customTextFieldInputDecoration({required String hint}) {
   return InputDecoration(
     hintText: hint,

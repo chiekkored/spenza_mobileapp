@@ -11,6 +11,7 @@ import 'package:spenza/views/screens/home/upload/uploadStep1.dart';
 
 import 'buttons.dart';
 
+/// "Choose one option" Bottom Sheet
 Future<dynamic> scanTabBottomSheet(BuildContext context) {
   return showModalBottomSheet(
       context: context,
@@ -114,6 +115,7 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
       });
 }
 
+/// Settings filter Bottom Sheet
 class ModalBottomSheet extends StatefulWidget {
   const ModalBottomSheet({Key? key}) : super(key: key);
 
@@ -300,8 +302,15 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
   }
 }
 
-Future<void> showCustomDialog(BuildContext context, String title,
-    String content, String buttonText, dynamic page) async {
+/// Alert Dialog
+///
+/// @param context Screen context to pass
+/// @param title Alert dialog title
+/// @param content Alert dialog content body
+/// @param buttonText Text inside the button
+/// @param page Navigator push to page
+void showCustomDialog(BuildContext context, String title, String content,
+    String buttonText, dynamic page) {
   if (Platform.isIOS) {
     showCupertinoDialog(
         context: context,
@@ -353,7 +362,24 @@ Future<void> showCustomDialog(BuildContext context, String title,
   }
 }
 
-Future<void> showErrorDialog(BuildContext context) async {
+/// Modal Dialog
+///
+/// @param context Screen context to pass
+/// @param widget Alert dialog content body
+void showCustomModal(BuildContext context, Widget widget) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: widget,
+        );
+      });
+}
+
+// Contact Support Alert Dialog
+void showErrorDialog(BuildContext context) {
   if (Platform.isIOS) {
     showCupertinoDialog(
         context: context,

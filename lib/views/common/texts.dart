@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Font weight: 700
+///
+/// @param text Text value
+/// @param size Text font size
+/// @param color Text font color
 class CustomTextBold extends StatelessWidget {
   final String text;
   final double size;
@@ -12,6 +17,7 @@ class CustomTextBold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontFamily: "Inter",
           fontWeight: FontWeight.w700,
@@ -22,6 +28,11 @@ class CustomTextBold extends StatelessWidget {
   }
 }
 
+/// Font weight: 500
+///
+/// @param text Text value
+/// @param size Text font size
+/// @param color Text font color
 class CustomTextMedium extends StatelessWidget {
   final String text;
   final double size;
@@ -34,6 +45,7 @@ class CustomTextMedium extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontFamily: "Inter",
           fontWeight: FontWeight.w500,
@@ -44,6 +56,11 @@ class CustomTextMedium extends StatelessWidget {
   }
 }
 
+/// Font weight: 600
+///
+/// @param text Text value
+/// @param size Text font size
+/// @param color Text font color
 class CustomTextSemiBold extends StatelessWidget {
   final String text;
   final double size;
@@ -56,6 +73,7 @@ class CustomTextSemiBold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontFamily: "Inter",
           fontWeight: FontWeight.w600,
@@ -66,6 +84,11 @@ class CustomTextSemiBold extends StatelessWidget {
   }
 }
 
+/// Font weight: 400
+///
+/// @param text Text value
+/// @param size Text font size
+/// @param color Text font color
 class CustomTextRegular extends StatelessWidget {
   final String text;
   final double size;
@@ -78,6 +101,7 @@ class CustomTextRegular extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontFamily: "Inter",
           fontWeight: FontWeight.w400,

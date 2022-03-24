@@ -22,7 +22,8 @@ class _CookNowTabState extends State<CookNowTab> {
           crossAxisCount: 2,
           crossAxisSpacing: 25.0,
           mainAxisSpacing: 32.0,
-          childAspectRatio: 0.61,
+          childAspectRatio: MediaQuery.of(context).size.width /
+              (MediaQuery.of(context).size.height / 1.3),
         ),
         itemBuilder: (BuildContext context, int index) {
           return Column(
@@ -30,36 +31,44 @@ class _CookNowTabState extends State<CookNowTab> {
             children: [
               Row(
                 children: [
-                  Container(
-                    height: 31.0,
-                    width: 31.0,
-                    margin: EdgeInsets.only(right: 8.0),
-                    decoration: BoxDecoration(
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(11.0),
-                      image: DecorationImage(
-                        image: NetworkImage("https://picsum.photos/200"),
+                      child: Image.network(
+                        "https://picsum.photos/200",
+                        fit: BoxFit.fitHeight,
+                        height: 31,
                       ),
                     ),
                   ),
-                  CustomTextMedium(
-                      text: "James Bond", size: 12, color: CColors.MainText)
+                  Expanded(
+                    child: CustomTextMedium(
+                        text:
+                            "James Bond James Bond James Bond James Bond James Bond ",
+                        size: 12,
+                        color: CColors.MainText),
+                  )
                 ],
-              ),
-              Container(
-                height: 151.0,
-                width: 151.0,
-                margin: EdgeInsets.only(top: 16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.0),
-                  image: DecorationImage(
-                    image: NetworkImage("https://picsum.photos/200"),
-                  ),
-                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
-                child: CustomTextBold(
-                    text: "Pancake", size: 17.0, color: CColors.PrimaryText),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24.0),
+                  child: Image.network(
+                    "https://picsum.photos/200",
+                    fit: BoxFit.fill,
+                    height: MediaQuery.of(context).size.width / 2.4,
+                  ),
+                ),
+              ),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: CustomTextBold(
+                      text: "Pancake", size: 17.0, color: CColors.PrimaryText),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
