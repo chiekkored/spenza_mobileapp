@@ -20,140 +20,139 @@ class _HomeTabState extends State<HomeTab> {
   int _selectedTab = 0;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: CColors.White,
-      child: SingleChildScrollView(
-        // physics: BouncingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              color: CColors.White,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 23.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () =>
-                          pushNewScreen(context, screen: SearchScreen()),
-                      child: Container(
-                        height: 56.0,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: CColors.Form,
-                          borderRadius: BorderRadius.circular(32.0),
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 27.0, right: 11.0),
-                                child: Icon(
-                                  CIcons.search,
-                                  color: CColors.SecondaryText,
-                                )),
-                            CustomTextMedium(
-                                text: "Search",
-                                size: 15,
-                                color: CColors.SecondaryText)
-                          ],
-                        ),
+    return SingleChildScrollView(
+      // physics: BouncingScrollPhysics(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            color: CColors.White,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 23.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () => pushNewScreen(context, screen: SearchScreen()),
+                    child: Container(
+                      height: 56.0,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: CColors.Form,
+                        borderRadius: BorderRadius.circular(32.0),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          CustomTextBold(
-                              text: "Tags",
-                              size: 17.0,
-                              color: CColors.PrimaryText),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: CustomRadioButton(
-                                      fontColor: CColors.White,
-                                      text: "All",
-                                      color: CColors.PrimaryColor),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: CustomRadioButton(
-                                      fontColor: CColors.SecondaryText,
-                                      text: "Food",
-                                      color: CColors.Form),
-                                ),
-                                CustomRadioButton(
-                                    fontColor: CColors.SecondaryText,
-                                    text: "Drink",
-                                    color: CColors.Form),
-                              ],
-                            ),
-                          )
+                              padding: const EdgeInsets.only(
+                                  left: 27.0, right: 11.0),
+                              child: Icon(
+                                CIcons.search,
+                                color: CColors.SecondaryText,
+                              )),
+                          CustomTextMedium(
+                              text: "Search",
+                              size: 15,
+                              color: CColors.SecondaryText)
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            DefaultTabController(
-              length: 2,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 50.0,
-                    color: CColors.White,
-                    child: TabBar(
-                        onTap: (value) => setState(() {
-                              _selectedTab = value;
-                            }),
-                        indicatorColor: CColors.PrimaryColor,
-                        labelColor: CColors.PrimaryText,
-                        unselectedLabelColor: CColors.SecondaryText,
-                        indicatorWeight: 3.0,
-                        labelStyle: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                          letterSpacing: 0.5,
-                        ),
-                        tabs: [
-                          Tab(
-                            text: "Cook now",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextBold(
+                            text: "Tags",
+                            size: 17.0,
+                            color: CColors.PrimaryText),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: CustomRadioButton(
+                                    fontColor: CColors.White,
+                                    text: "All",
+                                    color: CColors.PrimaryColor),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: CustomRadioButton(
+                                    fontColor: CColors.SecondaryText,
+                                    text: "Food",
+                                    color: CColors.Form),
+                              ),
+                              CustomRadioButton(
+                                  fontColor: CColors.SecondaryText,
+                                  text: "Drink",
+                                  color: CColors.Form),
+                            ],
                           ),
-                          Tab(
-                            text: "Plan",
-                          )
-                        ]),
-                  ),
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: Builder(builder: (context) {
-                      switch (_selectedTab) {
-                        case 0:
-                          return CookNowTab();
-                        case 1:
-                          return PlanTab();
-                      }
-                      return Container();
-                    }),
-                  ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          DefaultTabController(
+            length: 2,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                      color: CColors.White,
+                      border:
+                          Border(bottom: BorderSide(color: CColors.Outline))),
+                  child: TabBar(
+                      onTap: (value) => setState(() {
+                            _selectedTab = value;
+                          }),
+                      indicatorColor: CColors.PrimaryColor,
+                      labelColor: CColors.PrimaryText,
+                      unselectedLabelColor: CColors.SecondaryText,
+                      indicatorWeight: 3.0,
+                      labelStyle: TextStyle(
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        letterSpacing: 0.5,
+                      ),
+                      tabs: [
+                        Tab(
+                          text: "Cook now",
+                        ),
+                        Tab(
+                          text: "Plan",
+                        )
+                      ]),
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Builder(builder: (context) {
+                    switch (_selectedTab) {
+                      case 0:
+                        return CookNowTab();
+                      case 1:
+                        return PlanTab();
+                    }
+                    return Container();
+                  }),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

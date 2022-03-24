@@ -24,143 +24,151 @@ class _SignInScreenState extends State<SignInScreen> {
   AuthViewModel _authVM = AuthViewModel();
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
+    var userProvider = context.read<UserProvider>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomTextBold(
-                text: "Welcome Back!",
-                size: 22,
-                color: CColors.PrimaryText,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: CustomTextMedium(
-                  text: "Please enter your account here",
-                  size: 15,
-                  color: CColors.SecondaryText,
+      body: Container(
+        color: CColors.White,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTextBold(
+                  text: "Welcome Back!",
+                  size: 22,
+                  color: CColors.PrimaryText,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 32.0),
-                child: CustomAuthInput(
-                    controller: emailTextController,
-                    obscureText: false,
-                    keyboardType: TextInputType.emailAddress,
-                    icon: Icons.email_outlined,
-                    hintText: "Email or phone number"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: CustomAuthInput(
-                    controller: passwordTextController,
-                    obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
-                    icon: Icons.lock_outline,
-                    hintText: "Password"),
-              ),
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: CustomTextMedium(
+                    text: "Please enter your account here",
+                    size: 15,
+                    color: CColors.SecondaryText,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: CustomAuthInput(
+                      controller: emailTextController,
+                      obscureText: false,
+                      keyboardType: TextInputType.emailAddress,
+                      icon: Icons.email_outlined,
+                      hintText: "Email or phone number"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: CustomAuthInput(
+                      controller: passwordTextController,
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
+                      icon: Icons.lock_outline,
+                      hintText: "Password"),
+                ),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PasswordRecoveryScreen()),
+                        ),
+                        child: CustomTextMedium(
+                          text: "Forgot password?",
+                          size: 15,
+                          color: CColors.MainText,
+                        ),
+                      ),
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(top: 72.0),
+                    child: CustomPrimaryButton(
+                      text: "Login",
+                      doOnPressed: () async {
+                        dynamic doc = await _authVM.signInEmailAndPassword(
+                            context,
+                            emailTextController.text,
+                            passwordTextController.text);
+                        if (doc != null) {
+                          print(doc.user!.uid);
+                          await userProvider.setUser(doc.user!.uid);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Navigation()),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
+                      },
+                    )),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: CustomTextMedium(
+                      text: "Or continue with",
+                      size: 15,
+                      color: CColors.SecondaryText),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      _authVM.logout();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(vertical: 19.0),
+                      child: Center(
+                        child: CustomTextBold(
+                          text: "Google",
+                          size: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PasswordRecoveryScreen()),
-                      ),
-                      child: CustomTextMedium(
-                        text: "Forgot password?",
-                        size: 15,
-                        color: CColors.MainText,
-                      ),
-                    ),
-                  )),
-              Padding(
-                  padding: const EdgeInsets.only(top: 72.0),
-                  child: CustomPrimaryButton(
-                    text: "Login",
-                    doOnPressed: () async {
-                      dynamic doc = await _authVM.signInEmailAndPassword(
-                          context,
-                          emailTextController.text,
-                          passwordTextController.text);
-                      var userProvider = context.read<UserProvider>();
-                      if (doc != null) {
-                        await userProvider.setUser(doc.user!.uid);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => Navigation()),
-                          (Route<dynamic> route) => false,
-                        );
-                      }
-                    },
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: CustomTextMedium(
-                    text: "Or continue with",
-                    size: 15,
-                    color: CColors.SecondaryText),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: OutlinedButton(
-                  onPressed: () {
-                    _authVM.logout();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.symmetric(vertical: 19.0),
-                    child: Center(
-                      child: CustomTextBold(
-                        text: "Google",
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: GestureDetector(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen())),
-                  child: RichText(
-                    text: TextSpan(
-                        style: TextStyle(
-                            fontFamily: "Inter",
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.0,
-                            letterSpacing: 0.5,
-                            color: CColors.PrimaryText),
-                        children: <TextSpan>[
-                          TextSpan(text: "Don't have any account? "),
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: CColors.PrimaryColor,
+                            builder: (context) => SignUpScreen())),
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              letterSpacing: 0.5,
+                              color: CColors.PrimaryText),
+                          children: <TextSpan>[
+                            TextSpan(text: "Don't have any account? "),
+                            TextSpan(
+                              text: 'Sign Up',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: CColors.PrimaryColor,
+                              ),
                             ),
-                          ),
-                        ]),
+                          ]),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

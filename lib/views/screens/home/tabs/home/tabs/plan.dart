@@ -10,6 +10,6 @@ class PlanTab extends StatefulWidget {
 class _PlanTabState extends State<PlanTab> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Text("Plan");
   }
 }

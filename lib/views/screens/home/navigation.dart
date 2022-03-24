@@ -37,63 +37,69 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      navBarStyle: NavBarStyle.style15,
-      decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(0),
-        colorBehindNavBar: Colors.white,
-      ),
-      screens: [
-        HomeTab(),
-        RecipeTab(),
-        ScanTab(),
-        NotificationTab(),
-        ProfileTab()
-      ],
-      items: [
-        PersistentBottomNavBarItem(
-          icon: Icon(CIcons.home),
-          iconSize: 20,
-          title: "Home",
-          activeColorPrimary: CColors.PrimaryColor,
-          inactiveColorPrimary: CColors.SecondaryText,
-        ),
-        PersistentBottomNavBarItem(
-          icon: Icon(CIcons.recipe),
-          iconSize: 20,
-          title: "Recipe",
-          activeColorPrimary: CColors.PrimaryColor,
-          inactiveColorPrimary: CColors.SecondaryText,
-        ),
-        PersistentBottomNavBarItem(
-          onPressed: (_) => scanTabBottomSheet(context),
-          icon: Padding(
-            padding: const EdgeInsets.only(right: 5.0),
-            child: Icon(CIcons.scan),
+    return Container(
+      color: CColors.White,
+      child: SafeArea(
+        bottom: false,
+        child: PersistentTabView(
+          context,
+          controller: _controller,
+          navBarStyle: NavBarStyle.style15,
+          decoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(0),
+            colorBehindNavBar: Colors.white,
           ),
-          iconSize: 20,
-          title: "Scan",
-          activeColorSecondary: Colors.white,
-          activeColorPrimary: Colors.red,
-          // inactiveColorPrimary: CColors.SecondaryText,
+          screens: [
+            HomeTab(),
+            RecipeTab(),
+            ScanTab(),
+            NotificationTab(),
+            ProfileTab()
+          ],
+          items: [
+            PersistentBottomNavBarItem(
+              icon: Icon(CIcons.home),
+              iconSize: 20,
+              title: "Home",
+              activeColorPrimary: CColors.PrimaryColor,
+              inactiveColorPrimary: CColors.SecondaryText,
+            ),
+            PersistentBottomNavBarItem(
+              icon: Icon(CIcons.recipe),
+              iconSize: 20,
+              title: "Recipe",
+              activeColorPrimary: CColors.PrimaryColor,
+              inactiveColorPrimary: CColors.SecondaryText,
+            ),
+            PersistentBottomNavBarItem(
+              onPressed: (_) => scanTabBottomSheet(context),
+              icon: Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Icon(CIcons.scan),
+              ),
+              iconSize: 20,
+              title: "Scan",
+              activeColorSecondary: Colors.white,
+              activeColorPrimary: Colors.red,
+              // inactiveColorPrimary: CColors.SecondaryText,
+            ),
+            PersistentBottomNavBarItem(
+              icon: Icon(CIcons.notification),
+              iconSize: 20,
+              title: "Notification",
+              activeColorPrimary: CColors.PrimaryColor,
+              inactiveColorPrimary: CColors.SecondaryText,
+            ),
+            PersistentBottomNavBarItem(
+              icon: Icon(CIcons.profile),
+              iconSize: 20,
+              title: "Profile",
+              activeColorPrimary: CColors.PrimaryColor,
+              inactiveColorPrimary: CColors.SecondaryText,
+            ),
+          ],
         ),
-        PersistentBottomNavBarItem(
-          icon: Icon(CIcons.notification),
-          iconSize: 20,
-          title: "Notification",
-          activeColorPrimary: CColors.PrimaryColor,
-          inactiveColorPrimary: CColors.SecondaryText,
-        ),
-        PersistentBottomNavBarItem(
-          icon: Icon(CIcons.profile),
-          iconSize: 20,
-          title: "Profile",
-          activeColorPrimary: CColors.PrimaryColor,
-          inactiveColorPrimary: CColors.SecondaryText,
-        ),
-      ],
+      ),
     );
   }
 }

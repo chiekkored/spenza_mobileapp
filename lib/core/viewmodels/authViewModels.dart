@@ -35,9 +35,9 @@ class AuthViewModel {
   Future signInEmailAndPassword(
       BuildContext context, String email, String password) async {
     try {
-      print("---");
-      print("hello");
-      print("---");
+      if (email == "" && password == "") {
+        return null;
+      }
       return await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       //     .then((userCredential) async {

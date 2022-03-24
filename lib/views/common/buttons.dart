@@ -139,3 +139,35 @@ class CustomTransparentButton extends StatelessWidget {
     );
   }
 }
+
+/// Back Button
+class CustomBackButton extends StatelessWidget {
+  const CustomBackButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      icon: const BackButtonIcon(),
+      color: CColors.MainText,
+      onPressed: () => Navigator.maybePop(context),
+    );
+  }
+}
+
+/// Close Button
+class CustomCloseButton extends StatelessWidget {
+  const CustomCloseButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      icon: const Icon(Icons.close),
+      color: CColors.MainText,
+      onPressed: () => Navigator.maybePop(context),
+    );
+  }
+}

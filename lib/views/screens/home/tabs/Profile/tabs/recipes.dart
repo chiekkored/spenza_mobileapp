@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
 
-class CookNowTab extends StatefulWidget {
-  const CookNowTab({Key? key}) : super(key: key);
+class RecipesTab extends StatefulWidget {
+  const RecipesTab({Key? key}) : super(key: key);
 
   @override
-  _CookNowTabState createState() => _CookNowTabState();
+  State<RecipesTab> createState() => _RecipesTabState();
 }
 
-class _CookNowTabState extends State<CookNowTab> {
+class _RecipesTabState extends State<RecipesTab> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,39 +23,14 @@ class _CookNowTabState extends State<CookNowTab> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 25.0,
-            mainAxisSpacing: 32.0,
+            mainAxisSpacing: 16.0,
             childAspectRatio: MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.height / 1.3),
+                (MediaQuery.of(context).size.height / 1.4),
           ),
           itemBuilder: (BuildContext context, int index) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () => pushNewScreen(context,
-                      screen: UserProfileScreen(), withNavBar: false),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(11.0),
-                          child: Image.network(
-                            "https://picsum.photos/200",
-                            fit: BoxFit.fitHeight,
-                            height: 31,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextMedium(
-                            text: "James Bond",
-                            size: 12,
-                            color: CColors.MainText),
-                      )
-                    ],
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: ClipRRect(
