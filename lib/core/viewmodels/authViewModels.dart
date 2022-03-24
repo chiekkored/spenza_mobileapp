@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/core/models/userModel.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/views/common/popovers.dart';
 
 class AuthViewModel {
@@ -17,19 +19,8 @@ class AuthViewModel {
           "email": document["email"],
           "name": document["name"],
         }));
-  }
 
-  Future<void> getPreferences() async {
-    final pref = await SharedPreferences.getInstance();
-    if (pref.getString('user') != null) {
-      final data = jsonDecode(pref.getString('user')!);
-      UserModel user = UserModel(
-        uid: data["uid"],
-        email: data["email"],
-        name: data["name"],
-      );
-      return data;
-    }
+    print(pref.getString('user'));
   }
 
   Future signInEmailAndPassword(
@@ -40,25 +31,6 @@ class AuthViewModel {
       }
       return await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      //     .then((userCredential) async {
-      //   print("---");
-      //   print("hi");
-      //   print("---");
-      //   String _userID = userCredential.user!.uid;
-      //   print(_userID);
-      //   return await FirebaseFirestore.instance
-      //       .collection('users')
-      //       .doc(_userID)
-      //       .get()
-      //       .then(
-      //     (DocumentSnapshot documentSnapshot) async {
-      //       if (documentSnapshot.exists) {
-      //         await setPreferences(documentSnapshot);
-      //       }
-
-      //         return documentSnapshot;
-      //     },
-      //   );
       // });
     } on FirebaseAuthException catch (e) {
       print(e.code);
@@ -79,6 +51,8 @@ class AuthViewModel {
   }
 
   Future<void> logout() async {
+    final pref = await SharedPreferences.getInstance();
+    pref.clear();
     await FirebaseAuth.instance.signOut();
     print("logout");
   }

@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var userProvider = context.read<UserProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme:
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, user) {
                   if (user.hasData) {
+                    userProvider.getUserPreference();
                     return const Navigation();
                   } else {
                     return const OnboardingScreen();

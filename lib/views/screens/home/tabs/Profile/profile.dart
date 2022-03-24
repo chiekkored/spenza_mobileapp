@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
+import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -25,6 +29,8 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     AuthViewModel _authVM = AuthViewModel();
+    ProfileViewModel _profileVM = ProfileViewModel();
+    var _userProvider = context.read<UserProvider>();
     return SingleChildScrollView(
       // physics: BouncingScrollPhysics(),
       child: Column(
@@ -51,12 +57,6 @@ class _ProfileTabState extends State<ProfileTab> {
                           ),
                           (_) => false,
                         );
-                        // Navigator.pushAndRemoveUntil(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => SignInScreen()),
-                        //   (Route<dynamic> route) => false,
-                        // );
                       },
                       icon: Icon(
                         Icons.share,
@@ -72,8 +72,9 @@ class _ProfileTabState extends State<ProfileTab> {
                   child: Center(
                     child: CircleAvatar(
                       radius: 60.0,
+                      backgroundColor: Colors.transparent,
                       foregroundImage:
-                          NetworkImage("https://picsum.photos/200"),
+                          NetworkImage(_userProvider.userInfo.dpUrl),
                     ),
                   ),
                 ),
@@ -81,7 +82,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   padding: const EdgeInsets.only(top: 24.0),
                   child: Center(
                       child: CustomTextBold(
-                          text: "Ernst Blofeld",
+                          text: _userProvider.userInfo.name,
                           size: 17.0,
                           color: CColors.PrimaryText)),
                 ),
@@ -94,10 +95,41 @@ class _ProfileTabState extends State<ProfileTab> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CustomTextBold(
-                              text: "32",
-                              size: 17.0,
-                              color: CColors.PrimaryText),
+                          FutureBuilder<QuerySnapshot>(
+                              future: _profileVM
+                                  .getRecipes(_userProvider.userInfo.uid),
+                              builder: (context, snapshot) {
+                                // switch (snapshot.connectionState) {
+                                //   case ConnectionState.none:
+                                //     return Text('Input a URL to start');
+                                //   case ConnectionState.waiting:
+                                //     print("waiting");
+                                //     return Text('waiting');
+                                //   case ConnectionState.active:
+                                //     print("active");
+                                //     return Text('active');
+                                //   case ConnectionState.done:
+                                //     if (snapshot.hasError) {
+                                //       print("has Error");
+                                //       return Text(
+                                //         '${snapshot.error}',
+                                //         style: TextStyle(color: Colors.red),
+                                //       );
+                                //     } else {
+                                //       return Text(snapshot.data.data.toString());
+                                //     }
+                                // }
+                                if (!snapshot.hasData) {
+                                  return CustomTextBold(
+                                      text: "0",
+                                      size: 17.0,
+                                      color: CColors.PrimaryText);
+                                }
+                                return CustomTextBold(
+                                    text: snapshot.data!.docs.length.toString(),
+                                    size: 17.0,
+                                    color: CColors.PrimaryText);
+                              }),
                           CustomTextMedium(
                               text: "Recipes",
                               size: 12.0,
@@ -108,10 +140,21 @@ class _ProfileTabState extends State<ProfileTab> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CustomTextBold(
-                              text: "782",
-                              size: 17.0,
-                              color: CColors.PrimaryText),
+                          FutureBuilder<QuerySnapshot>(
+                              future: _profileVM
+                                  .getFollowing(_userProvider.userInfo.uid),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return CustomTextBold(
+                                      text: "0",
+                                      size: 17.0,
+                                      color: CColors.PrimaryText);
+                                }
+                                return CustomTextBold(
+                                    text: snapshot.data!.docs.length.toString(),
+                                    size: 17.0,
+                                    color: CColors.PrimaryText);
+                              }),
                           CustomTextMedium(
                               text: "Following",
                               size: 12.0,
@@ -122,10 +165,21 @@ class _ProfileTabState extends State<ProfileTab> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CustomTextBold(
-                              text: "1,287",
-                              size: 17.0,
-                              color: CColors.PrimaryText),
+                          FutureBuilder<QuerySnapshot>(
+                              future: _profileVM
+                                  .getFollowers(_userProvider.userInfo.uid),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return CustomTextBold(
+                                      text: "0",
+                                      size: 17.0,
+                                      color: CColors.PrimaryText);
+                                }
+                                return CustomTextBold(
+                                    text: snapshot.data!.docs.length.toString(),
+                                    size: 17.0,
+                                    color: CColors.PrimaryText);
+                              }),
                           CustomTextMedium(
                               text: "Followers",
                               size: 12.0,
