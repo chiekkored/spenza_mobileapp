@@ -88,22 +88,38 @@ class _SignInScreenState extends State<SignInScreen> {
                     )),
                 Padding(
                     padding: const EdgeInsets.only(top: 72.0),
-                    child: CustomPrimaryButton(
+                    child: CustomPrimaryButtonWIthLoading(
                       text: "Login",
+                      loading: _isLoading,
                       doOnPressed: () async {
-                        dynamic doc = await _authVM.signInEmailAndPassword(
-                            context,
-                            emailTextController.text,
-                            passwordTextController.text);
-                        if (doc != null) {
-                          print("uid: ${doc.user!.uid}");
-                          await userProvider.setUser(doc.user!.uid);
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Navigation()),
-                            (Route<dynamic> route) => false,
-                          );
+                        if (emailTextController.text == "" &&
+                            passwordTextController.text == "") {
+                          return null;
+                        }
+                        if (!_isLoading) {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          dynamic doc = await _authVM.signInEmailAndPassword(
+                              context,
+                              emailTextController.text,
+                              passwordTextController.text);
+                          if (doc != null) {
+                            print("uid: ${doc.user!.uid}");
+                            await userProvider.setUser(doc.user!.uid);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Navigation()),
+                              (Route<dynamic> route) => false,
+                            );
+                          } else {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        } else {
+                          return null;
                         }
                       },
                     )),

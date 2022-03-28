@@ -378,7 +378,9 @@ void showCustomModal(BuildContext context, Widget widget) {
       });
 }
 
-// Contact Support Alert Dialog
+/// Contact Support Alert Dialog
+///
+/// @param context Screen context to pass
 void showErrorDialog(BuildContext context) {
   if (Platform.isIOS) {
     showCupertinoDialog(
@@ -417,4 +419,9 @@ void showErrorDialog(BuildContext context) {
           );
         });
   }
+}
+
+/// Snackbar popover
+SnackBar showCustomSnackbar(String content) {
+  return SnackBar(content: Text(content));
 }

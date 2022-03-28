@@ -3,10 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spenza/core/models/userModel.dart';
-import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/views/common/popovers.dart';
 
 class AuthViewModel {
@@ -18,9 +15,8 @@ class AuthViewModel {
           "uid": document["uid"],
           "email": document["email"],
           "name": document["name"],
+          "dpUrl": document["dpUrl"]
         }));
-
-    print(pref.getString('user'));
   }
 
   Future signInEmailAndPassword(
@@ -47,6 +43,7 @@ class AuthViewModel {
             "Wrong password provided for that user", "Okay", null);
         print('Wrong password provided for that user.');
       } else {}
+      return null;
     }
   }
 

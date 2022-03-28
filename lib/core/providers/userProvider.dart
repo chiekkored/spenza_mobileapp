@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/core/models/userModel.dart';
@@ -12,6 +11,7 @@ class UserProvider extends ChangeNotifier {
   UserModel get userInfo => _users;
 
   Future<void> setUser(String uid) async {
+    AuthViewModel _authVM = AuthViewModel();
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -22,8 +22,9 @@ class UserProvider extends ChangeNotifier {
         _users.name = documentSnapshot["name"];
         _users.email = documentSnapshot["email"];
         _users.dpUrl = documentSnapshot["dpUrl"];
+        return documentSnapshot;
       }
-    });
+    }).then((document) => _authVM.setPreferences(document!));
   }
 
   void getUserPreference() async {
@@ -34,6 +35,10 @@ class UserProvider extends ChangeNotifier {
       _users.email = data["email"];
       _users.name = data["name"];
       _users.dpUrl = data["dpUrl"];
+    } else {
+      // pref.clear();
+      // await FirebaseAuth.instance.signOut();
+      // print("logout from user preference");
     }
   }
 }

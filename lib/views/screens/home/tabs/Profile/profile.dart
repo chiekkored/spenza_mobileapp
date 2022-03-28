@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -70,12 +71,59 @@ class _ProfileTabState extends State<ProfileTab> {
                 Padding(
                   padding: const EdgeInsets.only(top: 23.0),
                   child: Center(
-                    child: CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: Colors.transparent,
-                      foregroundImage:
-                          NetworkImage(_userProvider.userInfo.dpUrl),
-                    ),
+                    child: FutureBuilder<DocumentSnapshot>(
+                        future: _profileVM.getDpUrl(_userProvider.userInfo.uid),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.done:
+                              if (snapshot.hasError) {
+                                print("dpUrl has Error");
+                                return SizedBox(
+                                  height: 120.0,
+                                  child: CachedNetworkImage(
+                                    imageUrl: _userProvider.userInfo.dpUrl,
+                                    imageBuilder: (context, image) {
+                                      return CircleAvatar(
+                                        radius: 60.0,
+                                        backgroundColor: Colors.transparent,
+                                        foregroundImage: image,
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else {
+                                print("dpUrl has Data");
+                                return SizedBox(
+                                  height: 120.0,
+                                  child: CachedNetworkImage(
+                                    imageUrl: snapshot.data!["dpUrl"],
+                                    imageBuilder: (context, image) {
+                                      return CircleAvatar(
+                                        radius: 60.0,
+                                        backgroundColor: Colors.transparent,
+                                        foregroundImage: image,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            default:
+                              print("dpUrl maybe loading/no connection");
+                              return SizedBox(
+                                height: 120.0,
+                                child: CachedNetworkImage(
+                                  imageUrl: _userProvider.userInfo.dpUrl,
+                                  imageBuilder: (context, image) {
+                                    return CircleAvatar(
+                                      radius: 60.0,
+                                      backgroundColor: Colors.transparent,
+                                      foregroundImage: image,
+                                    );
+                                  },
+                                ),
+                              );
+                          }
+                        }),
                   ),
                 ),
                 Padding(

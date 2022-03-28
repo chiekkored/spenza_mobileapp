@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -20,6 +25,7 @@ class _HomeTabState extends State<HomeTab> {
   int _selectedTab = 0;
   @override
   Widget build(BuildContext context) {
+    var _userProvider = context.read<UserProvider>();
     return SingleChildScrollView(
       // physics: BouncingScrollPhysics(),
       child: Column(
@@ -34,7 +40,11 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => pushNewScreen(context, screen: SearchScreen()),
+                    onTap: () async {
+                      final pref = await SharedPreferences.getInstance();
+                      print(jsonDecode(pref.getString('user')!));
+                      // pushNewScreen(context, screen: SearchScreen());
+                    },
                     child: Container(
                       height: 56.0,
                       width: MediaQuery.of(context).size.width,

@@ -37,6 +37,45 @@ class CustomPrimaryButton extends StatelessWidget {
   }
 }
 
+/// Green Button with loading icon
+///
+/// @param text Text inside the button
+/// @param doOnPressed Function when user clicks
+class CustomPrimaryButtonWIthLoading extends StatelessWidget {
+  final String text;
+  final VoidCallback doOnPressed;
+  final bool loading;
+  const CustomPrimaryButtonWIthLoading(
+      {Key? key,
+      required this.text,
+      required this.doOnPressed,
+      required this.loading})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: doOnPressed,
+      style: OutlinedButton.styleFrom(
+        backgroundColor:
+            loading ? Color.fromARGB(255, 55, 85, 34) : CColors.PrimaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
+        ),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 19.0),
+        child: Center(
+          child: loading
+              ? SizedBox.square(
+                  dimension: 15.0, child: CircularProgressIndicator())
+              : CustomTextBold(text: text, size: 15, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}
+
 /// Gray Button
 ///
 /// @param text Text inside the button
