@@ -28,4 +28,12 @@ class ProfileViewModel {
         .collection("followers")
         .get();
   }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getPosts(String uid) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("posts")
+        .get();
+  }
 }
