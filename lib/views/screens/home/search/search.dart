@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
+import 'package:spenza/views/screens/home/search/results.dart';
 import 'package:spenza/views/screens/home/tabs/home/home.dart';
 import 'package:spenza/views/screens/home/upload/uploadStep1.dart';
 
@@ -16,8 +22,12 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  TextEditingController _searchTextController = TextEditingController();
+  SearchViewModel _searchVM = SearchViewModel();
+
   @override
   Widget build(BuildContext context) {
+    var _userProvider = context.read<UserProvider>();
     return Container(
       color: CColors.White,
       child: SafeArea(
@@ -44,7 +54,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         Expanded(
                           child: TextField(
-                            // autofocus: true,
+                            controller: _searchTextController,
+                            autofocus: true,
+                            textInputAction: TextInputAction.search,
+                            onSubmitted: (text) {
+                              print(text);
+                              pushNewScreen(context,
+                                  screen: SearchResultScreen(
+                                      searchText: _searchTextController.text));
+                            },
                             style: TextStyle(
                                 fontFamily: "Inter",
                                 fontWeight: FontWeight.w500,
@@ -106,39 +124,79 @@ class _SearchScreenState extends State<SearchScreen> {
                   color: CColors.White,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 2,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 24.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/svg/time.svg",
-                                      // height: 24,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 17.0),
-                                      child: CustomTextMedium(
-                                          text: "Pancakes",
-                                          size: 17,
-                                          color: CColors.PrimaryText),
-                                    )
-                                  ],
-                                ),
-                                Icon(
-                                  CIcons.arrow_upward,
-                                  size: 14.0,
-                                  color: CColors.SecondaryText,
-                                )
-                              ],
-                            ),
-                          );
+                    child: FutureBuilder<QuerySnapshot>(
+                        future: _searchVM
+                            .getSearchHistory(_userProvider.userInfo.uid),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                              print("-Search History- No Connection");
+                              return Container();
+                            case ConnectionState.waiting:
+                              print("-Search History- waiting");
+                              return Row(
+                                children: [
+                                  Text('waiting'),
+                                ],
+                              );
+                            case ConnectionState.done:
+                              if (snapshot.data!.docs.isEmpty) {
+                                print("-Search History- has Error");
+                                // showCustomDialog(context, "Error",
+                                //     "An error has occurred.", "Okay", null);
+                                return Container();
+                              } else {
+                                print("-Search History- has Data");
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder: (context, index) {
+                                      var _searchData =
+                                          snapshot.data!.docs[index];
+                                      return GestureDetector(
+                                        onTap: () => _searchTextController
+                                            .text = _searchData["searchText"],
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 24.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/svg/time.svg",
+                                                    // height: 24,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 17.0),
+                                                    child: CustomTextMedium(
+                                                        text: _searchData[
+                                                            "searchText"],
+                                                        size: 17,
+                                                        color: CColors
+                                                            .PrimaryText),
+                                                  )
+                                                ],
+                                              ),
+                                              Icon(
+                                                CIcons.arrow_upward,
+                                                size: 14.0,
+                                                color: CColors.SecondaryText,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              }
+                            default:
+                              return Container();
+                          }
                         }),
                   ),
                 ),

@@ -40,11 +40,7 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () async {
-                      final pref = await SharedPreferences.getInstance();
-                      print(jsonDecode(pref.getString('user')!));
-                      // pushNewScreen(context, screen: SearchScreen());
-                    },
+                    onTap: () => pushNewScreen(context, screen: SearchScreen()),
                     child: Container(
                       height: 56.0,
                       width: MediaQuery.of(context).size.width,

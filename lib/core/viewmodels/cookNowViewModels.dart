@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CookNowViewModel {
   Future<List<dynamic>> getPosts(String uid) async {
@@ -30,7 +31,6 @@ class CookNowViewModel {
               .get()
               .then((postsData) {
             _list.add(postsData);
-            print(_list);
             return _list;
           });
         });

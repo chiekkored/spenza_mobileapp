@@ -78,7 +78,7 @@ class _CookNowTabState extends State<CookNowTab> {
                                         imageBuilder: (context, image) {
                                           return Image(
                                             image: image,
-                                            fit: BoxFit.fitWidth,
+                                            fit: BoxFit.fill,
                                             height: 31,
                                             width: 31,
                                           );
