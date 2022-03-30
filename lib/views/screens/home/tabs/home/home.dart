@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -26,96 +27,103 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     var _userProvider = context.read<UserProvider>();
-    return SingleChildScrollView(
-      // physics: BouncingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: CColors.White,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 23.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () => pushNewScreen(context, screen: SearchScreen()),
-                    child: Container(
-                      height: 56.0,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: CColors.Form,
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 27.0, right: 11.0),
-                              child: Icon(
-                                CIcons.search,
-                                color: CColors.SecondaryText,
-                              )),
-                          CustomTextMedium(
-                              text: "Search",
-                              size: 15,
-                              color: CColors.SecondaryText)
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
+    return Material(
+      type: MaterialType.transparency,
+      child: DefaultTabController(
+        length: 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, value) {
+            return [
+              SliverToBoxAdapter(
+                child: Container(
+                  color: CColors.White,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 23.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomTextBold(
-                            text: "Tags",
-                            size: 17.0,
-                            color: CColors.PrimaryText),
+                        GestureDetector(
+                          onTap: () =>
+                              pushNewScreen(context, screen: SearchScreen()),
+                          child: Container(
+                            height: 56.0,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: CColors.Form,
+                              borderRadius: BorderRadius.circular(32.0),
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 27.0, right: 11.0),
+                                    child: Icon(
+                                      CIcons.search,
+                                      color: CColors.SecondaryText,
+                                    )),
+                                CustomTextMedium(
+                                    text: "Search",
+                                    size: 15,
+                                    color: CColors.SecondaryText)
+                              ],
+                            ),
+                          ),
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: Row(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              CustomTextBold(
+                                  text: "Tags",
+                                  size: 17.0,
+                                  color: CColors.PrimaryText),
                               Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: CustomRadioButton(
-                                    fontColor: CColors.White,
-                                    text: "All",
-                                    color: CColors.PrimaryColor),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: CustomRadioButton(
-                                    fontColor: CColors.SecondaryText,
-                                    text: "Food",
-                                    color: CColors.Form),
-                              ),
-                              CustomRadioButton(
-                                  fontColor: CColors.SecondaryText,
-                                  text: "Drink",
-                                  color: CColors.Form),
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 16.0),
+                                      child: CustomRadioButton(
+                                          doOnPressed: () async {},
+                                          fontColor: CColors.White,
+                                          text: "All",
+                                          color: CColors.PrimaryColor),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 16.0),
+                                      child: CustomRadioButton(
+                                          doOnPressed: () {},
+                                          fontColor: CColors.SecondaryText,
+                                          text: "Food",
+                                          color: CColors.Form),
+                                    ),
+                                    CustomRadioButton(
+                                        doOnPressed: () {},
+                                        fontColor: CColors.SecondaryText,
+                                        text: "Drink",
+                                        color: CColors.Form),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         )
                       ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          DefaultTabController(
-            length: 2,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 50.0,
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 8.0,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
                   decoration: BoxDecoration(
                       color: CColors.White,
                       border:
@@ -143,22 +151,14 @@ class _HomeTabState extends State<HomeTab> {
                         )
                       ]),
                 ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Builder(builder: (context) {
-                    switch (_selectedTab) {
-                      case 0:
-                        return CookNowTab();
-                      case 1:
-                        return PlanTab();
-                    }
-                    return Container();
-                  }),
-                ),
-              ],
-            ),
-          )
-        ],
+              ),
+            ];
+          },
+          body: TabBarView(children: [
+            CookNowTab(),
+            PlanTab(),
+          ]),
+        ),
       ),
     );
   }

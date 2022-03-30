@@ -15,7 +15,7 @@ class PasswordRecoveryScreen extends StatefulWidget {
 }
 
 class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
-  late TextEditingController passwordTextController;
+  TextEditingController passwordTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

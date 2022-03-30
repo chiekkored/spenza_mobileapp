@@ -68,7 +68,7 @@ class CustomPrimaryButtonWIthLoading extends StatelessWidget {
         child: Center(
           child: loading
               ? SizedBox.square(
-                  dimension: 15.0, child: CircularProgressIndicator())
+                  dimension: 18.0, child: CircularProgressIndicator())
               : CustomTextBold(text: text, size: 15, color: Colors.white),
         ),
       ),
@@ -119,17 +119,19 @@ class CustomRadioButton extends StatelessWidget {
   final String text;
   final Color color;
   final Color fontColor;
+  final VoidCallback doOnPressed;
   const CustomRadioButton({
     Key? key,
     required this.text,
     required this.color,
     required this.fontColor,
+    required this.doOnPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {},
+      onPressed: () => doOnPressed,
       style: OutlinedButton.styleFrom(
         side: BorderSide.none,
         backgroundColor: color,

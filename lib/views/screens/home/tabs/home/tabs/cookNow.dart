@@ -18,17 +18,27 @@ class CookNowTab extends StatefulWidget {
   _CookNowTabState createState() => _CookNowTabState();
 }
 
-class _CookNowTabState extends State<CookNowTab> {
+class _CookNowTabState extends State<CookNowTab>
+    with AutomaticKeepAliveClientMixin {
+  CookNowViewModel _cookNowVM = CookNowViewModel();
+  late final Future<List> _loadCookNow;
+  @override
+  void initState() {
+    var _userProvider = context.read<UserProvider>();
+    _loadCookNow = _cookNowVM
+        .getPosts(_userProvider.userInfo.uid); // only create the future once.
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    CookNowViewModel _cookNowVM = CookNowViewModel();
-    var _userProvider = context.read<UserProvider>();
+    super.build(context);
     return Container(
       color: CColors.White,
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: FutureBuilder<List>(
-            future: _cookNowVM.getPosts(_userProvider.userInfo.uid),
+            future: _loadCookNow,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -48,13 +58,14 @@ class _CookNowTabState extends State<CookNowTab> {
                     return GridView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 20),
                       itemCount: snapshot.data![1].docs.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 25.0,
                         mainAxisSpacing: 32.0,
                         childAspectRatio: MediaQuery.of(context).size.width /
-                            (MediaQuery.of(context).size.height / 1.3),
+                            (MediaQuery.of(context).size.height / 1.2),
                       ),
                       itemBuilder: (BuildContext context, int index) {
                         var _authorData = snapshot.data![0];
@@ -160,4 +171,7 @@ class _CookNowTabState extends State<CookNowTab> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

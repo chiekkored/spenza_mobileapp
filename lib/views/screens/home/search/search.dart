@@ -217,12 +217,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Row(
                           children: [
                             CustomRadioButton(
+                                doOnPressed: () {},
                                 text: "sushi",
                                 color: CColors.Form,
                                 fontColor: CColors.PrimaryText),
                             Padding(
                               padding: const EdgeInsets.only(left: 16.0),
                               child: CustomRadioButton(
+                                  doOnPressed: () {},
                                   text: "breakfast",
                                   color: CColors.Form,
                                   fontColor: CColors.PrimaryText),
@@ -235,12 +237,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Row(
                           children: [
                             CustomRadioButton(
+                                doOnPressed: () {},
                                 text: "seafood",
                                 color: CColors.Form,
                                 fontColor: CColors.PrimaryText),
                             Padding(
                               padding: const EdgeInsets.only(left: 16.0),
                               child: CustomRadioButton(
+                                  doOnPressed: () {},
                                   text: "fried rice",
                                   color: CColors.Form,
                                   fontColor: CColors.PrimaryText),

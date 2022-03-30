@@ -7,9 +7,13 @@ class PlanTab extends StatefulWidget {
   _PlanTabState createState() => _PlanTabState();
 }
 
-class _PlanTabState extends State<PlanTab> {
+class _PlanTabState extends State<PlanTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Text("Plan");
   }
+
+  @override
+  bool get wantKeepAlive => false;
 }

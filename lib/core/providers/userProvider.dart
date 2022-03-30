@@ -27,18 +27,21 @@ class UserProvider extends ChangeNotifier {
     }).then((document) => _authVM.setPreferences(document!));
   }
 
-  void getUserPreference() async {
-    final pref = await SharedPreferences.getInstance();
-    if (pref.getString('user') != null) {
-      final data = jsonDecode(pref.getString('user')!);
-      _users.uid = data["uid"];
-      _users.email = data["email"];
-      _users.name = data["name"];
-      _users.dpUrl = data["dpUrl"];
-    } else {
-      // pref.clear();
-      // await FirebaseAuth.instance.signOut();
-      // print("logout from user preference");
-    }
+  Future<bool> getUserPreference() async {
+    return await SharedPreferences.getInstance().then((pref) {
+      if (pref.getString('user') != null) {
+        final data = jsonDecode(pref.getString('user')!);
+        _users.uid = data["uid"];
+        _users.email = data["email"];
+        _users.name = data["name"];
+        _users.dpUrl = data["dpUrl"];
+        return true;
+      } else {
+        return false;
+        // pref.clear();
+        // await FirebaseAuth.instance.signOut();
+        // print("logout from user preference");
+      }
+    });
   }
 }

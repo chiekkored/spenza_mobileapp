@@ -7,6 +7,7 @@ import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/utilities/config/firebase_config.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/screens/home/navigation.dart';
+import 'package:spenza/views/screens/splash.dart';
 
 import 'views/screens/onboarding/onboarding.dart';
 
@@ -52,8 +53,14 @@ class MyApp extends StatelessWidget {
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, user) {
                   if (user.hasData) {
-                    userProvider.getUserPreference();
-                    return const Navigation();
+                    return FutureBuilder<bool>(
+                        future: userProvider.getUserPreference(),
+                        builder: (context, snapshot) {
+                          if (snapshot.data == true) {
+                            return const Navigation();
+                          }
+                          return const SplashScreen();
+                        });
                   } else {
                     return const OnboardingScreen();
                   }

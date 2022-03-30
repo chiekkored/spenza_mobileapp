@@ -15,8 +15,31 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  late TextEditingController emailTextController;
-  late TextEditingController passwordTextController;
+  bool charValue = false;
+  bool numValue = false;
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
+  void _checkPassword(String password) {
+    if (password.length > 6) {
+      setState(() {
+        charValue = true;
+      });
+    } else {
+      setState(() {
+        charValue = false;
+      });
+    }
+    if (password.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        numValue = true;
+      });
+    } else {
+      setState(() {
+        numValue = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +72,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     hintText: "Email or phone number"),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: CustomAuthInput(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    onChanged: (pass) => _checkPassword(pass),
                     controller: passwordTextController,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
-                    icon: Icons.lock_outline,
-                    hintText: "Password"),
-              ),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                        borderSide: const BorderSide(
+                          color: CColors.Outline,
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0),
+                          borderSide: BorderSide(color: CColors.PrimaryColor)),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 26.0, right: 12.0),
+                        child: Icon(
+                          Icons.lock_outline,
+                          color: CColors.PrimaryText,
+                        ),
+                      ),
+                      hintText: "Password",
+                      hintStyle: TextStyle(
+                          fontFamily: "Inter",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          letterSpacing: 0.5,
+                          color: CColors.SecondaryText),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                  )),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -71,20 +122,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0),
-                  child: CustomTextMedium(
-                      text: "Atleast 6 characters",
-                      size: 15,
-                      color: CColors.MainText),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          splashRadius: 0.0,
+                          checkColor: CColors.PrimaryColor,
+                          fillColor: charValue
+                              ? MaterialStateProperty.all(CColors.AccentColor)
+                              : MaterialStateProperty.all(CColors.PrimaryColor),
+                          value: charValue,
+                          shape: CircleBorder(),
+                          onChanged: (bool? value) {
+                            return null;
+                          },
+                        ),
+                      ),
+                      CustomTextMedium(
+                          text: "Atleast 6 characters",
+                          size: 15,
+                          color: charValue
+                              ? CColors.MainText
+                              : CColors.SecondaryText),
+                    ],
+                  ),
                 ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: CustomTextMedium(
-                    text: "Contains a number",
-                    size: 15,
-                    color: CColors.SecondaryText,
+                  padding: const EdgeInsets.only(top: 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          splashRadius: 0.0,
+                          checkColor: CColors.PrimaryColor,
+                          fillColor: numValue
+                              ? MaterialStateProperty.all(CColors.AccentColor)
+                              : MaterialStateProperty.all(CColors.PrimaryColor),
+                          value: numValue,
+                          shape: CircleBorder(),
+                          onChanged: (bool? value) {
+                            return null;
+                          },
+                        ),
+                      ),
+                      CustomTextMedium(
+                        text: "Contains a number",
+                        size: 15,
+                        color:
+                            numValue ? CColors.MainText : CColors.SecondaryText,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -92,11 +186,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding: const EdgeInsets.only(top: 23.0),
                 child: CustomPrimaryButton(
                     text: "Sign Up",
-                    doOnPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VerificationCodeScreen()),
-                        )),
+                    doOnPressed: () {
+                      if (emailTextController.text == "" &&
+                          passwordTextController.text == "") {
+                        return null;
+                      }
+                      if (!charValue || !numValue) {
+                        return null;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VerificationCodeScreen()),
+                      );
+                    }),
               ),
             ],
           ),

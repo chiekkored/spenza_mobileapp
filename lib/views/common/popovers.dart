@@ -151,6 +151,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                 Padding(
                   padding: const EdgeInsets.only(right: 17.0),
                   child: CustomRadioButton(
+                      doOnPressed: () {},
                       text: "All",
                       color: CColors.PrimaryColor,
                       fontColor: CColors.White),
@@ -158,6 +159,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                 Padding(
                   padding: const EdgeInsets.only(right: 17.0),
                   child: CustomRadioButton(
+                      doOnPressed: () {},
                       text: "Food",
                       color: CColors.Form,
                       fontColor: CColors.SecondaryText),
@@ -165,6 +167,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                 Padding(
                   padding: const EdgeInsets.only(right: 17.0),
                   child: CustomRadioButton(
+                      doOnPressed: () {},
                       text: "Drink",
                       color: CColors.Form,
                       fontColor: CColors.SecondaryText),

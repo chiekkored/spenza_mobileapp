@@ -43,11 +43,12 @@ class _NavigationState extends State<Navigation> {
         bottom: false,
         child: PersistentTabView(
           context,
+          bottomScreenMargin: 0.0,
           controller: _controller,
           navBarStyle: NavBarStyle.style15,
           decoration: NavBarDecoration(
             borderRadius: BorderRadius.circular(0),
-            colorBehindNavBar: Colors.white,
+            colorBehindNavBar: CColors.White,
           ),
           screens: [
             HomeTab(),

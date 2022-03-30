@@ -12,10 +12,11 @@ class SearchViewModel {
         .doc(uid)
         .collection("search");
 
-    // Get following lists
+    // Get all users
     return await _users.get().then((usersData) async {
-      // For loop following users and get its userData
+      // For loop all users and get its userData
       for (var user in usersData.docs) {
+        print(searchText);
         await _users.doc(user["uid"]).get().then((userData) async {
           _list.add(userData);
 
@@ -36,6 +37,7 @@ class SearchViewModel {
               // .where("postRecipeTitle", isEqualTo: searchTextCapFirst)
               .get()
               .then((postsData) {
+                // print(usersData.docs[0]["postRecipeTitle"]);
                 _list.add(postsData);
                 return _list;
               });
@@ -50,7 +52,6 @@ class SearchViewModel {
           })
           .then((value) => print("Search Added"))
           .catchError((error) => print("Failed to add user: $error"));
-      ;
       return _list;
     });
   }
