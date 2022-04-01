@@ -11,6 +11,7 @@ import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/forgot_password/password_recovery/passwordRecovery.dart';
 import 'package:spenza/views/screens/auth/sign_up/signup.dart';
+import 'package:spenza/views/screens/auth/verification/verificationEmail.dart';
 import 'package:spenza/views/screens/home/navigation.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -109,7 +110,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Navigation()),
+                                  builder: (context) => doc.user!.emailVerified
+                                      ? Navigation()
+                                      : Navigation()),
                               (Route<dynamic> route) => false,
                             );
                           } else {

@@ -8,6 +8,7 @@ import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
+import 'package:spenza/views/common/grids.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
@@ -23,6 +24,16 @@ class SearchResultScreen extends StatefulWidget {
 
 class _SearchResultScreenState extends State<SearchResultScreen> {
   SearchViewModel _searchVM = SearchViewModel();
+  late Future<List> _loadSearch;
+
+  @override
+  void initState() {
+    var _userProvider = context.read<UserProvider>();
+    _loadSearch = _searchVM.getSearch(widget.searchText,
+        _userProvider.userInfo.uid); // only create the future once.
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var _userProvider = context.read<UserProvider>();
@@ -56,15 +67,20 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                           child: TextField(
                             controller: _searchTextController,
                             textInputAction: TextInputAction.search,
-                            onSubmitted: (text) =>
+                            onSubmitted: (text) {
+                              if (_searchTextController.text == "") {
+                                return null;
+                              } else {
                                 Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    SearchResultScreen(
-                                  searchText: text,
-                                ),
-                              ),
-                            ),
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        SearchResultScreen(
+                                      searchText: text,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                             style: TextStyle(
                                 fontFamily: "Inter",
                                 fontWeight: FontWeight.w500,
@@ -74,6 +90,16 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: CColors.Form,
+                                suffixIcon: GestureDetector(
+                                  onTap: (() =>
+                                      _searchTextController.text = ""),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 11.0, right: 27.0),
+                                    child: SvgPicture.asset(
+                                        "assets/svg/clear.svg"),
+                                  ),
+                                ),
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 27.0, right: 11.0),
@@ -127,8 +153,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                   child: Padding(
                       padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
                       child: FutureBuilder<List>(
-                          future: _searchVM.getSearch(
-                              widget.searchText, _userProvider.userInfo.uid),
+                          future: _loadSearch,
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
                               case ConnectionState.none:
@@ -136,151 +161,70 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                 return Container();
                               case ConnectionState.waiting:
                                 print("-Search Results- waiting");
-                                return Text('waiting');
+                                return CustomGridShimmer();
                               case ConnectionState.done:
                                 if (snapshot.data!.isEmpty) {
                                   print("-Search Results- has Error");
+                                  print(snapshot.data);
+                                  // return Container();
                                   // showCustomDialog(context, "Error",
                                   //     "An error has occurred.", "Okay", null);
-                                  return Container();
+                                  return Expanded(
+                                    child: RefreshIndicator(
+                                        onRefresh: () async {
+                                          var _userProvider =
+                                              context.read<UserProvider>();
+                                          setState(() {
+                                            _loadSearch = _searchVM.getSearch(
+                                                widget.searchText,
+                                                _userProvider.userInfo.uid);
+                                          });
+                                        },
+                                        child: ListView(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 24.0),
+                                            shrinkWrap: true,
+                                            children: [
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/images/empty-face.png",
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            250,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 16.0),
+                                                    child: CustomTextMedium(
+                                                        text:
+                                                            "Nothing to see here.",
+                                                        size: 18.0,
+                                                        color: CColors
+                                                            .PrimaryText),
+                                                  ),
+                                                ],
+                                              )
+                                            ])),
+                                  );
                                 } else {
                                   print("-Search Results- has Data");
-                                  return GridView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data![1].docs.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 25.0,
-                                      mainAxisSpacing: 32.0,
-                                      childAspectRatio: MediaQuery.of(context)
-                                              .size
-                                              .width /
-                                          (MediaQuery.of(context).size.height /
-                                              1.3),
-                                    ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      var _authorData = snapshot.data![0];
-                                      var _authorPostsData =
-                                          snapshot.data![1].docs[index].data();
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () => pushNewScreen(context,
-                                                screen: UserProfileScreen(),
-                                                withNavBar: false),
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            11.0),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          _authorData["dpUrl"],
-                                                      imageBuilder:
-                                                          (context, image) {
-                                                        return Image(
-                                                          image: image,
-                                                          fit: BoxFit.cover,
-                                                          height: 31,
-                                                          width: 31,
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: CustomTextMedium(
-                                                      text: _authorData["name"],
-                                                      size: 12,
-                                                      color: CColors.MainText),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 16.0),
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(16.0),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: _authorPostsData[
-                                                      "postImageUrl"],
-                                                  imageBuilder:
-                                                      (context, image) {
-                                                    return Image(
-                                                      image: image,
-                                                      fit: BoxFit.fill,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2.4,
-                                                    );
-                                                  },
-                                                  errorWidget:
-                                                      (context, str, dyn) {
-                                                    return Center(
-                                                        child:
-                                                            Icon(Icons.error));
-                                                  },
-                                                )),
-                                          ),
-                                          Flexible(
-                                            fit: FlexFit.loose,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 16.0),
-                                              child: CustomTextBold(
-                                                  text: _authorPostsData[
-                                                      "postRecipeTitle"],
-                                                  size: 17.0,
-                                                  color: CColors.PrimaryText),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Row(
-                                              children: [
-                                                CustomTextMedium(
-                                                    text: _authorPostsData[
-                                                        "postPercent"],
-                                                    size: 12.0,
-                                                    color:
-                                                        CColors.SecondaryText),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 8.0),
-                                                  child: CustomTextMedium(
-                                                      text: "•",
-                                                      size: 12.0,
-                                                      color: CColors
-                                                          .SecondaryText),
-                                                ),
-                                                CustomTextMedium(
-                                                    text: _authorPostsData[
-                                                        "postDuration"],
-                                                    size: 12.0,
-                                                    color:
-                                                        CColors.SecondaryText),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      );
+                                  print(snapshot.data);
+                                  return RefreshIndicator(
+                                    onRefresh: () async {
+                                      setState(() {
+                                        _loadSearch = _searchVM.getSearch(
+                                            widget.searchText,
+                                            _userProvider.userInfo.uid);
+                                      });
                                     },
+                                    child: CustomGridView(snapshot: snapshot),
                                   );
                                 }
                               default:

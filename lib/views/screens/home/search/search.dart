@@ -8,6 +8,7 @@ import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
+import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/search/results.dart';
@@ -30,6 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
     var _userProvider = context.read<UserProvider>();
     return Container(
       color: CColors.White,
+      margin: const EdgeInsets.only(bottom: 40.0),
       child: SafeArea(
         child: Scaffold(
           body: SingleChildScrollView(
@@ -58,10 +60,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             autofocus: true,
                             textInputAction: TextInputAction.search,
                             onSubmitted: (text) {
-                              print(text);
-                              pushNewScreen(context,
-                                  screen: SearchResultScreen(
-                                      searchText: _searchTextController.text));
+                              if (_searchTextController.text == "") {
+                                return null;
+                              } else {
+                                pushNewScreen(context,
+                                    screen: SearchResultScreen(
+                                        searchText:
+                                            _searchTextController.text));
+                              }
                             },
                             style: TextStyle(
                                 fontFamily: "Inter",
@@ -134,17 +140,25 @@ class _SearchScreenState extends State<SearchScreen> {
                               return Container();
                             case ConnectionState.waiting:
                               print("-Search History- waiting");
-                              return Row(
-                                children: [
-                                  Text('waiting'),
-                                ],
-                              );
+                              return CustomListShimmer();
                             case ConnectionState.done:
                               if (snapshot.data!.docs.isEmpty) {
                                 print("-Search History- has Error");
                                 // showCustomDialog(context, "Error",
                                 //     "An error has occurred.", "Okay", null);
-                                return Container();
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16.0),
+                                      child: CustomTextMedium(
+                                          text: "No search results",
+                                          size: 18.0,
+                                          color: CColors.SecondaryText),
+                                    ),
+                                  ],
+                                );
                               } else {
                                 print("-Search History- has Data");
                                 return ListView.builder(

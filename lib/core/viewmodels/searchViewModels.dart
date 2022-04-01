@@ -16,10 +16,7 @@ class SearchViewModel {
     return await _users.get().then((usersData) async {
       // For loop all users and get its userData
       for (var user in usersData.docs) {
-        print(searchText);
         await _users.doc(user["uid"]).get().then((userData) async {
-          _list.add(userData);
-
           // Capital First Letter
           var searchTextCapFirst = searchText
               .replaceFirst(searchText[0], searchText[0].toUpperCase())
@@ -33,16 +30,17 @@ class SearchViewModel {
                 searchText.toLowerCase(),
                 searchTextCapFirst
               ])
-              // .where("postRecipeTitle", isEqualTo: searchText.toLowerCase())
-              // .where("postRecipeTitle", isEqualTo: searchTextCapFirst)
               .get()
               .then((postsData) {
-                // print(usersData.docs[0]["postRecipeTitle"]);
-                _list.add(postsData);
-                return _list;
+                print("postsData.docs");
+                print(postsData.docs);
+                for (var post in postsData.docs) {
+                  _list.add([userData.data(), post.data()]);
+                }
               });
         });
       }
+      print(_list);
       // Add to firestore search document
       DateTime now = new DateTime.now();
       await _usersSearch

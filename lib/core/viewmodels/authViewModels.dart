@@ -19,6 +19,18 @@ class AuthViewModel {
         }));
   }
 
+  Future<void> setNewPreferences(User user) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.setString(
+        'user',
+        jsonEncode({
+          "uid": user.uid,
+          "email": user.email ?? "",
+          "name": user.displayName ?? "",
+          "dpUrl": user.photoURL ?? ""
+        }));
+  }
+
   Future signInEmailAndPassword(
       BuildContext context, String email, String password) async {
     try {
@@ -44,6 +56,29 @@ class AuthViewModel {
         print('Wrong password provided for that user.');
       } else {}
       return null;
+    }
+  }
+
+  Future signUp(BuildContext context, String email, String password) async {
+    try {
+      return await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((userCredential) async {
+        if (!userCredential.user!.emailVerified) {
+          await userCredential.user!.sendEmailVerification();
+        }
+        return userCredential;
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showCustomDialog(context, "Weak Password",
+            "The password provided is too weak.", "Okay", null);
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        showCustomDialog(context, "Invalid Email",
+            "The account already exists for that email.", "Okay", null);
+        print('The account already exists for that email.');
+      }
     }
   }
 

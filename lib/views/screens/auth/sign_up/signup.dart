@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
 
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/verification/verification.dart';
+import 'package:spenza/views/screens/auth/verification/verificationEmail.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -17,8 +21,11 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   bool charValue = false;
   bool numValue = false;
+  bool _isLoading = false;
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
+  AuthViewModel _authVM = AuthViewModel();
+
   void _checkPassword(String password) {
     if (password.length > 6) {
       setState(() {
@@ -42,6 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var userProvider = context.read<UserProvider>();
     return Scaffold(
       body: Center(
         child: Padding(
@@ -184,22 +192,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 23.0),
-                child: CustomPrimaryButton(
-                    text: "Sign Up",
-                    doOnPressed: () {
-                      if (emailTextController.text == "" &&
-                          passwordTextController.text == "") {
-                        return null;
-                      }
-                      if (!charValue || !numValue) {
-                        return null;
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => VerificationCodeScreen()),
-                      );
-                    }),
+                child: CustomPrimaryButtonWIthLoading(
+                  text: "Sign Up",
+                  loading: _isLoading,
+                  doOnPressed: () async {
+                    if (emailTextController.text == "" &&
+                        passwordTextController.text == "") {
+                      return null;
+                    }
+                    if (!charValue || !numValue) {
+                      return null;
+                    }
+                    if (!_isLoading) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await _authVM
+                          .signUp(context, emailTextController.text,
+                              passwordTextController.text)
+                          .then((doc) async {
+                        if (doc != null) {
+                          print("-----------");
+                          print(doc.user!.uid);
+                          print("-----------");
+                          await userProvider.setNewUser(doc.user);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    VerificationEmailScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                        } else {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      });
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
               ),
             ],
           ),

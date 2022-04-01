@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/cookNowViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/common/grids.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
@@ -21,12 +23,14 @@ class CookNowTab extends StatefulWidget {
 class _CookNowTabState extends State<CookNowTab>
     with AutomaticKeepAliveClientMixin {
   CookNowViewModel _cookNowVM = CookNowViewModel();
-  late final Future<List> _loadCookNow;
+  late Future<List> _loadCookNow;
+
+  FirebaseAuth _user = FirebaseAuth.instance;
   @override
   void initState() {
-    var _userProvider = context.read<UserProvider>();
+    // var _userProvider = context.read<UserProvider>();
     _loadCookNow = _cookNowVM
-        .getPosts(_userProvider.userInfo.uid); // only create the future once.
+        .getPosts(_user.currentUser!.uid); // only create the future once.
     super.initState();
   }
 
@@ -46,125 +50,59 @@ class _CookNowTabState extends State<CookNowTab>
                   return Container();
                 case ConnectionState.waiting:
                   print("-Cook Now Tab- waiting");
-                  return Text('waiting');
+                  return CustomGridShimmer();
                 case ConnectionState.done:
                   if (snapshot.data!.isEmpty) {
                     print("-Cook Now Tab- has Error");
+                    print(snapshot.data);
                     // showCustomDialog(context, "Error",
                     //     "An error has occurred.", "Okay", null);
-                    return Container();
-                  } else {
-                    print("-Cook Now Tab- has Data");
-                    return GridView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(bottom: 20),
-                      itemCount: snapshot.data![1].docs.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 25.0,
-                        mainAxisSpacing: 32.0,
-                        childAspectRatio: MediaQuery.of(context).size.width /
-                            (MediaQuery.of(context).size.height / 1.2),
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        var _authorData = snapshot.data![0];
-                        var _authorPostsData =
-                            snapshot.data![1].docs[index].data();
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () => pushNewScreen(context,
-                                  screen: UserProfileScreen(),
-                                  withNavBar: false),
-                              child: Row(
+                    return RefreshIndicator(
+                        onRefresh: () async {
+                          var _userProvider = context.read<UserProvider>();
+                          setState(() {
+                            _loadCookNow =
+                                _cookNowVM.getPosts(_userProvider.userInfo.uid);
+                          });
+                        },
+                        child: ListView(
+                            padding: const EdgeInsets.only(bottom: 24.0),
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(11.0),
-                                      child: CachedNetworkImage(
-                                        imageUrl: _authorData["dpUrl"],
-                                        imageBuilder: (context, image) {
-                                          return Image(
-                                            image: image,
-                                            fit: BoxFit.fill,
-                                            height: 31,
-                                            width: 31,
-                                          );
-                                        },
-                                      ),
-                                    ),
+                                  Image.asset(
+                                    "assets/images/empty-face.png",
+                                    width:
+                                        MediaQuery.of(context).size.width - 250,
                                   ),
-                                  Expanded(
-                                    child: CustomTextMedium(
-                                        text: _authorData["name"],
-                                        size: 12,
-                                        color: CColors.MainText),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl: _authorPostsData["postImageUrl"],
-                                    imageBuilder: (context, image) {
-                                      return Image(
-                                        image: image,
-                                        fit: BoxFit.fill,
-                                        height:
-                                            MediaQuery.of(context).size.width /
-                                                2.4,
-                                      );
-                                    },
-                                    errorWidget: (context, str, dyn) {
-                                      return Center(child: Icon(Icons.error));
-                                    },
-                                  )),
-                            ),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 16.0),
-                                child: CustomTextBold(
-                                    text: _authorPostsData["postRecipeTitle"],
-                                    size: 17.0,
-                                    color: CColors.PrimaryText),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                children: [
-                                  CustomTextMedium(
-                                      text: _authorPostsData["postPercent"],
-                                      size: 12.0,
-                                      color: CColors.SecondaryText),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                    padding: const EdgeInsets.only(top: 16.0),
                                     child: CustomTextMedium(
-                                        text: "•",
-                                        size: 12.0,
+                                        text: "Nothing to see here.",
+                                        size: 18.0,
                                         color: CColors.SecondaryText),
                                   ),
-                                  CustomTextMedium(
-                                      text: _authorPostsData["postDuration"],
-                                      size: 12.0,
-                                      color: CColors.SecondaryText),
                                 ],
-                              ),
-                            )
-                          ],
-                        );
+                              )
+                            ]));
+                  } else {
+                    print("-Cook Now Tab- has Data");
+                    print(snapshot.data);
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        var _userProvider = context.read<UserProvider>();
+                        setState(() {
+                          _loadCookNow =
+                              _cookNowVM.getPosts(_userProvider.userInfo.uid);
+                        });
                       },
+                      child: CustomGridView(snapshot: snapshot),
                     );
                   }
                 default:
+                  print("-Cook Now Tab- default");
                   return Container();
               }
             }),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/core/models/userModel.dart';
@@ -25,6 +26,28 @@ class UserProvider extends ChangeNotifier {
         return documentSnapshot;
       }
     }).then((document) => _authVM.setPreferences(document!));
+  }
+
+  Future<void> setNewUser(User userCredential) async {
+    AuthViewModel _authVM = AuthViewModel();
+    print("object");
+    print(userCredential.uid);
+    print("object");
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.uid)
+        .set({
+      "uid": userCredential.uid,
+      "name": userCredential.displayName ?? "",
+      "email": userCredential.email ?? "",
+      "dpUrl": userCredential.photoURL ?? ""
+    }).then((value) async {
+      _users.uid = userCredential.uid;
+      _users.name = userCredential.displayName ?? "";
+      _users.email = userCredential.email ?? "";
+      _users.dpUrl = userCredential.photoURL ?? "";
+      return userCredential;
+    }).then((document) => _authVM.setNewPreferences(document));
   }
 
   Future<bool> getUserPreference() async {

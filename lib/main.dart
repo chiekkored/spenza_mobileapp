@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/utilities/config/firebase_config.dart';
 import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/screens/auth/verification/verificationEmail.dart';
 import 'package:spenza/views/screens/home/navigation.dart';
 import 'package:spenza/views/screens/splash.dart';
 
@@ -53,6 +54,8 @@ class MyApp extends StatelessWidget {
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, user) {
                   if (user.hasData) {
+                    print(user.data!.emailVerified);
+                    // if (user.data!.emailVerified) {
                     return FutureBuilder<bool>(
                         future: userProvider.getUserPreference(),
                         builder: (context, snapshot) {
@@ -61,6 +64,9 @@ class MyApp extends StatelessWidget {
                           }
                           return const SplashScreen();
                         });
+                    // } else {
+                    // return const VerificationEmailScreen();
+                    // }
                   } else {
                     return const OnboardingScreen();
                   }

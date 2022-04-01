@@ -26,238 +26,275 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
-  int _selectedTab = 0;
+  ProfileViewModel _profileVM = ProfileViewModel();
+
+  late Future<DocumentSnapshot<Object?>> _getUserData;
+  late Future<QuerySnapshot<Object?>> _getRecipes;
+  late Stream<QuerySnapshot<Object?>> _getFollowing;
+  late Stream<QuerySnapshot<Object?>> _getFollowers;
+
+  @override
+  void initState() {
+    var _userProvider = context.read<UserProvider>();
+    _getUserData = _profileVM.getUserData(_userProvider.userInfo.uid);
+    _getRecipes = _profileVM.getRecipes(_userProvider.userInfo.uid);
+    _getFollowing = _profileVM.getFollowing(_userProvider.userInfo.uid);
+    _getFollowers = _profileVM.getFollowers(_userProvider.userInfo.uid);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    AuthViewModel _authVM = AuthViewModel();
-    ProfileViewModel _profileVM = ProfileViewModel();
     var _userProvider = context.read<UserProvider>();
-    return SingleChildScrollView(
-      // physics: BouncingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: CColors.White,
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        _authVM.logout();
-                        Navigator.of(context, rootNavigator: true)
-                            .pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return SignInScreen();
-                            },
-                          ),
-                          (_) => false,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.share,
-                        color: CColors.MainText,
-                      ),
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 23.0),
-                  child: Center(
-                    child: FutureBuilder<DocumentSnapshot>(
-                        future: _profileVM.getDpUrl(_userProvider.userInfo.uid),
-                        builder: (context, snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.done:
-                              if (snapshot.hasError) {
-                                print("dpUrl has Error");
-                                return SizedBox(
-                                  height: 120.0,
-                                  child: CachedNetworkImage(
-                                    imageUrl: _userProvider.userInfo.dpUrl,
-                                    imageBuilder: (context, image) {
-                                      return CircleAvatar(
-                                        radius: 60.0,
-                                        backgroundColor: Colors.transparent,
-                                        foregroundImage: image,
-                                      );
-                                    },
-                                  ),
-                                );
-                              } else {
-                                print("dpUrl has Data");
-                                return SizedBox(
-                                  height: 120.0,
-                                  child: CachedNetworkImage(
-                                    imageUrl: snapshot.data!["dpUrl"],
-                                    imageBuilder: (context, image) {
-                                      return CircleAvatar(
-                                        radius: 60.0,
-                                        backgroundColor: Colors.transparent,
-                                        foregroundImage: image,
-                                      );
-                                    },
-                                  ),
-                                );
-                              }
-                            default:
-                              print("dpUrl maybe loading/no connection");
-                              return SizedBox(
-                                height: 120.0,
-                                child: CachedNetworkImage(
-                                  imageUrl: _userProvider.userInfo.dpUrl,
-                                  imageBuilder: (context, image) {
-                                    return CircleAvatar(
-                                      radius: 60.0,
-                                      backgroundColor: Colors.transparent,
-                                      foregroundImage: image,
-                                    );
+    AuthViewModel _authVM = AuthViewModel();
+    return Material(
+      type: MaterialType.transparency,
+      child: DefaultTabController(
+        length: 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, value) {
+            return [
+              SliverToBoxAdapter(
+                child: Container(
+                  color: CColors.White,
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _authVM.logout();
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return SignInScreen();
                                   },
                                 ),
+                                (_) => false,
                               );
-                          }
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: Center(
-                      child: CustomTextBold(
-                          text: _userProvider.userInfo.name,
-                          size: 17.0,
-                          color: CColors.PrimaryText)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FutureBuilder<QuerySnapshot>(
-                              future: _profileVM
-                                  .getRecipes(_userProvider.userInfo.uid),
-                              builder: (context, snapshot) {
-                                // switch (snapshot.connectionState) {
-                                //   case ConnectionState.none:
-                                //     return Text('Input a URL to start');
-                                //   case ConnectionState.waiting:
-                                //     print("waiting");
-                                //     return Text('waiting');
-                                //   case ConnectionState.active:
-                                //     print("active");
-                                //     return Text('active');
-                                //   case ConnectionState.done:
-                                //     if (snapshot.hasError) {
-                                //       print("has Error");
-                                //       return Text(
-                                //         '${snapshot.error}',
-                                //         style: TextStyle(color: Colors.red),
-                                //       );
-                                //     } else {
-                                //       return Text(snapshot.data.data.toString());
-                                //     }
-                                // }
-                                if (!snapshot.hasData) {
-                                  return CustomTextBold(
-                                      text: "0",
-                                      size: 17.0,
-                                      color: CColors.PrimaryText);
-                                }
-                                return CustomTextBold(
-                                    text: snapshot.data!.docs.length.toString(),
-                                    size: 17.0,
-                                    color: CColors.PrimaryText);
-                              }),
-                          CustomTextMedium(
-                              text: "Recipes",
-                              size: 12.0,
-                              color: CColors.SecondaryText)
+                            },
+                            icon: Icon(
+                              Icons.share,
+                              color: CColors.MainText,
+                            ),
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                          )
                         ],
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FutureBuilder<QuerySnapshot>(
-                              future: _profileVM
-                                  .getFollowing(_userProvider.userInfo.uid),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 23.0),
+                        child: Center(
+                          child: FutureBuilder<DocumentSnapshot>(
+                              future: _getUserData,
                               builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return CustomTextBold(
-                                      text: "0",
-                                      size: 17.0,
-                                      color: CColors.PrimaryText);
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.done:
+                                    if (snapshot.hasError) {
+                                      print("-dpUrl- has Error");
+                                      return SizedBox(
+                                        height: 120.0,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              _userProvider.userInfo.dpUrl,
+                                          imageBuilder: (context, image) {
+                                            return CircleAvatar(
+                                              radius: 60.0,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              foregroundImage: image,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    } else {
+                                      print("-dpUrl- has Data");
+                                      return SizedBox(
+                                        height: 120.0,
+                                        child: CachedNetworkImage(
+                                          imageUrl: snapshot.data!["dpUrl"],
+                                          imageBuilder: (context, image) {
+                                            return CircleAvatar(
+                                              radius: 60.0,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              foregroundImage: image,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    }
+                                  default:
+                                    print(
+                                        "-dpUrl- maybe loading/no connection");
+                                    return SizedBox(
+                                      height: 120.0,
+                                      child: CachedNetworkImage(
+                                        imageUrl: _userProvider.userInfo.dpUrl,
+                                        imageBuilder: (context, image) {
+                                          return CircleAvatar(
+                                            radius: 60.0,
+                                            backgroundColor: Colors.transparent,
+                                            foregroundImage: image,
+                                          );
+                                        },
+                                      ),
+                                    );
                                 }
-                                return CustomTextBold(
-                                    text: snapshot.data!.docs.length.toString(),
-                                    size: 17.0,
-                                    color: CColors.PrimaryText);
                               }),
-                          CustomTextMedium(
-                              text: "Following",
-                              size: 12.0,
-                              color: CColors.SecondaryText)
-                        ],
+                        ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FutureBuilder<QuerySnapshot>(
-                              future: _profileVM
-                                  .getFollowers(_userProvider.userInfo.uid),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return CustomTextBold(
-                                      text: "0",
-                                      size: 17.0,
-                                      color: CColors.PrimaryText);
-                                }
-                                return CustomTextBold(
-                                    text: snapshot.data!.docs.length.toString(),
-                                    size: 17.0,
-                                    color: CColors.PrimaryText);
-                              }),
-                          CustomTextMedium(
-                              text: "Followers",
-                              size: 12.0,
-                              color: CColors.SecondaryText)
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: Center(
+                            child: CustomTextBold(
+                                text: _userProvider.userInfo.name,
+                                size: 17.0,
+                                color: CColors.PrimaryText)),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                FutureBuilder<QuerySnapshot>(
+                                    future: _getRecipes,
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            print(
+                                                "-Profile Recipes Count- has Error");
+                                            return Text(
+                                              '${snapshot.error}',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            );
+                                          } else {
+                                            print(
+                                                "-Profile Recipes Count- has Data");
+                                            return CustomTextBold(
+                                                text: snapshot.data!.docs.length
+                                                    .toString(),
+                                                size: 17.0,
+                                                color: CColors.PrimaryText);
+                                          }
+                                        default:
+                                          return CustomTextBold(
+                                              text: "0",
+                                              size: 17.0,
+                                              color: CColors.PrimaryText);
+                                      }
+                                    }),
+                                CustomTextMedium(
+                                    text: "Recipes",
+                                    size: 12.0,
+                                    color: CColors.SecondaryText)
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: _getFollowing,
+                                    builder: (context, snapshot) {
+                                      // switch (snapshot.connectionState) {
+                                      //   case ConnectionState.done:
+                                      if (!snapshot.hasData) {
+                                        print(
+                                            "-Profile Following Count- has Error");
+                                        return CustomTextBold(
+                                            text: "0",
+                                            size: 17.0,
+                                            color: CColors.PrimaryText);
+                                      } else {
+                                        print(
+                                            "-Profile Following Count- has Data");
+                                        return CustomTextBold(
+                                            text: snapshot.data!.docs.length
+                                                .toString(),
+                                            size: 17.0,
+                                            color: CColors.PrimaryText);
+                                      }
+                                      //   default:
+                                      //     return CustomTextBold(
+                                      //         text: "0",
+                                      //         size: 17.0,
+                                      //         color: CColors.PrimaryText);
+                                      // }
+                                    }),
+                                CustomTextMedium(
+                                    text: "Following",
+                                    size: 12.0,
+                                    color: CColors.SecondaryText)
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: _getFollowers,
+                                    builder: (context, snapshot) {
+                                      // switch (snapshot.connectionState) {
+                                      //   case ConnectionState.done:
+                                      if (!snapshot.hasData) {
+                                        print(
+                                            "-Profile Followers Count- has Error");
+                                        return Text(
+                                          '${snapshot.error}',
+                                          style: TextStyle(color: Colors.red),
+                                        );
+                                      } else {
+                                        print(
+                                            "-Profile Followers Count- has Data");
+                                        return CustomTextBold(
+                                            text: snapshot.data!.docs.length
+                                                .toString(),
+                                            size: 17.0,
+                                            color: CColors.PrimaryText);
+                                      }
+                                      //   default:
+                                      //     return CustomTextBold(
+                                      //         text: "0",
+                                      //         size: 17.0,
+                                      //         color: CColors.PrimaryText);
+                                      // }
+                                    }),
+                                CustomTextMedium(
+                                    text: "Followers",
+                                    size: 12.0,
+                                    color: CColors.SecondaryText)
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          DefaultTabController(
-            length: 2,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 50.0,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 8.0,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
                   decoration: BoxDecoration(
                       color: CColors.White,
                       border:
                           Border(bottom: BorderSide(color: CColors.Outline))),
                   child: TabBar(
-                      onTap: (value) => setState(() {
-                            _selectedTab = value;
-                          }),
                       indicatorColor: CColors.PrimaryColor,
                       labelColor: CColors.PrimaryText,
                       unselectedLabelColor: CColors.SecondaryText,
@@ -277,22 +314,14 @@ class _ProfileTabState extends State<ProfileTab> {
                         )
                       ]),
                 ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Builder(builder: (context) {
-                    switch (_selectedTab) {
-                      case 0:
-                        return RecipesTab();
-                      case 1:
-                        return LikedTab();
-                    }
-                    return Container();
-                  }),
-                ),
-              ],
-            ),
-          )
-        ],
+              ),
+            ];
+          },
+          body: TabBarView(children: [
+            RecipesTab(uid: _userProvider.userInfo.uid),
+            LikedTab(),
+          ]),
+        ),
       ),
     );
   }
