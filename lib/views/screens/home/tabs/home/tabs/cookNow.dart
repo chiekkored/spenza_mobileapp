@@ -66,6 +66,7 @@ class _CookNowTabState extends State<CookNowTab>
                           });
                         },
                         child: ListView(
+                            physics: BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(bottom: 24.0),
                             children: [
                               Column(

@@ -1,4 +1,4 @@
-package com.example.spenza
+package com.pocketdevs.spenza
 
 import io.flutter.embedding.android.FlutterActivity
 

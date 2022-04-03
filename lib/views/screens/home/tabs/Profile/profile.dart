@@ -250,10 +250,10 @@ class _ProfileTabState extends State<ProfileTab> {
                                       if (!snapshot.hasData) {
                                         print(
                                             "-Profile Followers Count- has Error");
-                                        return Text(
-                                          '${snapshot.error}',
-                                          style: TextStyle(color: Colors.red),
-                                        );
+                                        return CustomTextBold(
+                                            text: "0",
+                                            size: 17.0,
+                                            color: CColors.PrimaryText);
                                       } else {
                                         print(
                                             "-Profile Followers Count- has Data");

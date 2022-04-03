@@ -30,7 +30,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
     var _aspectRatio = _width / cellHeight;
 
     return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 40.0),
       shrinkWrap: true,
       itemCount: snapshot.data!.docs.length,
@@ -60,7 +60,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                         imageBuilder: (context, image) {
                           return Image(
                             image: image,
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.cover,
                             height: MediaQuery.of(context).size.width / 2.4,
                           );
                         },
@@ -146,7 +146,7 @@ class CustomGridView extends StatelessWidget {
     var _aspectRatio = _width / cellHeight;
 
     return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       padding: const EdgeInsets.only(bottom: 50),
       itemCount: snapshot.data!.length,
@@ -212,7 +212,7 @@ class CustomGridView extends StatelessWidget {
                         imageBuilder: (context, image) {
                           return Image(
                             image: image,
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.cover,
                             height: MediaQuery.of(context).size.width / 2.4,
                           );
                         },
