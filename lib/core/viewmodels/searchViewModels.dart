@@ -35,7 +35,7 @@ class SearchViewModel {
                 print("postsData.docs");
                 print(postsData.docs);
                 for (var post in postsData.docs) {
-                  _list.add([userData.data(), post.data()]);
+                  _list.add([userData.data(), post.data(), post.id]);
                 }
               });
         });

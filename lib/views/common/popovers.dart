@@ -56,9 +56,10 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                               .collection("posts")
                               .add({
                             "postDuration": "60 mins",
-                            "postImageUrl": "https://picsum.photos/200",
+                            "postImageUrl":
+                                "https://picsum.photos/id/106/2592/1728",
                             "postPercent": "75%",
-                            "postRecipeTitle": "Salads"
+                            "postRecipeTitle": "Cake"
                           }).then((value) => print("added posts"));
                           // pushNewScreen(context,
                           //   withNavBar: false, screen: UploadStep1Screen());

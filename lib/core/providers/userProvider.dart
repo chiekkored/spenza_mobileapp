@@ -38,9 +38,11 @@ class UserProvider extends ChangeNotifier {
         .doc(userCredential.uid)
         .set({
       "uid": userCredential.uid,
-      "name": userCredential.displayName ?? "",
+      "name": userCredential.email!
+          .substring(0, userCredential.email!.indexOf('@')),
       "email": userCredential.email ?? "",
-      "dpUrl": userCredential.photoURL ?? ""
+      "dpUrl": userCredential.photoURL ??
+          "https://firebasestorage.googleapis.com/v0/b/spenza-recipe-app.appspot.com/o/placeholders%2Ficon.png?alt=media&token=18603a2b-2386-48e3-ae79-d11d8adaef52",
     }).then((value) async {
       _users.uid = userCredential.uid;
       _users.name = userCredential.email!

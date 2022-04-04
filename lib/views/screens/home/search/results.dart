@@ -150,87 +150,85 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 Container(
                   margin: EdgeInsets.only(top: 8.0),
                   color: CColors.White,
-                  child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-                      child: FutureBuilder<List>(
-                          future: _loadSearch,
-                          builder: (context, snapshot) {
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.none:
-                                print("-Search Results- No Connection");
-                                return Container();
-                              case ConnectionState.waiting:
-                                print("-Search Results- waiting");
-                                return CustomGridShimmer();
-                              case ConnectionState.done:
-                                if (snapshot.data!.isEmpty) {
-                                  print("-Search Results- has Error");
-                                  print(snapshot.data);
-                                  // return Container();
-                                  // showCustomDialog(context, "Error",
-                                  //     "An error has occurred.", "Okay", null);
-                                  return Expanded(
-                                    child: RefreshIndicator(
-                                        onRefresh: () async {
-                                          var _userProvider =
-                                              context.read<UserProvider>();
-                                          setState(() {
-                                            _loadSearch = _searchVM.getSearch(
-                                                widget.searchText,
-                                                _userProvider.userInfo.uid);
-                                          });
-                                        },
-                                        child: ListView(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 24.0),
-                                            shrinkWrap: true,
-                                            children: [
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Image.asset(
-                                                    "assets/images/empty-face.png",
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            250,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 16.0),
-                                                    child: CustomTextMedium(
-                                                        text:
-                                                            "Nothing to see here.",
-                                                        size: 18.0,
-                                                        color: CColors
-                                                            .PrimaryText),
-                                                  ),
-                                                ],
-                                              )
-                                            ])),
-                                  );
-                                } else {
-                                  print("-Search Results- has Data");
-                                  print(snapshot.data);
-                                  return RefreshIndicator(
+                  child: FutureBuilder<List>(
+                      future: _loadSearch,
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            print("-Search Results- No Connection");
+                            return Container();
+                          case ConnectionState.waiting:
+                            print("-Search Results- waiting");
+                            return CustomGridShimmer();
+                          case ConnectionState.done:
+                            if (snapshot.data!.isEmpty) {
+                              print("-Search Results- has Error");
+                              print(snapshot.data);
+                              // return Container();
+                              // showCustomDialog(context, "Error",
+                              //     "An error has occurred.", "Okay", null);
+                              return Expanded(
+                                child: RefreshIndicator(
                                     onRefresh: () async {
+                                      var _userProvider =
+                                          context.read<UserProvider>();
                                       setState(() {
                                         _loadSearch = _searchVM.getSearch(
                                             widget.searchText,
                                             _userProvider.userInfo.uid);
                                       });
                                     },
-                                    child: CustomGridView(snapshot: snapshot),
-                                  );
-                                }
-                              default:
-                                return Container();
+                                    child: ListView(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 24.0),
+                                        shrinkWrap: true,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Image.asset(
+                                                "assets/images/empty-face.png",
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    250,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 16.0),
+                                                child: CustomTextMedium(
+                                                    text:
+                                                        "Nothing to see here.",
+                                                    size: 18.0,
+                                                    color: CColors.PrimaryText),
+                                              ),
+                                            ],
+                                          )
+                                        ])),
+                              );
+                            } else {
+                              print("-Search Results- has Data");
+                              print(snapshot.data);
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  setState(() {
+                                    _loadSearch = _searchVM.getSearch(
+                                        widget.searchText,
+                                        _userProvider.userInfo.uid);
+                                  });
+                                },
+                                child: CustomGridView(
+                                  snapshot: snapshot,
+                                  fromScreen: "Search",
+                                ),
+                              );
                             }
-                          })),
+                          default:
+                            return Container();
+                        }
+                      }),
                 ),
               ],
             ),

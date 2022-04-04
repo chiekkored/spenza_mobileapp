@@ -425,7 +425,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               },
               body: TabBarView(children: [
                 RecipesTab(uid: widget.uid),
-                LikedTab(),
+                LikedTab(uid: widget.uid),
               ]),
             ),
           ),

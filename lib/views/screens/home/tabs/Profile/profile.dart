@@ -329,7 +329,7 @@ class _ProfileTabState extends State<ProfileTab> {
           },
           body: TabBarView(children: [
             RecipesTab(uid: _userProvider.userInfo.uid),
-            LikedTab(),
+            LikedTab(uid: _userProvider.userInfo.uid),
           ]),
         ),
       ),

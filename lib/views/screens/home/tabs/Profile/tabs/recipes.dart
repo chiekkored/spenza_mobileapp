@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/grids.dart';
@@ -18,13 +19,13 @@ class RecipesTab extends StatefulWidget {
 
 class _RecipesTabState extends State<RecipesTab>
     with AutomaticKeepAliveClientMixin {
-  ProfileViewModel _profileVM = ProfileViewModel();
+  PostViewModel _profileVM = PostViewModel();
   late Future<QuerySnapshot> _loadRecipes;
 
   @override
   void initState() {
     _loadRecipes =
-        _profileVM.getPosts(widget.uid); // only create the future once.
+        _profileVM.getProfilePosts(widget.uid); // only create the future once.
     super.initState();
   }
 
@@ -53,11 +54,11 @@ class _RecipesTabState extends State<RecipesTab>
                   return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
-                          _loadRecipes = _profileVM.getPosts(widget.uid);
+                          _loadRecipes = _profileVM.getProfilePosts(widget.uid);
                         });
                       },
                       child: ListView(
-                          padding: const EdgeInsets.only(bottom: 24.0),
+                          padding: const EdgeInsets.symmetric(vertical: 24.0),
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -84,10 +85,13 @@ class _RecipesTabState extends State<RecipesTab>
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {
-                        _loadRecipes = _profileVM.getPosts(widget.uid);
+                        _loadRecipes = _profileVM.getProfilePosts(widget.uid);
                       });
                     },
-                    child: CustomGridViewWithoutDp(snapshot: snapshot),
+                    child: CustomGridViewWithoutDp(
+                      snapshot: snapshot,
+                      fromScreen: "profile",
+                    ),
                   );
                 }
               default:

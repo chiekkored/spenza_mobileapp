@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/cookNowViewModels.dart';
+import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/grids.dart';
 import 'package:spenza/views/common/popovers.dart';
@@ -22,14 +23,14 @@ class CookNowTab extends StatefulWidget {
 
 class _CookNowTabState extends State<CookNowTab>
     with AutomaticKeepAliveClientMixin {
-  CookNowViewModel _cookNowVM = CookNowViewModel();
+  PostViewModel _postVM = PostViewModel();
   late Future<List> _loadCookNow;
 
   FirebaseAuth _user = FirebaseAuth.instance;
   @override
   void initState() {
     // var _userProvider = context.read<UserProvider>();
-    _loadCookNow = _cookNowVM
+    _loadCookNow = _postVM
         .getPosts(_user.currentUser!.uid); // only create the future once.
     super.initState();
   }
@@ -60,12 +61,12 @@ class _CookNowTabState extends State<CookNowTab>
                         var _userProvider = context.read<UserProvider>();
                         setState(() {
                           _loadCookNow =
-                              _cookNowVM.getPosts(_userProvider.userInfo.uid);
+                              _postVM.getPosts(_userProvider.userInfo.uid);
                         });
                       },
                       child: ListView(
                           physics: BouncingScrollPhysics(),
-                          padding: const EdgeInsets.only(bottom: 24.0),
+                          padding: const EdgeInsets.symmetric(vertical: 24.0),
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -94,10 +95,13 @@ class _CookNowTabState extends State<CookNowTab>
                       var _userProvider = context.read<UserProvider>();
                       setState(() {
                         _loadCookNow =
-                            _cookNowVM.getPosts(_userProvider.userInfo.uid);
+                            _postVM.getPosts(_userProvider.userInfo.uid);
                       });
                     },
-                    child: CustomGridView(snapshot: snapshot),
+                    child: CustomGridView(
+                      snapshot: snapshot,
+                      fromScreen: "Home",
+                    ),
                   );
                 }
               default:
