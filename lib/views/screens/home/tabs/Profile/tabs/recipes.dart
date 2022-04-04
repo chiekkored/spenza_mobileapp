@@ -34,69 +34,66 @@ class _RecipesTabState extends State<RecipesTab>
 
     return Container(
       color: CColors.White,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: FutureBuilder<QuerySnapshot>(
-            future: _loadRecipes,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  print("-Profile Recipes- No Connection");
-                  return Container();
-                case ConnectionState.waiting:
-                  print("-Profile Recipes- waiting");
-                  return CustomGridShimmerWithoutDp();
-                case ConnectionState.done:
-                  if (snapshot.data!.docs.isEmpty) {
-                    print("-Profile Recipes- has Error");
-                    print(snapshot.data);
-                    // showCustomDialog(context, "Error",
-                    //     "An error has occurred.", "Okay", null);
-                    return RefreshIndicator(
-                        onRefresh: () async {
-                          setState(() {
-                            _loadRecipes = _profileVM.getPosts(widget.uid);
-                          });
-                        },
-                        child: ListView(
-                            padding: const EdgeInsets.only(bottom: 24.0),
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/empty-face.png",
-                                    width:
-                                        MediaQuery.of(context).size.width - 250,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 16.0),
-                                    child: CustomTextMedium(
-                                        text: "Nothing to see here.",
-                                        size: 18.0,
-                                        color: CColors.SecondaryText),
-                                  ),
-                                ],
-                              )
-                            ]));
-                  } else {
-                    print("-Profile Recipes- has Data");
-                    print(snapshot.data);
-                    return RefreshIndicator(
+      child: FutureBuilder<QuerySnapshot>(
+          future: _loadRecipes,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                print("-Profile Recipes- No Connection");
+                return Container();
+              case ConnectionState.waiting:
+                print("-Profile Recipes- waiting");
+                return CustomGridShimmerWithoutDp();
+              case ConnectionState.done:
+                if (snapshot.data!.docs.isEmpty) {
+                  print("-Profile Recipes- has Error");
+                  print(snapshot.data);
+                  // showCustomDialog(context, "Error",
+                  //     "An error has occurred.", "Okay", null);
+                  return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
                           _loadRecipes = _profileVM.getPosts(widget.uid);
                         });
                       },
-                      child: CustomGridViewWithoutDp(snapshot: snapshot),
-                    );
-                  }
-                default:
-                  return Container();
-              }
-            }),
-      ),
+                      child: ListView(
+                          padding: const EdgeInsets.only(bottom: 24.0),
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  "assets/images/empty-face.png",
+                                  width:
+                                      MediaQuery.of(context).size.width - 250,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0),
+                                  child: CustomTextMedium(
+                                      text: "Nothing to see here.",
+                                      size: 18.0,
+                                      color: CColors.SecondaryText),
+                                ),
+                              ],
+                            )
+                          ]));
+                } else {
+                  print("-Profile Recipes- has Data");
+                  print(snapshot.data);
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() {
+                        _loadRecipes = _profileVM.getPosts(widget.uid);
+                      });
+                    },
+                    child: CustomGridViewWithoutDp(snapshot: snapshot),
+                  );
+                }
+              default:
+                return Container();
+            }
+          }),
     );
   }
 

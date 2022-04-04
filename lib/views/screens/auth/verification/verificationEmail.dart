@@ -60,8 +60,9 @@ class _VerificationEmailScreenState extends State<VerificationEmailScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
-                child: OutlinedButton(
-                    onPressed: () async {
+                child: CustomTransparentButton(
+                    text: "Send again",
+                    doOnPressed: () async {
                       if (_resendState) {
                         User? user = FirebaseAuth.instance.currentUser;
                         await user!.sendEmailVerification();
@@ -71,27 +72,7 @@ class _VerificationEmailScreenState extends State<VerificationEmailScreen> {
                       } else {
                         return null;
                       }
-                      // Navigator.push(
-                      //     context,
-                      //     CupertinoPageRoute(
-                      //         builder: (context) => VerificationCodeScreen()),
-                      //   );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(vertical: 19.0),
-                      child: Center(
-                        child: CustomTextBold(
-                            text: "Send again",
-                            size: 15,
-                            color: CColors.SecondaryText),
-                      ),
-                    )),
+                    }),
               ),
               // Padding(
               //   padding: const EdgeInsets.only(top: 16.0),

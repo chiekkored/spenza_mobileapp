@@ -43,9 +43,11 @@ class UserProvider extends ChangeNotifier {
       "dpUrl": userCredential.photoURL ?? ""
     }).then((value) async {
       _users.uid = userCredential.uid;
-      _users.name = userCredential.displayName ?? "";
+      _users.name = userCredential.email!
+          .substring(0, userCredential.email!.indexOf('@'));
       _users.email = userCredential.email ?? "";
-      _users.dpUrl = userCredential.photoURL ?? "";
+      _users.dpUrl = userCredential.photoURL ??
+          "https://firebasestorage.googleapis.com/v0/b/spenza-recipe-app.appspot.com/o/placeholders%2Ficon.png?alt=media&token=18603a2b-2386-48e3-ae79-d11d8adaef52";
       return userCredential;
     }).then((document) => _authVM.setNewPreferences(document));
   }

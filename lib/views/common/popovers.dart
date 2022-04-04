@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -32,7 +34,9 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  Align(alignment: Alignment.centerLeft, child: CloseButton()),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomCloseButton()),
                   CustomTextBold(
                       text: "Choose one option",
                       size: 17.0,
@@ -45,8 +49,20 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () => pushNewScreen(context,
-                            withNavBar: false, screen: UploadStep1Screen()),
+                        onTap: () async {
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .collection("posts")
+                              .add({
+                            "postDuration": "60 mins",
+                            "postImageUrl": "https://picsum.photos/200",
+                            "postPercent": "75%",
+                            "postRecipeTitle": "Salads"
+                          }).then((value) => print("added posts"));
+                          // pushNewScreen(context,
+                          //   withNavBar: false, screen: UploadStep1Screen());
+                        },
                         child: Container(
                           height: 186.0,
                           decoration: BoxDecoration(
@@ -320,17 +336,22 @@ void showCustomDialog(BuildContext context, String title, String content,
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
             title: Text(title),
-            content: CustomTextMedium(
-                text: content, size: 15, color: CColors.MainText),
+            content: Text(
+              content,
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15.0,
+                  letterSpacing: 0.5,
+                  color: CColors.MainText),
+            ),
             actions: <Widget>[
               TextButton(
                 child: Text(buttonText),
                 onPressed: () {
                   if (page != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => page),
-                    );
+                    // ignore: unnecessary_statements
+                    page;
                   }
                   Navigator.of(context).pop();
                 },
@@ -344,8 +365,15 @@ void showCustomDialog(BuildContext context, String title, String content,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(title),
-            content: CustomTextMedium(
-                text: content, size: 15, color: CColors.MainText),
+            content: Text(
+              content,
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15.0,
+                  letterSpacing: 0.5,
+                  color: CColors.MainText),
+            ),
             actions: <Widget>[
               TextButton(
                 child: Text(buttonText),
@@ -391,10 +419,15 @@ void showErrorDialog(BuildContext context) {
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
             title: Text("Error"),
-            content: CustomTextMedium(
-                text: "Something went wrong. Contact our support",
-                size: 15,
-                color: CColors.MainText),
+            content: Text(
+              "Something went wrong. Contact our support",
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15.0,
+                  letterSpacing: 0.5,
+                  color: CColors.MainText),
+            ),
             actions: <Widget>[
               TextButton(
                 child: Text("Okay"),
@@ -409,10 +442,15 @@ void showErrorDialog(BuildContext context) {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Error"),
-            content: CustomTextMedium(
-                text: "Something went wrong. Contact our support",
-                size: 15,
-                color: CColors.MainText),
+            content: Text(
+              "Something went wrong. Contact our support",
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15.0,
+                  letterSpacing: 0.5,
+                  color: CColors.MainText),
+            ),
             actions: <Widget>[
               TextButton(
                 child: Text("Okay"),

@@ -31,7 +31,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
 
     return GridView.builder(
       physics: BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 40.0),
+      padding: const EdgeInsets.all(24),
       shrinkWrap: true,
       itemCount: snapshot.data!.docs.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -148,7 +148,7 @@ class CustomGridView extends StatelessWidget {
     return GridView.builder(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
-      padding: const EdgeInsets.only(bottom: 50),
+      padding: const EdgeInsets.all(24),
       itemCount: snapshot.data!.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -298,6 +298,7 @@ class CustomGridShimmer extends StatelessWidget {
       highlightColor: CColors.White,
       child: GridView.builder(
         shrinkWrap: true,
+        padding: const EdgeInsets.all(24),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 25.0,
@@ -402,6 +403,7 @@ class CustomGridShimmerWithoutDp extends StatelessWidget {
       highlightColor: CColors.White,
       child: GridView.builder(
         shrinkWrap: true,
+        padding: const EdgeInsets.all(24),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 25.0,

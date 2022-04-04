@@ -39,59 +39,23 @@ class _CookNowTabState extends State<CookNowTab>
     super.build(context);
     return Container(
       color: CColors.White,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: FutureBuilder<List>(
-            future: _loadCookNow,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  print("-Cook Now Tab- No Connection");
-                  return Container();
-                case ConnectionState.waiting:
-                  print("-Cook Now Tab- waiting");
-                  return CustomGridShimmer();
-                case ConnectionState.done:
-                  if (snapshot.data!.isEmpty) {
-                    print("-Cook Now Tab- has Error");
-                    print(snapshot.data);
-                    // showCustomDialog(context, "Error",
-                    //     "An error has occurred.", "Okay", null);
-                    return RefreshIndicator(
-                        onRefresh: () async {
-                          var _userProvider = context.read<UserProvider>();
-                          setState(() {
-                            _loadCookNow =
-                                _cookNowVM.getPosts(_userProvider.userInfo.uid);
-                          });
-                        },
-                        child: ListView(
-                            physics: BouncingScrollPhysics(),
-                            padding: const EdgeInsets.only(bottom: 24.0),
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/empty-face.png",
-                                    width:
-                                        MediaQuery.of(context).size.width - 250,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 16.0),
-                                    child: CustomTextMedium(
-                                        text: "Nothing to see here.",
-                                        size: 18.0,
-                                        color: CColors.SecondaryText),
-                                  ),
-                                ],
-                              )
-                            ]));
-                  } else {
-                    print("-Cook Now Tab- has Data");
-                    print(snapshot.data);
-                    return RefreshIndicator(
+      child: FutureBuilder<List>(
+          future: _loadCookNow,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                print("-Cook Now Tab- No Connection");
+                return Container();
+              case ConnectionState.waiting:
+                print("-Cook Now Tab- waiting");
+                return CustomGridShimmer();
+              case ConnectionState.done:
+                if (snapshot.data!.isEmpty) {
+                  print("-Cook Now Tab- has Error");
+                  print(snapshot.data);
+                  // showCustomDialog(context, "Error",
+                  //     "An error has occurred.", "Okay", null);
+                  return RefreshIndicator(
                       onRefresh: () async {
                         var _userProvider = context.read<UserProvider>();
                         setState(() {
@@ -99,15 +63,48 @@ class _CookNowTabState extends State<CookNowTab>
                               _cookNowVM.getPosts(_userProvider.userInfo.uid);
                         });
                       },
-                      child: CustomGridView(snapshot: snapshot),
-                    );
-                  }
-                default:
-                  print("-Cook Now Tab- default");
-                  return Container();
-              }
-            }),
-      ),
+                      child: ListView(
+                          physics: BouncingScrollPhysics(),
+                          padding: const EdgeInsets.only(bottom: 24.0),
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  "assets/images/empty-face.png",
+                                  width:
+                                      MediaQuery.of(context).size.width - 250,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0),
+                                  child: CustomTextMedium(
+                                      text: "Nothing to see here.",
+                                      size: 18.0,
+                                      color: CColors.SecondaryText),
+                                ),
+                              ],
+                            )
+                          ]));
+                } else {
+                  print("-Cook Now Tab- has Data");
+                  print(snapshot.data);
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      var _userProvider = context.read<UserProvider>();
+                      setState(() {
+                        _loadCookNow =
+                            _cookNowVM.getPosts(_userProvider.userInfo.uid);
+                      });
+                    },
+                    child: CustomGridView(snapshot: snapshot),
+                  );
+                }
+              default:
+                print("-Cook Now Tab- default");
+                return Container();
+            }
+          }),
     );
   }
 

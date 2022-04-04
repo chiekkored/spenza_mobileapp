@@ -4,13 +4,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/config/firebase_config.dart';
 import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
 import 'package:spenza/views/screens/auth/verification/verificationEmail.dart';
 import 'package:spenza/views/screens/home/navigation.dart';
 import 'package:spenza/views/screens/splash.dart';
 
 import 'views/screens/onboarding/onboarding.dart';
+
+/// TODO: If firestore change, change dpUrl default link
 
 // List Available Cameras
 List<CameraDescription> cameras = [];
@@ -55,18 +59,18 @@ class MyApp extends StatelessWidget {
                 builder: (context, user) {
                   if (user.hasData) {
                     print(user.data!.emailVerified);
-                    // if (user.data!.emailVerified) {
-                    return FutureBuilder<bool>(
-                        future: userProvider.getUserPreference(),
-                        builder: (context, snapshot) {
-                          if (snapshot.data == true) {
+                    if (user.data!.emailVerified) {
+                      return FutureBuilder<bool>(
+                          future: userProvider.getUserPreference(),
+                          builder: (context, snapshot) {
+                            if (snapshot.data == true) {
+                              return const Navigation();
+                            }
                             return const Navigation();
-                          }
-                          return const SplashScreen();
-                        });
-                    // } else {
-                    // return const VerificationEmailScreen();
-                    // }
+                          });
+                    } else {
+                      return const VerificationEmailScreen();
+                    }
                   } else {
                     return const OnboardingScreen();
                   }

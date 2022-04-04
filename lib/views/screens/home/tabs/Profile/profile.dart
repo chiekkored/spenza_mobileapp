@@ -115,17 +115,27 @@ class _ProfileTabState extends State<ProfileTab> {
                                       print("-dpUrl- has Data");
                                       return SizedBox(
                                         height: 120.0,
-                                        child: CachedNetworkImage(
-                                          imageUrl: snapshot.data!["dpUrl"],
-                                          imageBuilder: (context, image) {
-                                            return CircleAvatar(
-                                              radius: 60.0,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage: image,
-                                            );
-                                          },
-                                        ),
+                                        child: snapshot.data!["dpUrl"] !=
+                                                "New User"
+                                            ? CachedNetworkImage(
+                                                imageUrl:
+                                                    snapshot.data!["dpUrl"],
+                                                imageBuilder: (context, image) {
+                                                  return CircleAvatar(
+                                                    radius: 60.0,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    foregroundImage: image,
+                                                  );
+                                                },
+                                              )
+                                            : CircleAvatar(
+                                                radius: 80.0,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                foregroundImage: AssetImage(
+                                                    "assets/images/logo.png"),
+                                              ),
                                       );
                                     }
                                   default:
