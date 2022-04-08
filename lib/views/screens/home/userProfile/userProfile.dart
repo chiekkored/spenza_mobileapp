@@ -370,11 +370,16 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                               doOnPressed: () async {
                                                 await _profileVM
                                                     .setFollow(
-                                                        _userProvider
-                                                            .userInfo.uid,
-                                                        widget.uid,
-                                                        widget.name,
-                                                        widget.dpUrl)
+                                                      _userProvider
+                                                          .userInfo.uid,
+                                                      widget.uid,
+                                                      widget.name,
+                                                      widget.dpUrl,
+                                                      _userProvider
+                                                          .userInfo.name,
+                                                      _userProvider
+                                                          .userInfo.dpUrl,
+                                                    )
                                                     .then((value) => null);
                                               });
                                         }

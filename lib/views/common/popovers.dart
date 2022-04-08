@@ -50,16 +50,20 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
+                          // https://picsum.photos/id/106/2592/1728
+                          // https://picsum.photos/id/30/1280/901
+                          // https://picsum.photos/id/292/3852/2556
                           await FirebaseFirestore.instance
                               .collection('users')
                               .doc(FirebaseAuth.instance.currentUser!.uid)
                               .collection("posts")
                               .add({
-                            "postDuration": "60 mins",
+                            "postDuration": "40 mins",
                             "postImageUrl":
-                                "https://picsum.photos/id/106/2592/1728",
-                            "postPercent": "75%",
-                            "postRecipeTitle": "Cake"
+                                "https://picsum.photos/id/30/1280/901",
+                            "postPercent": "68%",
+                            "postRecipeTitle": "Pancake",
+                            "authorUid": FirebaseAuth.instance.currentUser!.uid
                           }).then((value) => print("added posts"));
                           // pushNewScreen(context,
                           //   withNavBar: false, screen: UploadStep1Screen());

@@ -55,6 +55,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
         ),
         itemBuilder: (BuildContext context, int index) {
           var _postData = snapshot.data!.docs[index];
+          print("authorUid: ${_postData["authorUid"]}");
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +113,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                     return GestureDetector(
                                       onTap: () async {
                                         bool result = await _postVM.likePost(
-                                            _userProvider.userInfo.uid,
+                                            _postData["authorUid"],
                                             snapshot.data!.docs[index].id,
                                             _userProvider.userInfo.uid,
                                             _userProvider.userInfo.name,
@@ -168,7 +169,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                       return GestureDetector(
                                         onTap: () async {
                                           bool result = await _postVM.likePost(
-                                              _userProvider.userInfo.uid,
+                                              _postData["authorUid"],
                                               _postData.id,
                                               _userProvider.userInfo.uid,
                                               _userProvider.userInfo.name,

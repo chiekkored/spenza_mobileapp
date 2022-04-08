@@ -41,7 +41,8 @@ class ProfileViewModel {
   }
 
   Future<bool> setFollow(String uid, String profileUid, String profileName,
-      String profileDpUrl) async {
+      String profileDpUrl, String userName, String userDpUrl) async {
+    DateTime now = new DateTime.now();
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -49,15 +50,17 @@ class ProfileViewModel {
         .doc(profileUid)
         .set({"uid": profileUid, "name": profileName, "dpUrl": profileDpUrl})
         .then((value) => FirebaseFirestore.instance
+            .collection('users')
+            .doc(profileUid)
+            .collection("followers")
+            .doc(uid)
+            .set({"uid": uid, "name": userName, "dpUrl": userDpUrl})
+            .then((value) => FirebaseFirestore.instance
                 .collection('users')
                 .doc(profileUid)
-                .collection("followers")
-                .doc(profileUid)
-                .set({
-              "uid": profileUid,
-              "name": profileName,
-              "dpUrl": profileDpUrl
-            }).then((value) {
+                .collection("notifications")
+                .add({"type": "follow", "dateCreated": now, "uid": uid}))
+            .then((value) {
               print("[Success] Follow: $profileName");
               return true;
             }))
@@ -78,14 +81,18 @@ class ProfileViewModel {
                 .collection('users')
                 .doc(profileUid)
                 .collection("followers")
-                .where("uid", isEqualTo: uid)
-                .get()
-                .then((value) => FirebaseFirestore.instance
+                .doc(uid)
+                .delete()
+                .then((value) => FirebaseFirestore
+                    .instance // Get document inside profile's notifications
                     .collection('users')
                     .doc(profileUid)
-                    .collection("followers")
-                    .doc(docId)
-                    .delete())
+                    .collection("notifications")
+                    .where("type", isEqualTo: "follow")
+                    .where("uid", isEqualTo: uid)
+                    .limit(1)
+                    .get()
+                    .then((value) => value.docs.first.reference.delete()))
                 .then((value) {
               print("[Success] Unfollow: $profileUid");
               return true;
