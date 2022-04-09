@@ -105,6 +105,8 @@ class CustomRecipeDetailListShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextBold(
             text: "Description", size: 17.0, color: CColors.PrimaryText),
@@ -112,15 +114,56 @@ class CustomRecipeDetailListShimmer extends StatelessWidget {
           baseColor: CColors.Form,
           highlightColor: CColors.White,
           child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(0.0),
               shrinkWrap: true,
-              itemCount: 1,
+              itemCount: 5,
               itemBuilder: (_, __) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Column(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 8.0,
+                    color: Colors.white,
+                  ),
+                );
+              }),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Divider(
+            thickness: 1.0,
+          ),
+        ),
+        CustomTextBold(
+          text: "Ingredients",
+          size: 17.0,
+          color: CColors.PrimaryText,
+        ),
+        Shimmer.fromColors(
+          baseColor: CColors.Form,
+          highlightColor: CColors.White,
+          child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(0.0),
+              shrinkWrap: true,
+              itemCount: 5,
+              itemBuilder: (_, __) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: 100.0,
+                        width: 25.0,
+                        height: 25.0,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
                         height: 8.0,
                         color: Colors.white,
                       ),
@@ -136,7 +179,56 @@ class CustomRecipeDetailListShimmer extends StatelessWidget {
           ),
         ),
         CustomTextBold(
-            text: "Ingredients", size: 17.0, color: CColors.PrimaryText),
+          text: "Steps",
+          size: 17.0,
+          color: CColors.PrimaryText,
+        ),
+        Shimmer.fromColors(
+          baseColor: CColors.Form,
+          highlightColor: CColors.White,
+          child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(0.0),
+              shrinkWrap: true,
+              itemCount: 2,
+              itemBuilder: (_, __) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 25.0,
+                        height: 25.0,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width - 100,
+                            height: 8.0,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 100,
+                            height: 150.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
+        ),
       ],
     );
   }

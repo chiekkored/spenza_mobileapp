@@ -17,7 +17,7 @@ import 'buttons.dart';
 Future<dynamic> scanTabBottomSheet(BuildContext context) {
   return showModalBottomSheet(
       context: context,
-      useRootNavigator: false,
+      useRootNavigator: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(32.0),

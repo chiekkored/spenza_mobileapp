@@ -10,4 +10,14 @@ class RecipeDetailsViewModel {
         .collection("likes")
         .get();
   }
+
+  Future<DocumentSnapshot> getRecipeDetails(
+      String postDocId, String profileUid) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(profileUid)
+        .collection("posts")
+        .doc(postDocId)
+        .get();
+  }
 }

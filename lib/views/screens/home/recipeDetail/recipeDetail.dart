@@ -39,16 +39,14 @@ class RecipeDetailScreen extends StatefulWidget {
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   late Future<QuerySnapshot> _getLikes;
+  late Future<DocumentSnapshot> _getRecipeDetails;
   RecipeDetailsViewModel _recipeDetailVM = RecipeDetailsViewModel();
-  var ing = [
-    "10 cacao beans (preferably peeled)",
-    "10 raw cashews (or macadamia nuts)",
-    "2 tablespoons raw honey"
-  ];
 
   @override
   void initState() {
     _getLikes = _recipeDetailVM.getLikes(widget.postDocId, widget.profileUid);
+    _getRecipeDetails =
+        _recipeDetailVM.getRecipeDetails(widget.postDocId, widget.profileUid);
     super.initState();
   }
 
@@ -195,143 +193,223 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     thickness: 1.0,
                   ),
                 ),
-                FutureBuilder<Object>(
-                    future: null,
+                FutureBuilder<DocumentSnapshot>(
+                    future: _getRecipeDetails,
                     builder: (context, snapshot) {
-                      return CustomRecipeDetailListShimmer();
-                      //     return Column(
-                      //       children: [
-                      //         CustomTextBold(
-                      //     text: "Description",
-                      //     size: 17.0,
-                      //     color: CColors.PrimaryText),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 8.0),
-                      //   child: Text(
-                      //     "We all love a good Chocolate Milk so why pollute ourselves with fake chocolate and high-glycemic sugar? This amazing nut-milk is delicious AND nutritious!",
-                      //     style: TextStyle(
-                      //         height: 1.6,
-                      //         fontFamily: "Inter",
-                      //         fontWeight: FontWeight.w500,
-                      //         fontSize: 15.0,
-                      //         letterSpacing: 0.5,
-                      //         color: CColors.SecondaryText),
-                      //   ),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      //   child: Divider(
-                      //     thickness: 1.0,
-                      //   ),
-                      // ),
-                      // CustomTextBold(
-                      //     text: "Ingredients",
-                      //     size: 17.0,
-                      //     color: CColors.PrimaryText),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 16.0),
-                      //   child: ListView.builder(
-                      //       shrinkWrap: true,
-                      //       physics: NeverScrollableScrollPhysics(),
-                      //       padding: const EdgeInsets.all(0.0),
-                      //       itemCount: 3,
-                      //       itemBuilder: (context, index) {
-                      //         return Row(
-                      //           mainAxisAlignment: MainAxisAlignment.start,
-                      //           children: [
-                      //             Padding(
-                      //               padding: const EdgeInsets.only(right: 8.0),
-                      //               child: Transform.scale(
-                      //                 scale: 1.2,
-                      //                 child: Checkbox(
-                      //                   splashRadius: 0.0,
-                      //                   checkColor: CColors.PrimaryColor,
-                      //                   fillColor: MaterialStateProperty.all(
-                      //                       CColors.AccentColor),
-                      //                   value: true,
-                      //                   shape: CircleBorder(),
-                      //                   onChanged: (bool? value) {
-                      //                     return null;
-                      //                   },
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //             CustomTextMedium(
-                      //                 text: ing[index],
-                      //                 size: 15.0,
-                      //                 color: CColors.MainText)
-                      //           ],
-                      //         );
-                      //       }),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      //   child: Divider(
-                      //     thickness: 1.0,
-                      //   ),
-                      // ),
-                      // CustomTextBold(
-                      //     text: "Steps", size: 17.0, color: CColors.PrimaryText),
-                      // ListView.builder(
-                      //     shrinkWrap: true,
-                      //     padding: const EdgeInsets.all(0.0),
-                      //     physics: NeverScrollableScrollPhysics(),
-                      //     itemCount: 1,
-                      //     itemBuilder: ((context, index) {
-                      //       index++;
-                      //       return Padding(
-                      //         padding: const EdgeInsets.only(top: 18.0),
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.start,
-                      //           crossAxisAlignment: CrossAxisAlignment.start,
-                      //           mainAxisSize: MainAxisSize.min,
-                      //           children: [
-                      //             Padding(
-                      //               padding: const EdgeInsets.only(right: 12.0),
-                      //               child: Container(
-                      //                   height: 25.0,
-                      //                   width: 25.0,
-                      //                   decoration: BoxDecoration(
-                      //                       shape: BoxShape.circle,
-                      //                       color: CColors.MainText),
-                      //                   child: Center(
-                      //                     child: CustomTextBold(
-                      //                         text: index.toString(),
-                      //                         size: 12.0,
-                      //                         color: CColors.White),
-                      //                   )),
-                      //             ),
-                      //             Flexible(
-                      //               fit: FlexFit.loose,
-                      //               child: Column(
-                      //                 crossAxisAlignment: CrossAxisAlignment.start,
-                      //                 children: [
-                      //                   CustomTextMedium(
-                      //                       text: "Blend all ingredients",
-                      //                       size: 15.0,
-                      //                       color: CColors.MainText),
-                      //                   Padding(
-                      //                     padding: const EdgeInsets.only(top: 12.0),
-                      //                     child: ClipRRect(
-                      //                       borderRadius: BorderRadius.circular(12.0),
-                      //                       child: CachedNetworkImage(
-                      //                         imageUrl: widget.imgUrl,
-                      //                         height: 155,
-                      //                         width:
-                      //                             MediaQuery.of(context).size.width,
-                      //                         fit: BoxFit.cover,
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       );
-                      //     }))
-                      //       ],
-                      //     );
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          print(snapshot.data!.data());
+                          var postData = snapshot.data!;
+                          List postDataIngredients = postData["ingredients"];
+                          List postDataSteps = postData["steps"];
+                          if (snapshot.hasError) {
+                            print("-Recipe Detail- has Error");
+                            return CustomTextBold(
+                                text: "Encountered an Error.",
+                                size: 17.0,
+                                color: CColors.PrimaryText);
+                          } else {
+                            print("-Recipe Detail- has Data");
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextBold(
+                                    text: "Description",
+                                    size: 17.0,
+                                    color: CColors.PrimaryText),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    postData["postDescription"],
+                                    style: TextStyle(
+                                        height: 1.6,
+                                        fontFamily: "Inter",
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.5,
+                                        color: CColors.SecondaryText),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
+                                  child: Divider(
+                                    thickness: 1.0,
+                                  ),
+                                ),
+                                CustomTextBold(
+                                    text: "Ingredients",
+                                    size: 17.0,
+                                    color: CColors.PrimaryText),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0),
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.all(0.0),
+                                      itemCount: postDataIngredients.length,
+                                      itemBuilder: (context, index) {
+                                        if (postDataIngredients[index] == '') {
+                                          return CustomTextMedium(
+                                              text: "No Ingredients",
+                                              size: 15.0,
+                                              color: CColors.SecondaryText);
+                                        } else {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0),
+                                                child: Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Checkbox(
+                                                    splashRadius: 0.0,
+                                                    checkColor:
+                                                        CColors.PrimaryColor,
+                                                    fillColor:
+                                                        MaterialStateProperty
+                                                            .all(CColors
+                                                                .AccentColor),
+                                                    value: true,
+                                                    shape: CircleBorder(),
+                                                    onChanged: (bool? value) {
+                                                      return null;
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              CustomTextMedium(
+                                                  text: postDataIngredients[
+                                                      index],
+                                                  size: 15.0,
+                                                  color: CColors.MainText)
+                                            ],
+                                          );
+                                        }
+                                      }),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
+                                  child: Divider(
+                                    thickness: 1.0,
+                                  ),
+                                ),
+                                CustomTextBold(
+                                    text: "Steps",
+                                    size: 17.0,
+                                    color: CColors.PrimaryText),
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.all(0.0),
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: postDataSteps.length,
+                                    itemBuilder: ((context, index) {
+                                      int stepIndex = index + 1;
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 18.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 12.0),
+                                              child: Container(
+                                                  height: 25.0,
+                                                  width: 25.0,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: CColors.MainText),
+                                                  child: Center(
+                                                    child: CustomTextBold(
+                                                        text: stepIndex
+                                                            .toString(),
+                                                        size: 12.0,
+                                                        color: CColors.White),
+                                                  )),
+                                            ),
+                                            Flexible(
+                                              fit: FlexFit.loose,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CustomTextMedium(
+                                                      text: postDataSteps[index]
+                                                          ["stepsText"],
+                                                      size: 15.0,
+                                                      color: CColors.MainText),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 12.0),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            postDataSteps[index]
+                                                                ["stepsImage"],
+                                                        placeholder: (context,
+                                                                s) =>
+                                                            Container(
+                                                                color: CColors
+                                                                    .Form,
+                                                                height: 155,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width),
+                                                        imageBuilder:
+                                                            (context, image) {
+                                                          return Image(
+                                                            image: image,
+                                                            height: 155,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            fit: BoxFit.cover,
+                                                          );
+                                                        },
+                                                        errorWidget: (context,
+                                                            str, dyn) {
+                                                          return Center(
+                                                              child: Icon(
+                                                                  Icons.error));
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }))
+                              ],
+                            );
+                          }
+                        case ConnectionState.waiting:
+                          return CustomRecipeDetailListShimmer();
+                        default:
+                          print("-Recipe Detail- no connection");
+                          return CustomTextBold(
+                              text: "Please check internet connection.",
+                              size: 17.0,
+                              color: CColors.SecondaryText);
+                      }
                     })
               ],
             ),

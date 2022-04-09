@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
+import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/upload/uploadStep2.dart';
 
@@ -16,11 +19,12 @@ class UploadStep1Screen extends StatefulWidget {
 }
 
 class _UploadStep1ScreenState extends State<UploadStep1Screen> {
-  double _cookingDurationSlider = 0.0;
+  double _cookingDurationSlider = 10.0;
   TextEditingController _foodNameTextController = TextEditingController();
   TextEditingController _descriptionTextController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  late XFile? image;
+  XFile image = XFile("");
+  bool isCoverAttached = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,8 +56,21 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 32.0),
                       child: GestureDetector(
-                        onTap: () async => image =
-                            await _picker.pickImage(source: ImageSource.camera),
+                        onTap: () async {
+                          await _picker
+                              .pickImage(source: ImageSource.camera)
+                              .then((value) {
+                            if (value!.path != '') {
+                              setState(() {
+                                image = value;
+                                isCoverAttached = true;
+                              });
+                            } else {
+                              return null;
+                            }
+                            return null;
+                          });
+                        },
                         child: DottedBorder(
                           color: CColors.Outline,
                           borderType: BorderType.RRect,
@@ -63,29 +80,48 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                           child: Container(
                             height: 161.0,
                             width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 22.0, bottom: 16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  SvgPicture.asset("assets/svg/image.svg"),
+                            child: Column(
+                              children: [
+                                if (isCoverAttached) ...[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    child: Image.file(
+                                      File(image.path),
+                                      fit: BoxFit.cover,
+                                      height: 161.0,
+                                      width: MediaQuery.of(context).size.width,
+                                    ),
+                                  )
+                                ] else ...[
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 22.0),
-                                    child: CustomTextBold(
-                                        text: "Add Cover Photo",
-                                        size: 15.0,
-                                        color: CColors.PrimaryText),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: CustomTextMedium(
-                                        text: "(up to 12 Mb)",
-                                        size: 12.0,
-                                        color: CColors.SecondaryText),
+                                    padding: const EdgeInsets.only(
+                                        top: 22.0, bottom: 16.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        SvgPicture.asset(
+                                            "assets/svg/image.svg"),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 22.0),
+                                          child: CustomTextBold(
+                                              text: "Add Cover Photo",
+                                              size: 15.0,
+                                              color: CColors.PrimaryText),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: CustomTextMedium(
+                                              text: "(up to 12 Mb)",
+                                              size: 12.0,
+                                              color: CColors.SecondaryText),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
-                              ),
+                              ],
                             ),
                           ),
                         ),
@@ -119,7 +155,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                       child: TextField(
                         controller: _descriptionTextController,
                         maxLines: 3,
-                        keyboardType: TextInputType.multiline,
+                        keyboardType: TextInputType.text,
                         style: customTextFieldTextStyle(),
                         decoration: InputDecoration(
                           hintText: "Tell me about your food",
@@ -173,7 +209,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                           CustomTextBold(
                               text: "<10",
                               size: 15.0,
-                              color: _cookingDurationSlider >= 0
+                              color: _cookingDurationSlider >= 10
                                   ? CColors.PrimaryColor
                                   : CColors.SecondaryText),
                           CustomTextBold(
@@ -194,6 +230,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                     Slider(
                       value: _cookingDurationSlider,
                       max: 60,
+                      min: 10,
                       inactiveColor: CColors.Outline,
                       activeColor: CColors.PrimaryColor,
                       onChanged: (double value) {
@@ -215,13 +252,20 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
               child: CustomPrimaryButton(
                   text: "Next",
                   doOnPressed: () {
-                    final page = UploadStep2Screen(
-                        coverPath: image!.path,
-                        foodName: _foodNameTextController.text,
-                        description: _descriptionTextController.text,
-                        cookingDuration: _cookingDurationSlider);
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => page));
+                    if (!isCoverAttached ||
+                        _foodNameTextController.text == '' ||
+                        _descriptionTextController.text == '') {
+                      return showCustomDialog(context, "Fields Required",
+                          "Please fill all fields.", "OK", null);
+                    } else {
+                      final page = UploadStep2Screen(
+                          coverPath: image.path,
+                          foodName: _foodNameTextController.text,
+                          description: _descriptionTextController.text,
+                          cookingDuration: _cookingDurationSlider);
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => page));
+                    }
                   }),
             ),
           ),
