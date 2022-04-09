@@ -1,22 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
-import 'package:spenza/utilities/constants/icons.dart';
-import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
-import 'package:spenza/views/screens/home/search/search.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/liked.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/recipes.dart';
-import 'package:spenza/views/screens/home/tabs/home/tabs/cookNow.dart';
-import 'package:spenza/views/screens/home/tabs/home/tabs/plan.dart';
-import 'package:spenza/views/screens/home/tabs/recipe/recipe.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({Key? key}) : super(key: key);
@@ -29,7 +22,7 @@ class _ProfileTabState extends State<ProfileTab> {
   ProfileViewModel _profileVM = ProfileViewModel();
 
   late Future<DocumentSnapshot<Object?>> _getUserData;
-  late Future<QuerySnapshot<Object?>> _getRecipes;
+  late Stream<QuerySnapshot<Object?>> _getRecipes;
   late Stream<QuerySnapshot<Object?>> _getFollowing;
   late Stream<QuerySnapshot<Object?>> _getFollowers;
 
@@ -175,33 +168,24 @@ class _ProfileTabState extends State<ProfileTab> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                FutureBuilder<QuerySnapshot>(
-                                    future: _getRecipes,
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: _getRecipes,
                                     builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            print(
-                                                "-Profile Recipes Count- has Error");
-                                            return Text(
-                                              '${snapshot.error}',
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            );
-                                          } else {
-                                            print(
-                                                "-Profile Recipes Count- has Data");
-                                            return CustomTextBold(
-                                                text: snapshot.data!.docs.length
-                                                    .toString(),
-                                                size: 17.0,
-                                                color: CColors.PrimaryText);
-                                          }
-                                        default:
-                                          return CustomTextBold(
-                                              text: "0",
-                                              size: 17.0,
-                                              color: CColors.PrimaryText);
+                                      if (!snapshot.hasData) {
+                                        print(
+                                            "-Profile Recipe Count- has Error");
+                                        return CustomTextBold(
+                                            text: "0",
+                                            size: 17.0,
+                                            color: CColors.PrimaryText);
+                                      } else {
+                                        print(
+                                            "-Profile Recipe Count- has Data");
+                                        return CustomTextBold(
+                                            text: snapshot.data!.docs.length
+                                                .toString(),
+                                            size: 17.0,
+                                            color: CColors.PrimaryText);
                                       }
                                     }),
                                 CustomTextMedium(

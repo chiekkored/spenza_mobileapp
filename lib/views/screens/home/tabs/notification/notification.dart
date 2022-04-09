@@ -50,14 +50,7 @@ class _NotificationTabState extends State<NotificationTab> {
           future: _loadNotification,
           builder: (context, snapshot) {
             DateTime now = new DateTime.now();
-            DateTime date = new DateTime(
-              now.year,
-              now.month,
-              now.day,
-              0,
-              0,
-              0,
-            );
+            DateTime date = new DateTime(now.year, now.month, now.day, 0, 0, 0);
             if (!snapshot.hasData) {
               return Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -1038,14 +1031,16 @@ class _NotificationTabState extends State<NotificationTab> {
     return GestureDetector(
       onTap: () => pushNewScreen(context,
           screen: RecipeDetailScreen(
-              imgUrl: _postData["postImageUrl"],
-              postRecipeTitle: _postData["postRecipeTitle"],
-              postPercent: _postData["postPercent"],
-              postDuration: _postData["postDuration"],
-              dpUrl: _userProvider.userInfo.dpUrl,
-              name: _userProvider.userInfo.name,
-              postDocId: _postDocId,
-              fromScreen: "Notification"),
+            imgUrl: _postData["postImageUrl"],
+            postRecipeTitle: _postData["postRecipeTitle"],
+            postPercent: _postData["postPercent"],
+            postDuration: _postData["postDuration"],
+            dpUrl: _userProvider.userInfo.dpUrl,
+            name: _userProvider.userInfo.name,
+            postDocId: _postDocId,
+            fromScreen: "Notification",
+            profileUid: _postData["authorUid"],
+          ),
           withNavBar: false),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1124,14 +1119,16 @@ class _NotificationTabState extends State<NotificationTab> {
     return GestureDetector(
       onTap: () => pushNewScreen(context,
           screen: RecipeDetailScreen(
-              imgUrl: _postData["postImageUrl"],
-              postRecipeTitle: _postData["postRecipeTitle"],
-              postPercent: _postData["postPercent"],
-              postDuration: _postData["postDuration"],
-              dpUrl: _userProvider.userInfo.dpUrl,
-              name: _userProvider.userInfo.name,
-              postDocId: _postDocId,
-              fromScreen: "Notification"),
+            imgUrl: _postData["postImageUrl"],
+            postRecipeTitle: _postData["postRecipeTitle"],
+            postPercent: _postData["postPercent"],
+            postDuration: _postData["postDuration"],
+            dpUrl: _userProvider.userInfo.dpUrl,
+            name: _userProvider.userInfo.name,
+            postDocId: _postDocId,
+            fromScreen: "Notification",
+            profileUid: _postData["authorUid"],
+          ),
           withNavBar: false),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/models/userModel.dart';
+import 'package:spenza/core/providers/userProvider.dart';
+import 'package:spenza/core/viewmodels/uploadViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
@@ -7,15 +15,34 @@ import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 
 class UploadStep2Screen extends StatefulWidget {
-  const UploadStep2Screen({Key? key}) : super(key: key);
+  final String coverPath;
+  final String foodName;
+  final String description;
+  final double cookingDuration;
+  const UploadStep2Screen(
+      {Key? key,
+      required this.coverPath,
+      required this.foodName,
+      required this.description,
+      required this.cookingDuration})
+      : super(key: key);
 
   @override
   State<UploadStep2Screen> createState() => _UploadStep2ScreenState();
 }
 
 class _UploadStep2ScreenState extends State<UploadStep2Screen> {
+  final _formKey = GlobalKey<FormState>();
+
+  UploadViewModel _uploadVM = UploadViewModel();
+
   List<Widget> _inputIngredients = [];
   List<Widget> _inputSteps = [];
+
+  List<TextEditingController> _ingredientTextControllerList = [];
+  List<TextEditingController> _stepsTextControllerList = [];
+  List<XFile?> _imagesList = [];
+
   int _countIngredients = 0;
   int _countSteps = 0;
   int _labelSteps = 1;
@@ -28,6 +55,8 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
   }
 
   void _addInputIngredients() {
+    TextEditingController controller = TextEditingController();
+    _ingredientTextControllerList.add(controller);
     _inputIngredients = List.from(_inputIngredients)
       ..add(ListTile(
         dense: true,
@@ -44,6 +73,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
             Flexible(
               fit: FlexFit.loose,
               child: TextField(
+                controller: controller,
                 style: customTextFieldTextStyle(),
                 decoration:
                     customTextFieldInputDecoration(hint: "Enter ingredient"),
@@ -56,6 +86,9 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
   }
 
   void _addInputSteps() {
+    TextEditingController controller = TextEditingController();
+    _stepsTextControllerList.add(controller);
+    ImagePicker picker = ImagePicker();
     _inputSteps = List.from(_inputSteps)
       ..add(ListTile(
         dense: true,
@@ -96,6 +129,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
               child: Column(
                 children: [
                   TextField(
+                      controller: controller,
                       maxLines: 4,
                       style: customTextFieldTextStyle(),
                       decoration: InputDecoration(
@@ -127,7 +161,10 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        _imagesList.add(await picker.pickImage(
+                            source: ImageSource.gallery));
+                      },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: CColors.Form,
                         side: BorderSide.none,
@@ -303,57 +340,101 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                   width: 15.0,
                 ),
                 Expanded(
-                    child: CustomPrimaryButton(
-                        text: "Next",
-                        doOnPressed: () => showCustomModal(
-                            context,
-                            Container(
-                              padding: EdgeInsets.all(48.0),
-                              decoration: BoxDecoration(
-                                color: CColors.White,
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24.0),
-                                    child: Image.asset(
-                                        "assets/images/upload-success.png"),
+                  child: CustomPrimaryButton(
+                    text: "Next",
+                    doOnPressed: () async {
+                      UserModel _user = context.read<UserProvider>().userInfo;
+                      showCustomModal(
+                          context,
+                          Container(
+                            padding: EdgeInsets.all(48.0),
+                            decoration: BoxDecoration(
+                              color: CColors.White,
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Platform.isIOS
+                                ? CupertinoActivityIndicator()
+                                : CircularProgressIndicator(),
+                          ));
+                      await _uploadVM
+                          .uploadRecipe(
+                              _user.uid,
+                              widget.coverPath,
+                              widget.foodName,
+                              widget.description,
+                              widget.cookingDuration,
+                              _ingredientTextControllerList,
+                              _stepsTextControllerList,
+                              _imagesList)
+                          .then((value) {
+                        Navigator.maybePop(context);
+                        value
+                            ? showCustomModal(
+                                context,
+                                Container(
+                                  padding: EdgeInsets.all(48.0),
+                                  decoration: BoxDecoration(
+                                    color: CColors.White,
+                                    borderRadius: BorderRadius.circular(24.0),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 32.0),
-                                    child: CustomTextBold(
-                                        text: "Upload Success",
-                                        size: 22.0,
-                                        color: CColors.MainText),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24.0),
+                                        child: Image.asset(
+                                            "assets/images/upload-success.png"),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 32.0),
+                                        child: CustomTextBold(
+                                            text: "Upload Success",
+                                            size: 22.0,
+                                            color: CColors.MainText),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Text(
+                                          "Your recipe has been uploaded, you can see it on your profile",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: "Inter",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 15.0,
+                                              letterSpacing: 0.5,
+                                              color: CColors.MainText),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 24.0),
+                                        child: CustomPrimaryButton(
+                                            text: "Back to Home",
+                                            doOnPressed: () =>
+                                                Navigator.popUntil(
+                                                    context,
+                                                    ModalRoute.withName(Navigator
+                                                        .defaultRouteName))),
+                                      )
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      "Your recipe has been uploaded, you can see it on your profile",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: "Inter",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15.0,
-                                          letterSpacing: 0.5,
-                                          color: CColors.MainText),
+                                ))
+                            : showCustomModal(
+                                context,
+                                Container(
+                                    padding: EdgeInsets.all(48.0),
+                                    decoration: BoxDecoration(
+                                      color: CColors.White,
+                                      borderRadius: BorderRadius.circular(24.0),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 24.0),
-                                    child: CustomPrimaryButton(
-                                        text: "Back to Home",
-                                        doOnPressed: () => Navigator.popUntil(
-                                            context,
-                                            ModalRoute.withName(
-                                                Navigator.defaultRouteName))),
-                                  )
-                                ],
-                              ),
-                            )))),
+                                    child: Text("Error Uploading")));
+                      });
+                    },
+                  ),
+                ),
               ],
             ),
           ),

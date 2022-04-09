@@ -30,7 +30,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   ProfileViewModel _profileVM = ProfileViewModel();
 
   late Future<DocumentSnapshot<Object?>> _getUserData;
-  late Future<QuerySnapshot<Object?>> _getRecipes;
+  late Stream<QuerySnapshot<Object?>> _getRecipes;
   late Stream<QuerySnapshot<Object?>> _getIsFollowing;
   late Stream<QuerySnapshot<Object?>> _getFollowing;
   late Stream<QuerySnapshot<Object?>> _getFollowers;
@@ -216,34 +216,24 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    FutureBuilder<QuerySnapshot>(
-                                        future: _getRecipes,
+                                    StreamBuilder<QuerySnapshot>(
+                                        stream: _getRecipes,
                                         builder: (context, snapshot) {
-                                          switch (snapshot.connectionState) {
-                                            case ConnectionState.done:
-                                              if (snapshot.hasError) {
-                                                print(
-                                                    "-Profile Recipes Count- has Error");
-                                                return Text(
-                                                  '${snapshot.error}',
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                );
-                                              } else {
-                                                print(
-                                                    "-Profile Recipes Count- has Data");
-                                                return CustomTextBold(
-                                                    text: snapshot
-                                                        .data!.docs.length
-                                                        .toString(),
-                                                    size: 17.0,
-                                                    color: CColors.PrimaryText);
-                                              }
-                                            default:
-                                              return CustomTextBold(
-                                                  text: "0",
-                                                  size: 17.0,
-                                                  color: CColors.PrimaryText);
+                                          if (!snapshot.hasData) {
+                                            print(
+                                                "-Profile Recipe Count- has Error");
+                                            return CustomTextBold(
+                                                text: "0",
+                                                size: 17.0,
+                                                color: CColors.PrimaryText);
+                                          } else {
+                                            print(
+                                                "-Profile Recipe Count- has Data");
+                                            return CustomTextBold(
+                                                text: snapshot.data!.docs.length
+                                                    .toString(),
+                                                size: 17.0,
+                                                color: CColors.PrimaryText);
                                           }
                                         }),
                                     CustomTextMedium(

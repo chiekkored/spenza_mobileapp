@@ -90,7 +90,7 @@ class _RecipesTabState extends State<RecipesTab>
                     },
                     child: CustomGridViewWithoutDp(
                       snapshot: snapshot,
-                      fromScreen: "profile",
+                      fromScreen: "receipes",
                     ),
                   );
                 }

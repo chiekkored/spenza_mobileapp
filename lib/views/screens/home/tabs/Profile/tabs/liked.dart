@@ -86,7 +86,7 @@ class _LikedTabState extends State<LikedTab>
                     },
                     child: CustomGridView(
                       snapshot: snapshot,
-                      fromScreen: "profile",
+                      fromScreen: "liked",
                     ),
                   );
                 }

@@ -57,6 +57,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
           var _postData = snapshot.data!.docs[index];
           print("authorUid: ${_postData["authorUid"]}");
           return Column(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -76,6 +77,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                 name: _userProvider.userInfo.name,
                                 postDocId: _postData.id,
                                 fromScreen: fromScreen,
+                                profileUid: _postData["authorUid"],
                               ),
                               withNavBar: false)),
                           child: Hero(
@@ -91,6 +93,8 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                   image: image,
                                   fit: BoxFit.cover,
                                   height:
+                                      MediaQuery.of(context).size.width / 2.4,
+                                  width:
                                       MediaQuery.of(context).size.width / 2.4,
                                 );
                               },
@@ -333,6 +337,7 @@ class CustomGridView extends StatelessWidget {
                       name: _authorData["name"],
                       postDocId: _postDocId,
                       fromScreen: fromScreen,
+                      profileUid: _authorData["uid"],
                     ),
                     withNavBar: false)),
                 child: Padding(
@@ -354,6 +359,8 @@ class CustomGridView extends StatelessWidget {
                                   image: image,
                                   fit: BoxFit.cover,
                                   height:
+                                      MediaQuery.of(context).size.width / 2.4,
+                                  width:
                                       MediaQuery.of(context).size.width / 2.4,
                                 );
                               },

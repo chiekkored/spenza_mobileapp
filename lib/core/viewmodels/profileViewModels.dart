@@ -5,12 +5,12 @@ class ProfileViewModel {
     return await FirebaseFirestore.instance.collection('users').doc(uid).get();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getRecipes(String uid) async {
-    return await FirebaseFirestore.instance
+  Stream<QuerySnapshot<Map<String, dynamic>>> getRecipes(String uid) {
+    return FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection("posts")
-        .get();
+        .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getIsFollowing(
