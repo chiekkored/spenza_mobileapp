@@ -358,6 +358,9 @@ PODS:
   - Firebase/Firestore (8.11.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.11.0)
+  - Firebase/MLModelDownloader (8.11.0):
+    - Firebase/CoreOnly
+    - FirebaseMLModelDownloader (~> 8.11.0-beta)
   - Firebase/Storage (8.11.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 8.11.0)
@@ -367,6 +370,10 @@ PODS:
     - Flutter
   - firebase_core (1.13.1):
     - Firebase/CoreOnly (= 8.11.0)
+    - Flutter
+  - firebase_ml_model_downloader (0.1.0-9):
+    - Firebase/MLModelDownloader (= 8.11.0)
+    - firebase_core
     - Flutter
   - firebase_storage (10.2.11):
     - Firebase/Storage (= 8.11.0)
@@ -399,6 +406,17 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30908.0)
+  - FirebaseInstallations (8.13.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - FirebaseMLModelDownloader (8.11.0-beta):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/Logger (~> 7.7)
+    - SwiftProtobuf (~> 1.0)
   - FirebaseStorage (8.11.0):
     - FirebaseCore (~> 8.0)
     - GTMSessionFetcher/Core (~> 1.5)
@@ -406,10 +424,68 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - google_ml_kit (0.6.0):
+    - Flutter
+    - GoogleMLKit/BarcodeScanning (~> 2.2.0)
+    - GoogleMLKit/DigitalInkRecognition (~> 2.2.0)
+    - GoogleMLKit/FaceDetection (~> 2.2.0)
+    - GoogleMLKit/ImageLabeling (~> 2.2.0)
+    - GoogleMLKit/ImageLabelingCustom (~> 2.2.0)
+    - GoogleMLKit/LanguageID (~> 2.2.0)
+    - GoogleMLKit/LinkFirebase (~> 2.2.0)
+    - GoogleMLKit/PoseDetection (~> 2.2.0)
+    - GoogleMLKit/PoseDetectionAccurate (~> 2.2.0)
+    - GoogleMLKit/TextRecognition (~> 2.2.0)
   - GoogleDataTransport (9.1.2):
     - GoogleUtilities/Environment (~> 7.2)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleMLKit/BarcodeScanning (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitBarcodeScanning (~> 1.3.0)
+  - GoogleMLKit/DigitalInkRecognition (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitDigitalInkRecognition (~> 1.3.0)
+  - GoogleMLKit/FaceDetection (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitFaceDetection (~> 1.3.0)
+  - GoogleMLKit/ImageLabeling (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitImageLabeling (~> 1.3.0)
+  - GoogleMLKit/ImageLabelingCustom (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitImageLabelingCustom (~> 1.3.0)
+  - GoogleMLKit/LanguageID (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitLanguageID (~> 1.3.0)
+  - GoogleMLKit/LinkFirebase (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitLinkFirebase (~> 1.3.0)
+  - GoogleMLKit/MLKitCore (2.2.0):
+    - MLKitCommon (~> 3.0.0)
+  - GoogleMLKit/PoseDetection (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitPoseDetection (~> 1.0.0-beta4)
+  - GoogleMLKit/PoseDetectionAccurate (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitPoseDetectionAccurate (~> 1.0.0-beta4)
+  - GoogleMLKit/TextRecognition (2.2.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitTextRecognition (~> 1.3.0)
+  - GoogleToolboxForMac/DebugUtils (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - GoogleToolboxForMac/Defines (2.3.2)
+  - GoogleToolboxForMac/Logger (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSData+zlib (2.3.2)":
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.3.2)":
+    - GoogleToolboxForMac/DebugUtils (= 2.3.2)
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
+  - GoogleToolboxForMac/StringEncoding (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
   - GoogleUtilities/AppDelegateSwizzler (7.7.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -424,6 +500,10 @@ PODS:
     - GoogleUtilities/Reachability
   - "GoogleUtilities/NSData+zlib (7.7.0)"
   - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilitiesComponents (1.1.0):
     - GoogleUtilities/Logger
   - "gRPC-C++ (1.28.2)":
     - "gRPC-C++/Implementation (= 1.28.2)"
@@ -453,6 +533,88 @@ PODS:
   - image_picker_ios (0.0.1):
     - Flutter
   - leveldb-library (1.22.1)
+  - MLImage (1.0.0-beta1)
+  - MLKitBarcodeScanning (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitVision (~> 1.3)
+  - MLKitCommon (3.0.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - GoogleUtilities/UserDefaults (~> 7.0)
+    - GoogleUtilitiesComponents (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.12)
+  - MLKitDigitalInkRecognition (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitMDD (~> 1.3)
+    - SSZipArchive (~> 2.1)
+  - MLKitFaceDetection (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitVision (~> 1.3)
+  - MLKitImageLabeling (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitImageLabelingCommon (~> 1.3)
+    - MLKitVision (~> 1.3)
+    - MLKitVisionKit (~> 2.2)
+  - MLKitImageLabelingCommon (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitVision (~> 1.3)
+  - MLKitImageLabelingCustom (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitImageLabelingCommon (~> 1.3)
+    - MLKitVision (~> 1.3)
+    - MLKitVisionKit (~> 2.2)
+  - MLKitLanguageID (1.3.0):
+    - MLKitNaturalLanguage (~> 1.3)
+  - MLKitLinkFirebase (1.3.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - MLKitCommon (~> 3.0)
+  - MLKitMDD (1.3.0):
+    - MLKitCommon (~> 3.0)
+  - MLKitNaturalLanguage (1.3.0):
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - GoogleToolboxForMac/StringEncoding (~> 2.1)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - MLKitCommon (~> 3.0)
+    - Protobuf (~> 3.12)
+  - MLKitObjectDetectionCommon (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitVision (~> 1.3)
+  - MLKitPoseDetection (1.0.0-beta4):
+    - MLKitCommon (~> 3.0)
+    - MLKitPoseDetectionCommon (= 1.0.0-beta4)
+    - MLKitXenoCommon (= 1.0.0-beta4)
+  - MLKitPoseDetectionAccurate (1.0.0-beta4):
+    - MLKitCommon (~> 3.0)
+    - MLKitPoseDetectionCommon (= 1.0.0-beta4)
+    - MLKitXenoCommon (= 1.0.0-beta4)
+  - MLKitPoseDetectionCommon (1.0.0-beta4):
+    - MLKitCommon (~> 3.0)
+    - MLKitXenoCommon (= 1.0.0-beta4)
+  - MLKitTextRecognition (1.3.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitVision (~> 1.3)
+  - MLKitVision (1.3.0):
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - GTMSessionFetcher/Core (~> 1.1)
+    - MLImage (= 1.0.0-beta1)
+    - MLKitCommon (~> 3.0)
+    - Protobuf (~> 3.12)
+  - MLKitVisionKit (2.2.0):
+    - MLKitCommon (~> 3.0)
+    - MLKitImageLabelingCommon (~> 1.3)
+    - MLKitObjectDetectionCommon (~> 1.3)
+    - MLKitVision (~> 1.3)
+  - MLKitXenoCommon (1.0.0-beta4):
+    - MLKitCommon (~> 3.0)
+    - MLKitVision (~> 1.3)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -461,19 +623,24 @@ PODS:
   - path_provider_ios (0.0.1):
     - Flutter
   - PromisesObjC (2.0.0)
+  - Protobuf (3.20.0)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - SSZipArchive (2.4.3)
+  - SwiftProtobuf (1.19.0)
 
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_ml_model_downloader (from `.symlinks/plugins/firebase_ml_model_downloader/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - google_ml_kit (from `.symlinks/plugins/google_ml_kit/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -488,16 +655,44 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseFirestore
+    - FirebaseInstallations
+    - FirebaseMLModelDownloader
     - FirebaseStorage
     - FMDB
     - GoogleDataTransport
+    - GoogleMLKit
+    - GoogleToolboxForMac
     - GoogleUtilities
+    - GoogleUtilitiesComponents
     - "gRPC-C++"
     - gRPC-Core
     - GTMSessionFetcher
     - leveldb-library
+    - MLImage
+    - MLKitBarcodeScanning
+    - MLKitCommon
+    - MLKitDigitalInkRecognition
+    - MLKitFaceDetection
+    - MLKitImageLabeling
+    - MLKitImageLabelingCommon
+    - MLKitImageLabelingCustom
+    - MLKitLanguageID
+    - MLKitLinkFirebase
+    - MLKitMDD
+    - MLKitNaturalLanguage
+    - MLKitObjectDetectionCommon
+    - MLKitPoseDetection
+    - MLKitPoseDetectionAccurate
+    - MLKitPoseDetectionCommon
+    - MLKitTextRecognition
+    - MLKitVision
+    - MLKitVisionKit
+    - MLKitXenoCommon
     - nanopb
     - PromisesObjC
+    - Protobuf
+    - SSZipArchive
+    - SwiftProtobuf
 
 EXTERNAL SOURCES:
   camera:
@@ -508,10 +703,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_ml_model_downloader:
+    :path: ".symlinks/plugins/firebase_ml_model_downloader/ios"
   firebase_storage:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  google_ml_kit:
+    :path: ".symlinks/plugins/google_ml_kit/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   path_provider_ios:
@@ -529,27 +728,57 @@ SPEC CHECKSUMS:
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
   firebase_auth: bdfbd5b10da1db6d5eb6ae7dbda5d81365b9cc9d
   firebase_core: 08f6a85f62060111de5e98d6a214810d11365de9
+  firebase_ml_model_downloader: 67a18547c5a94a0f6ada895c95278f58ffbea9b3
   firebase_storage: 256be4eb004e82f5e1f3d880f5f30502dbacff35
   FirebaseAuth: d96d73aba85d192d7a7aa0b86dd6d7f8ec170b4b
   FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
   FirebaseCoreDiagnostics: c2836d254a8f0bbb4121ff18f2c2ea39d118fd08
   FirebaseFirestore: 3b2e4b532c68809b3df5f8d39d28b3398ffc196b
+  FirebaseInstallations: 60edbf7e11d91ae4c751d26c200dfd037099abe0
+  FirebaseMLModelDownloader: b96b6331803e8fb62591076ba0ab97900ffb92d8
   FirebaseStorage: 4d05cb1112ff8822a0f9f5090da8bd6d550602ec
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  google_ml_kit: a85eefb9ea6156b27ee2fba2b71e461e7b26a4f6
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
+  GoogleMLKit: 85ffdc9641d05311c76dbba5bbf93059087be12f
+  GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
   "gRPC-C++": 13d8ccef97d5c3c441b7e3c529ef28ebee86fad2
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  MLImage: 647f3d580c10b3c9a3f6154f5d7baead60c42a0c
+  MLKitBarcodeScanning: 6b998bd1cfe471ae407a7f647d649494617787c0
+  MLKitCommon: 6d6be0a2e9a6340aad1c1f2b9449c11dee8af70f
+  MLKitDigitalInkRecognition: 7913834c241b25f9dff538fa1cebe3d59afccf66
+  MLKitFaceDetection: 897f007aa4eb426ef1bac7c66e5451d02ffc2e83
+  MLKitImageLabeling: fc44a4f90b1cf16bcb62c043d477c052ba7539ca
+  MLKitImageLabelingCommon: fbe695a04fb236555e6b7e69e7def153a04324c1
+  MLKitImageLabelingCustom: 83e609e6b7dd8a16dc8790ef325bab1372d1d91d
+  MLKitLanguageID: 3848cf59a1693e2076ba65b37da261c674f97170
+  MLKitLinkFirebase: ae5bd6996d0a1a3d3e0bb4c634b594101c07d094
+  MLKitMDD: 37b4fbb5fd45809e646fca676945d6a8479ae66e
+  MLKitNaturalLanguage: 2a0295232578461ec25bf5933e45570c3b651d27
+  MLKitObjectDetectionCommon: 6abf300c61cd781ee3abc8abea8a3f8baca886dc
+  MLKitPoseDetection: bbc263ae4e961e83c9350abe919cff183797e687
+  MLKitPoseDetectionAccurate: c87162574669a84b89fdd0279a1f0722faa99b6e
+  MLKitPoseDetectionCommon: 5dedea934317c80c32b5eda8ede161128e096bdc
+  MLKitTextRecognition: fd52b7b3cef00751c202475f5a147e9752130767
+  MLKitVision: 26da299aef93291f24f5200e8372919f73abf3b5
+  MLKitVisionKit: 226bac429eda1d84285409e31ce9da72606850fb
+  MLKitXenoCommon: bf5b3528d77cabe0d04f3c13536ba1302346e31c
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
+  Protobuf: 66e2f3b26a35e4cc379831f4ced538274ee4b923
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
+  SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
 
-PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+PODFILE CHECKSUM: 8bc4bf3c0d3a3eec0bd75f898228846eab89666b
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

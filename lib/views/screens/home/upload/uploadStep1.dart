@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -58,7 +60,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                       child: GestureDetector(
                         onTap: () async {
                           await _picker
-                              .pickImage(source: ImageSource.camera)
+                              .pickImage(source: ImageSource.gallery)
                               .then((value) {
                             if (value!.path != '') {
                               setState(() {
@@ -251,7 +253,16 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: CustomPrimaryButton(
                   text: "Next",
-                  doOnPressed: () {
+                  doOnPressed: () async {
+                    // final inputImage = InputImage.fromFile(File(image.path));
+                    // final imageLabeler = GoogleMlKit.vision.imageLabeler();
+                    // final List<ImageLabel> labels =
+                    //     await imageLabeler.processImage(inputImage);
+                    // for (ImageLabel label in labels) {
+                    //   print(label.label);
+                    //   print(label.index);
+                    //   print(label.confidence);
+                    // }
                     if (!isCoverAttached ||
                         _foodNameTextController.text == '' ||
                         _descriptionTextController.text == '') {

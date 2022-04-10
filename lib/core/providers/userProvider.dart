@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
+import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel _users = UserModel(uid: "", email: "", name: "", dpUrl: "");
@@ -55,6 +56,27 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<bool> getUserPreference() async {
+    FirebaseCustomModel model = await FirebaseModelDownloader.instance.getModel(
+        'Object-Labeler',
+        FirebaseModelDownloadType.localModelUpdateInBackground);
+    // FirebaseCustomModel remoteModel =
+    //     FirebaseCustomModel(file: 'Object-Labeler');
+    // FirebaseModelDownloadConditions conditions =
+    //     FirebaseModelDownloadConditions(
+    //         androidWifiRequired: true,
+    //         androidDeviceIdleRequired: true,
+    //         androidChargingRequired: true,
+    //         iosAllowsCellularAccess: false,
+    //         iosAllowsBackgroundDownloading: true);
+    // FirebaseModelManager modelManager = FirebaseModelManager.instance;
+    // await modelManager.download(remoteModel, conditions);
+    // if (await modelManager.isModelDownloaded(remoteModel) == true) {
+    //   // do something with this model
+    //   print("Model Downloaded");
+    // } else {
+    //   // fall back on a locally-bundled model or do something else
+    //   print("Model Download Unsuccessful");
+    // }
     return await SharedPreferences.getInstance().then((pref) {
       if (pref.getString('user') != null) {
         final data = jsonDecode(pref.getString('user')!);

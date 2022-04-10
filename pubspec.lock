@@ -211,6 +211,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.1"
+  firebase_ml_model_downloader:
+    dependency: "direct main"
+    description:
+      name: firebase_ml_model_downloader
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+9"
+  firebase_ml_model_downloader_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_ml_model_downloader_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+2"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -282,6 +296,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_ml_kit:
+    dependency: "direct main"
+    description:
+      name: google_ml_kit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.3"
   grouped_list:
     dependency: "direct main"
     description:
