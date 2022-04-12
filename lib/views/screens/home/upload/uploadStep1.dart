@@ -1,10 +1,14 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+// import 'package:google_ml_kit/google_ml_kit.dart';
+// import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -254,29 +258,124 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
               child: CustomPrimaryButton(
                   text: "Next",
                   doOnPressed: () async {
-                    // final inputImage = InputImage.fromFile(File(image.path));
-                    // final imageLabeler = GoogleMlKit.vision.imageLabeler();
-                    // final List<ImageLabel> labels =
-                    //     await imageLabeler.processImage(inputImage);
-                    // for (ImageLabel label in labels) {
-                    //   print(label.label);
-                    //   print(label.index);
-                    //   print(label.confidence);
+                    // Cloud Vision API with Firebase Function
+                    // FirebaseFunctions functions = FirebaseFunctions.instance;
+
+                    // final bytes = await File(image.path).readAsBytes();
+
+                    // String img64 = base64Encode(bytes);
+
+                    // HttpsCallable callable =
+                    //     functions.httpsCallable("annotateImage");
+                    // final a = {
+                    //   "requests": [
+                    //     {
+                    //       "image": {"content": "$img64"},
+                    //       "features": [
+                    //         {"type": "LABEL_DETECTION", "maxResults": "1"}
+                    //       ]
+                    //     }
+                    //   ]
+                    // };
+                    // final jsonEncoder = JsonEncoder();
+                    // // log(img64);
+                    // final resp = await callable.call({
+                    //   "image": {"content": "$img64"},
+                    //   "features": [
+                    //     {"type": "LABEL_DETECTION"}
+                    //   ]
+                    // });
+
+                    // print("result: ${resp.data}");
+                    // final results = await callable();
+                    // List fruit = results.data;
+                    // for (var item in fruit) {
+                    //   print(item);
                     // }
-                    if (!isCoverAttached ||
-                        _foodNameTextController.text == '' ||
-                        _descriptionTextController.text == '') {
-                      return showCustomDialog(context, "Fields Required",
-                          "Please fill all fields.", "OK", null);
-                    } else {
-                      final page = UploadStep2Screen(
-                          coverPath: image.path,
-                          foodName: _foodNameTextController.text,
-                          description: _descriptionTextController.text,
-                          cookingDuration: _cookingDurationSlider);
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => page));
-                    }
+
+                    // Google_ml_vision
+                    // final GoogleVisionImage visionImage =
+                    //     GoogleVisionImage.fromFile(File(image.path));
+
+                    // final ImageLabeler labeler =
+                    //     GoogleVision.instance.imageLabeler();
+                    // final List<ImageLabel> labels =
+                    //     await labeler.processImage(visionImage);
+
+                    // for (ImageLabel label in labels) {
+                    //   print("Label: ${label.text}");
+                    //   print("Index: ${label.entityId}");
+                    //   print("Confidence: ${label.confidence}");
+                    // }
+
+                    // Google_ml_kit
+                    // final inputImage = InputImage.fromFile(File(image.path));
+                    // FirebaseCustomModel objectLabelerModel =
+                    //     await FirebaseModelDownloader.instance.getModel(
+                    //         'Object-Labeler',
+                    //         FirebaseModelDownloadType
+                    //             .localModelUpdateInBackground);
+                    // FirebaseCustomModel foodModel =
+                    //     await FirebaseModelDownloader.instance.getModel(
+                    //         'Food',
+                    //         FirebaseModelDownloadType
+                    //             .localModelUpdateInBackground);
+
+                    // final imagePDModel = GoogleMlKit.vision.imageLabeler();
+                    // final imageLabelerOLModel = GoogleMlKit.vision.imageLabeler(
+                    //     CustomImageLabelerOptions(
+                    //         customModel: CustomLocalModel.file,
+                    //         customModelPath: objectLabelerModel.file.path));
+                    // final imageLabelerFModel = GoogleMlKit.vision.imageLabeler(
+                    //     CustomImageLabelerOptions(
+                    //         customModel: CustomLocalModel.file,
+                    //         customModelPath: foodModel.file.path));
+
+                    // final List<ImageLabel> mlKitLabels =
+                    //     await imagePDModel.processImage(inputImage);
+                    // final List<ImageLabel> objectLabels =
+                    //     await imageLabelerOLModel.processImage(inputImage);
+                    // final List<ImageLabel> foodLabels =
+                    //     await imageLabelerFModel.processImage(inputImage);
+                    // print("MLKit Pre-defined Model:");
+                    // for (ImageLabel label in mlKitLabels) {
+                    //   print("Label: ${label.label}");
+                    //   // print("Index: ${label.index}");
+                    //   print("Confidence: ${label.confidence}");
+                    // }
+                    // print("");
+                    // print("--------------");
+                    // print("");
+                    // print("Object Labeler Model:");
+                    // for (ImageLabel label in objectLabels) {
+                    //   print("Label: ${label.label}");
+                    //   // print("Index: ${label.index}");
+                    //   print("Confidence: ${label.confidence}");
+                    // }
+                    // print("");
+                    // print("--------------");
+                    // print("");
+                    // print("Food Model:");
+                    // for (ImageLabel label in foodLabels) {
+                    //   print("Label: ${label.label}");
+                    //   // print("Index: ${label.index}");
+                    //   print("Confidence: ${label.confidence}");
+                    // }
+
+                    // if (!isCoverAttached ||
+                    //     _foodNameTextController.text == '' ||
+                    //     _descriptionTextController.text == '') {
+                    //   return showCustomDialog(context, "Fields Required",
+                    //       "Please fill all fields.", "OK", null);
+                    // } else {
+                    //   final page = UploadStep2Screen(
+                    //       coverPath: image.path,
+                    //       foodName: _foodNameTextController.text,
+                    //       description: _descriptionTextController.text,
+                    //       cookingDuration: _cookingDurationSlider);
+                    //   Navigator.of(context)
+                    //       .push(MaterialPageRoute(builder: (_) => page));
+                    // }
                   }),
             ),
           ),
