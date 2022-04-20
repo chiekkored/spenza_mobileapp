@@ -54,6 +54,10 @@ class AuthViewModel {
         showCustomDialog(context, "Invalid Password",
             "Wrong password provided for that user", "Okay", null);
         print('Wrong password provided for that user.');
+      } else if (e.code == 'network-request-failed') {
+        showCustomDialog(context, "Connection Error",
+            "Please check connection and try again", "Okay", null);
+        print('No Connection.');
       } else {}
       return null;
     }
