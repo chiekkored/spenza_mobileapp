@@ -8,6 +8,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
+import 'package:spenza/views/screens/home/pantryPost/pantryPost.dart';
 import 'package:spenza/views/screens/home/scan/camera.dart';
 import 'package:spenza/views/screens/home/upload/uploadStep1.dart';
 
@@ -100,8 +101,10 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                     ),
                     Expanded(
                       child: GestureDetector(
+                        // onTap: () => pushNewScreen(context,
+                        //     withNavBar: false, screen: ScanCameraScreen()),
                         onTap: () => pushNewScreen(context,
-                            withNavBar: false, screen: ScanCameraScreen()),
+                            withNavBar: false, screen: PantryPostScreen()),
                         child: Container(
                           height: 186.0,
                           decoration: BoxDecoration(

@@ -111,14 +111,14 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                 stream: _postVM.getIfPostLiked(
                                     _userProvider.userInfo.uid,
                                     snapshot.data!.docs[index].id),
-                                builder: (context, snapshot) {
-                                  print("is liked: ${snapshot.data}");
-                                  if (!snapshot.hasData) {
+                                builder: (context, streamSnapshot) {
+                                  print("is liked: ${streamSnapshot.data}");
+                                  if (!streamSnapshot.hasData) {
                                     return GestureDetector(
                                       onTap: () async {
                                         bool result = await _postVM.likePost(
                                             _postData["authorUid"],
-                                            snapshot.data!.docs[index].id,
+                                            streamSnapshot.data!.docs[index].id,
                                             _userProvider.userInfo.uid,
                                             _userProvider.userInfo.name,
                                             _userProvider.userInfo.dpUrl);
@@ -141,7 +141,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                       ),
                                     );
                                   } else {
-                                    if (snapshot.data!.docs.length > 0) {
+                                    if (streamSnapshot.data!.docs.length > 0) {
                                       return GestureDetector(
                                         onTap: () async {
                                           bool result =

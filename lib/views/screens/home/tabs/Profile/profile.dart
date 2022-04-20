@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
@@ -8,6 +9,7 @@ import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
+import 'package:spenza/views/screens/home/pantry/pantry.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/liked.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/recipes.dart';
 
@@ -55,8 +57,30 @@ class _ProfileTabState extends State<ProfileTab> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          IconButton(
+                            onPressed: () {
+                              // _authVM.logout();
+                              // Navigator.of(context, rootNavigator: true)
+                              //     .pushAndRemoveUntil(
+                              //   MaterialPageRoute(
+                              //     builder: (BuildContext context) {
+                              //       return SignInScreen();
+                              //     },
+                              //   ),
+                              //   (_) => false,
+                              // );
+                              pushNewScreen(context, screen: PantryScreen());
+                            },
+                            icon: Icon(
+                              Icons.food_bank,
+                              size: 35.0,
+                              color: CColors.MainText,
+                            ),
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                          ),
                           IconButton(
                             onPressed: () {
                               _authVM.logout();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/fonts.dart';
@@ -211,4 +212,45 @@ class CustomCloseButton extends StatelessWidget {
       onPressed: () => Navigator.maybePop(context),
     );
   }
+}
+
+/// SELECTED: Radio Button text: Input character style
+TextStyle customRadioButtonTextStyleSelected() {
+  return TextStyle(
+      fontFamily: "Inter",
+      fontWeight: FontWeight.w700,
+      fontSize: 15,
+      letterSpacing: 0.5,
+      color: CColors.White);
+}
+
+/// UNSELECTED: Radio Button text: Input character style
+TextStyle customRadioButtonTextStyleUnselected() {
+  return TextStyle(
+      fontFamily: "Inter",
+      fontWeight: FontWeight.w700,
+      fontSize: 15,
+      letterSpacing: 0.5,
+      color: CColors.SecondaryText);
+}
+
+GroupButtonOptions customGroupButtonOptions() {
+  return GroupButtonOptions(
+    selectedTextStyle: customRadioButtonTextStyleSelected(),
+    unselectedTextStyle: customRadioButtonTextStyleUnselected(),
+    selectedColor: CColors.PrimaryColor,
+    unselectedColor: CColors.Form,
+    borderRadius: BorderRadius.circular(32.0),
+    spacing: 10,
+    runSpacing: 20,
+    elevation: 0.0,
+    selectedShadow: [],
+    unselectedShadow: [],
+    textPadding: const EdgeInsets.symmetric(
+      vertical: 19.0,
+      horizontal: 12.0,
+    ),
+    mainGroupAlignment: MainGroupAlignment.start,
+    alignment: Alignment.centerLeft,
+  );
 }

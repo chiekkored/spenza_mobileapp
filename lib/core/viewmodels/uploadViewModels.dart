@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 
 class UploadViewModel {
   Future<bool> uploadRecipe(
@@ -74,18 +76,71 @@ class UploadViewModel {
         });
     return result;
   }
+
+  Future<bool> uploadPantry(String uid, String coverPath, String foodName,
+      String quantity, String unit) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    try {
+      DateTime now = DateTime.now();
+      Reference storageRefDest = storageRef.child("posts/$uid/$now");
+      await storageRefDest.putFile(File(coverPath));
+      String imageUrl = await storageRefDest.getDownloadURL();
+
+      CollectionReference _usersPantry = FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection("pantries");
+      bool result = await _usersPantry
+          .add({
+            "pantryFoodTitle": foodName,
+            "pantryQuantity": quantity,
+            "pantryUnit": unit,
+            "pantryImageUrl": imageUrl,
+          })
+          .then((value) => true)
+          .catchError((e) {
+            print(e.toString());
+            return false;
+          });
+      return result;
+    } on FirebaseException catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
+
+  Future<List<ImageLabel>> getSuggested(InputImage inputImage) async {
+    List<ImageLabel> suggestedList = [];
+    FirebaseCustomModel objectLabelerModel =
+        await FirebaseModelDownloader.instance.getModel('Object-Labeler',
+            FirebaseModelDownloadType.localModelUpdateInBackground);
+    FirebaseCustomModel foodModel = await FirebaseModelDownloader.instance
+        .getModel(
+            'Food', FirebaseModelDownloadType.localModelUpdateInBackground);
+
+    final imagePDModel = GoogleMlKit.vision.imageLabeler();
+    final imageLabelerOLModel = GoogleMlKit.vision.imageLabeler(
+        CustomImageLabelerOptions(
+            customModel: CustomLocalModel.file,
+            customModelPath: objectLabelerModel.file.path));
+    final imageLabelerFModel = GoogleMlKit.vision.imageLabeler(
+        CustomImageLabelerOptions(
+            customModel: CustomLocalModel.file,
+            customModelPath: foodModel.file.path));
+
+    final List<ImageLabel> mlKitLabels =
+        await imagePDModel.processImage(inputImage);
+    final List<ImageLabel> objectLabels =
+        await imageLabelerOLModel.processImage(inputImage);
+    final List<ImageLabel> foodLabels =
+        await imageLabelerFModel.processImage(inputImage);
+    // suggestedList.add([mlKitLabels, objectLabels, foodLabels]);
+    suggestedList = [
+      ...foodLabels,
+      ...objectLabels,
+      ...mlKitLabels,
+    ];
+
+    return suggestedList;
+  }
 }
-
-
-
-                          //     .collection('users')
-                          //     .doc(FirebaseAuth.instance.currentUser!.uid)
-                          //     .collection("posts")
-                          //     .add({
-                          //   "postDuration": "40 mins",
-                          //   "postImageUrl":
-                          //       "https://picsum.photos/id/30/1280/901",
-                          //   "postPercent": "68%",
-                          //   "postRecipeTitle": "Pancake",
-                          //   "authorUid": FirebaseAuth.instance.currentUser!.uid
-                          // }).then((value) => print("added posts"));

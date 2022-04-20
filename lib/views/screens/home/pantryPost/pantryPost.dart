@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:group_button/group_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/models/userModel.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/uploadViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -16,21 +19,28 @@ import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/upload/uploadStep2.dart';
 
-class UploadStep1Screen extends StatefulWidget {
-  const UploadStep1Screen({Key? key}) : super(key: key);
+class PantryPostScreen extends StatefulWidget {
+  const PantryPostScreen({Key? key}) : super(key: key);
 
   @override
-  _UploadStep1ScreenState createState() => _UploadStep1ScreenState();
+  State<PantryPostScreen> createState() => _PantryPostScreenState();
 }
 
-class _UploadStep1ScreenState extends State<UploadStep1Screen> {
+class _PantryPostScreenState extends State<PantryPostScreen> {
   UploadViewModel _uploadVM = UploadViewModel();
-  double _cookingDurationSlider = 10.0;
   TextEditingController _foodNameTextController = TextEditingController();
-  TextEditingController _descriptionTextController = TextEditingController();
+  TextEditingController _quantityTextController = TextEditingController();
+  TextEditingController _unitTextController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   XFile image = XFile("");
   bool isCoverAttached = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _quantityTextController.text = "0";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -68,7 +78,6 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                                 .pickImage(source: ImageSource.gallery)
                                 .then((value) {
                               if (value!.path != '') {
-                                print(value);
                                 setState(() {
                                   image = value;
                                   isCoverAttached = true;
@@ -158,98 +167,70 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 24.0),
                       child: CustomTextBold(
-                          text: "Description",
+                          text: "Quantity",
                           size: 17.0,
                           color: CColors.PrimaryText),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
-                      child: TextField(
-                        controller: _descriptionTextController,
-                        maxLines: 3,
-                        keyboardType: TextInputType.text,
-                        style: customTextFieldTextStyle(),
-                        decoration: InputDecoration(
-                          hintText: "Tell me about your food",
-                          hintStyle: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              letterSpacing: 0.5,
-                              color: CColors.SecondaryText),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: const BorderSide(
-                              color: CColors.Outline,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: const BorderSide(
-                              color: CColors.PrimaryColor,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
+                      child: StatefulBuilder(
+                        builder: (BuildContext context,
+                            void Function(void Function()) setState) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () => setState(() {
+                                        int quantity = int.parse(
+                                            _quantityTextController.text);
+                                        if (quantity > 0) {
+                                          quantity--;
+                                          _quantityTextController.text =
+                                              quantity.toString();
+                                        }
+                                      }),
+                                  icon: Icon(Icons.remove)),
+                              Expanded(
+                                child: TextField(
+                                  controller: _quantityTextController,
+                                  keyboardType: TextInputType.numberWithOptions(
+                                      signed: true),
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  style: customTextFieldTextStyle(),
+                                  decoration: customTextFieldInputDecoration(
+                                      hint: "Enter food quantity"),
+                                ),
+                              ),
+                              IconButton(
+                                  onPressed: () => setState(() {
+                                        int quantity = int.parse(
+                                            _quantityTextController.text);
+                                        quantity++;
+                                        _quantityTextController.text =
+                                            quantity.toString();
+                                      }),
+                                  icon: Icon(Icons.add)),
+                            ],
+                          );
+                        },
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomTextBold(
-                              text: "Cooking Duration ",
-                              size: 17.0,
-                              color: CColors.PrimaryText),
-                          CustomTextBold(
-                              text: "(in minutes)",
-                              size: 17.0,
-                              color: CColors.SecondaryText),
-                        ],
-                      ),
+                      child: CustomTextBold(
+                          text: "Unit", size: 17.0, color: CColors.PrimaryText),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomTextBold(
-                              text: "<10",
-                              size: 15.0,
-                              color: _cookingDurationSlider >= 10
-                                  ? CColors.PrimaryColor
-                                  : CColors.SecondaryText),
-                          CustomTextBold(
-                              text: "30",
-                              size: 15.0,
-                              color: _cookingDurationSlider >= 30
-                                  ? CColors.PrimaryColor
-                                  : CColors.SecondaryText),
-                          CustomTextBold(
-                              text: ">60",
-                              size: 15.0,
-                              color: _cookingDurationSlider >= 60
-                                  ? CColors.PrimaryColor
-                                  : CColors.SecondaryText),
-                        ],
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: TextField(
+                        controller: _unitTextController,
+                        style: customTextFieldTextStyle(),
+                        decoration: customTextFieldInputDecoration(
+                            hint: "Enter quantity unit"),
                       ),
-                    ),
-                    Slider(
-                      value: _cookingDurationSlider,
-                      max: 60,
-                      min: 10,
-                      inactiveColor: CColors.Outline,
-                      activeColor: CColors.PrimaryColor,
-                      onChanged: (double value) {
-                        setState(() {
-                          _cookingDurationSlider = value;
-                        });
-                      },
                     ),
                   ],
                 ),
@@ -262,21 +243,94 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: CustomPrimaryButton(
-                  text: "Next",
+                  text: "Add to pantry",
                   doOnPressed: () async {
                     if (!isCoverAttached ||
                         _foodNameTextController.text == '' ||
-                        _descriptionTextController.text == '') {
+                        _quantityTextController.text == '' ||
+                        _unitTextController.text == '') {
                       return showCustomDialog(context, "Fields Required",
                           "Please fill all fields.", "OK", null);
                     } else {
-                      final page = UploadStep2Screen(
-                          coverPath: image.path,
-                          foodName: _foodNameTextController.text,
-                          description: _descriptionTextController.text,
-                          cookingDuration: _cookingDurationSlider);
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => page));
+                      UserModel _user = context.read<UserProvider>().userInfo;
+                      showCustomModal(
+                          context,
+                          Container(
+                            padding: EdgeInsets.all(48.0),
+                            decoration: BoxDecoration(
+                              color: CColors.White,
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Platform.isIOS
+                                ? CupertinoActivityIndicator()
+                                : CircularProgressIndicator(),
+                          ));
+                      bool value = await _uploadVM.uploadPantry(
+                          _user.uid,
+                          image.path,
+                          _foodNameTextController.text,
+                          _quantityTextController.text,
+                          _unitTextController.text);
+                      Navigator.of(context).maybePop(context);
+                      value
+                          ? showCustomModal(
+                              context,
+                              Container(
+                                padding: EdgeInsets.all(48.0),
+                                decoration: BoxDecoration(
+                                  color: CColors.White,
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24.0),
+                                      child: Image.asset(
+                                          "assets/images/upload-success.png"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 32.0),
+                                      child: CustomTextBold(
+                                          text: "Successfully added",
+                                          size: 22.0,
+                                          color: CColors.MainText),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        "Your pantry has been added, you can see it on the Pantry Page",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: "Inter",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15.0,
+                                            letterSpacing: 0.5,
+                                            color: CColors.MainText),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 24.0),
+                                      child: CustomPrimaryButton(
+                                          text: "Back to Home",
+                                          doOnPressed: () => Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  Navigator.defaultRouteName))),
+                                    )
+                                  ],
+                                ),
+                              ))
+                          : showCustomModal(
+                              context,
+                              Container(
+                                  padding: EdgeInsets.all(48.0),
+                                  decoration: BoxDecoration(
+                                    color: CColors.White,
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                  child: Text("Error Adding")));
                     }
                   }),
             ),
