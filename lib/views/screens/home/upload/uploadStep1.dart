@@ -254,15 +254,60 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
               child: CustomPrimaryButton(
                   text: "Next",
                   doOnPressed: () async {
-                    // final inputImage = InputImage.fromFile(File(image.path));
-                    // final imageLabeler = GoogleMlKit.vision.imageLabeler();
-                    // final List<ImageLabel> labels =
-                    //     await imageLabeler.processImage(inputImage);
-                    // for (ImageLabel label in labels) {
-                    //   print(label.label);
-                    //   print(label.index);
-                    //   print(label.confidence);
-                    // }
+                    // Google_ml_kit
+                    final inputImage = InputImage.fromFile(File(image.path));
+                    FirebaseCustomModel objectLabelerModel =
+                        await FirebaseModelDownloader.instance.getModel(
+                            'Object-Labeler',
+                            FirebaseModelDownloadType
+                                .localModelUpdateInBackground);
+                    FirebaseCustomModel foodModel =
+                        await FirebaseModelDownloader.instance.getModel(
+                            'Food',
+                            FirebaseModelDownloadType
+                                .localModelUpdateInBackground);
+
+                    final imagePDModel = GoogleMlKit.vision.imageLabeler();
+                    final imageLabelerOLModel = GoogleMlKit.vision.imageLabeler(
+                        CustomImageLabelerOptions(
+                            customModel: CustomLocalModel.file,
+                            customModelPath: objectLabelerModel.file.path));
+                    final imageLabelerFModel = GoogleMlKit.vision.imageLabeler(
+                        CustomImageLabelerOptions(
+                            customModel: CustomLocalModel.file,
+                            customModelPath: foodModel.file.path));
+
+                    final List<ImageLabel> mlKitLabels =
+                        await imagePDModel.processImage(inputImage);
+                    final List<ImageLabel> objectLabels =
+                        await imageLabelerOLModel.processImage(inputImage);
+                    final List<ImageLabel> foodLabels =
+                        await imageLabelerFModel.processImage(inputImage);
+                    print("MLKit Pre-defined Model:");
+                    for (ImageLabel label in mlKitLabels) {
+                      print("Label: ${label.label}");
+                      // print("Index: ${label.index}");
+                      print("Confidence: ${label.confidence}");
+                    }
+                    print("");
+                    print("--------------");
+                    print("");
+                    print("Object Labeler Model:");
+                    for (ImageLabel label in objectLabels) {
+                      print("Label: ${label.label}");
+                      // print("Index: ${label.index}");
+                      print("Confidence: ${label.confidence}");
+                    }
+                    print("");
+                    print("--------------");
+                    print("");
+                    print("Food Model:");
+                    for (ImageLabel label in foodLabels) {
+                      print("Label: ${label.label}");
+                      // print("Index: ${label.index}");
+                      print("Confidence: ${label.confidence}");
+                    }
+
                     if (!isCoverAttached ||
                         _foodNameTextController.text == '' ||
                         _descriptionTextController.text == '') {
