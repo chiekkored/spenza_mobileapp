@@ -44,7 +44,7 @@ class _RecipeTabState extends State<RecipeTab> {
                         });
                       },
                       child: ListView(
-                          physics: BouncingScrollPhysics(),
+                          // physics: BouncingScrollPhysics(),
                           padding: const EdgeInsets.symmetric(vertical: 24.0),
                           children: [
                             Column(
