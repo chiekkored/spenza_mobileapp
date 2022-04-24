@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,10 +25,12 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  int _selectedTab = 0;
+  GroupButtonController _tagSelectedController =
+      GroupButtonController(selectedIndex: 0);
+  String _tags = "";
+
   @override
   Widget build(BuildContext context) {
-    var _userProvider = context.read<UserProvider>();
     return Material(
       type: MaterialType.transparency,
       child: DefaultTabController(
@@ -82,32 +85,13 @@ class _HomeTabState extends State<HomeTab> {
                                   color: CColors.PrimaryText),
                               Padding(
                                 padding: const EdgeInsets.only(top: 16.0),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 16.0),
-                                      child: CustomRadioButton(
-                                          doOnPressed: () async {},
-                                          fontColor: CColors.White,
-                                          text: "All",
-                                          color: CColors.PrimaryColor),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 16.0),
-                                      child: CustomRadioButton(
-                                          doOnPressed: () {},
-                                          fontColor: CColors.SecondaryText,
-                                          text: "Food",
-                                          color: CColors.Form),
-                                    ),
-                                    CustomRadioButton(
-                                        doOnPressed: () {},
-                                        fontColor: CColors.SecondaryText,
-                                        text: "Drink",
-                                        color: CColors.Form),
-                                  ],
+                                child: GroupButton(
+                                  controller: _tagSelectedController,
+                                  isRadio: true,
+                                  onSelected: (str, index, isSelected) =>
+                                      _tags = str.toString(),
+                                  options: customGroupButtonOptions(),
+                                  buttons: ["All", "Food", "Drink"],
                                 ),
                               )
                             ],
@@ -130,9 +114,6 @@ class _HomeTabState extends State<HomeTab> {
                       border:
                           Border(bottom: BorderSide(color: CColors.Outline))),
                   child: TabBar(
-                      onTap: (value) => setState(() {
-                            _selectedTab = value;
-                          }),
                       indicatorColor: CColors.PrimaryColor,
                       labelColor: CColors.PrimaryText,
                       unselectedLabelColor: CColors.SecondaryText,

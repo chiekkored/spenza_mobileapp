@@ -61,8 +61,8 @@ class _PantryScreenState extends State<PantryScreen> {
                           if (index == 0) {
                             // return the header
                             return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 24.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24.0),
                               child: new CustomTextBold(
                                   text: "Pantry",
                                   size: 24.0,
@@ -72,6 +72,8 @@ class _PantryScreenState extends State<PantryScreen> {
                           index -= 1;
                           var pantryData = snapshot.data!.docs[index];
                           return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 24.0),
                             visualDensity:
                                 VisualDensity.adaptivePlatformDensity,
                             leading: Container(

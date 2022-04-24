@@ -49,32 +49,33 @@ class UploadViewModel {
       Reference storageRefDest = storageRef.child("posts/$uid/$now");
       await storageRefDest.putFile(File(coverPath));
       coverUrl = await storageRefDest.getDownloadURL();
+
+      CollectionReference _usersPosts = FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection("posts");
+      bool result = await _usersPosts
+          .add({
+            "postRecipeTitle": foodName.toLowerCase(),
+            "postDuration": "${cookingDuration.round().toString()} mins",
+            "postDescription": description,
+            "authorUid": uid,
+            "postImageUrl": coverUrl,
+            "postPercent": "80%",
+            "postDateCreated": now,
+            "ingredients": _ingredientText,
+            "steps": _steps
+          })
+          .then((value) => true)
+          .catchError((e) {
+            print(e.toString());
+            return false;
+          });
+      return result;
     } on FirebaseException catch (e) {
       print(e.message);
       return false;
     }
-
-    CollectionReference _usersPosts = FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
-        .collection("posts");
-    bool result = await _usersPosts
-        .add({
-          "postRecipeTitle": foodName,
-          "postDuration": "${cookingDuration.round().toString()} mins",
-          "postDescription": description,
-          "authorUid": uid,
-          "postImageUrl": coverUrl,
-          "postPercent": "80%",
-          "ingredients": _ingredientText,
-          "steps": _steps
-        })
-        .then((value) => true)
-        .catchError((e) {
-          print(e.toString());
-          return false;
-        });
-    return result;
   }
 
   Future<bool> uploadPantry(String uid, String coverPath, String foodName,

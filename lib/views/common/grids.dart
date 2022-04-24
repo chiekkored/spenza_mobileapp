@@ -56,6 +56,11 @@ class CustomGridViewWithoutDp extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           var _postData = snapshot.data!.docs[index];
           print("authorUid: ${_postData["authorUid"]}");
+          String postRecipeTitle = _postData["postRecipeTitle"];
+          postRecipeTitle = postRecipeTitle
+              .replaceFirst(
+                  postRecipeTitle[0], postRecipeTitle[0].toUpperCase())
+              .toString();
           return Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +213,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: CustomTextBold(
-                      text: _postData["postRecipeTitle"],
+                      text: postRecipeTitle,
                       size: 17.0,
                       color: CColors.PrimaryText),
                 ),
@@ -283,6 +288,11 @@ class CustomGridView extends StatelessWidget {
           var _authorData = snapshot.data![index][0];
           var _authorPostsData = snapshot.data![index][1];
           var _postDocId = snapshot.data![index][2];
+          String postRecipeTitle = _authorPostsData["postRecipeTitle"];
+          postRecipeTitle = postRecipeTitle
+              .replaceFirst(
+                  postRecipeTitle[0], postRecipeTitle[0].toUpperCase())
+              .toString();
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -474,7 +484,7 @@ class CustomGridView extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: CustomTextBold(
-                      text: _authorPostsData["postRecipeTitle"],
+                      text: postRecipeTitle,
                       size: 17.0,
                       color: CColors.PrimaryText),
                 ),

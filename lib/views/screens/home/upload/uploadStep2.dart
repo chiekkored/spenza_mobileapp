@@ -74,6 +74,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
               fit: FlexFit.loose,
               child: TextField(
                 controller: controller,
+                textCapitalization: TextCapitalization.sentences,
                 style: customTextFieldTextStyle(),
                 decoration:
                     customTextFieldInputDecoration(hint: "Enter ingredient"),
@@ -130,6 +131,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                 children: [
                   TextField(
                       controller: controller,
+                      textCapitalization: TextCapitalization.sentences,
                       maxLines: 4,
                       style: customTextFieldTextStyle(),
                       keyboardType: TextInputType.text,
@@ -436,7 +438,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                       showCustomModal(
                           context,
                           Container(
-                            padding: EdgeInsets.all(48.0),
+                            padding: const EdgeInsets.symmetric(vertical: 48.0),
                             decoration: BoxDecoration(
                               color: CColors.White,
                               borderRadius: BorderRadius.circular(24.0),
@@ -503,10 +505,8 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                                         child: CustomPrimaryButton(
                                             text: "Back to Home",
                                             doOnPressed: () =>
-                                                Navigator.popUntil(
-                                                    context,
-                                                    ModalRoute.withName(Navigator
-                                                        .defaultRouteName))),
+                                                Navigator.of(context).popUntil(
+                                                    (route) => route.isFirst)),
                                       )
                                     ],
                                   ),

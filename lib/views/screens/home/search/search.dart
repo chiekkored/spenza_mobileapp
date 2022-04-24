@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
@@ -22,12 +23,14 @@ class SearchScreen extends StatefulWidget {
   _SearchScreenState createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen>
+    with AutomaticKeepAliveClientMixin {
   TextEditingController _searchTextController = TextEditingController();
   SearchViewModel _searchVM = SearchViewModel();
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var _userProvider = context.read<UserProvider>();
     return Container(
       color: CColors.White,
@@ -219,54 +222,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   padding: EdgeInsets.all(24.0),
                   width: MediaQuery.of(context).size.width,
                   color: CColors.White,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomTextBold(
-                          text: "Search suggestions",
-                          size: 17.0,
-                          color: CColors.PrimaryText),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: Row(
-                          children: [
-                            CustomRadioButton(
-                                doOnPressed: () {},
-                                text: "sushi",
-                                color: CColors.Form,
-                                fontColor: CColors.PrimaryText),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: CustomRadioButton(
-                                  doOnPressed: () {},
-                                  text: "breakfast",
-                                  color: CColors.Form,
-                                  fontColor: CColors.PrimaryText),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Row(
-                          children: [
-                            CustomRadioButton(
-                                doOnPressed: () {},
-                                text: "seafood",
-                                color: CColors.Form,
-                                fontColor: CColors.PrimaryText),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: CustomRadioButton(
-                                  doOnPressed: () {},
-                                  text: "fried rice",
-                                  color: CColors.Form,
-                                  fontColor: CColors.PrimaryText),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  child: GroupButton(
+                    isRadio: true,
+                    onSelected: (str, index, isSelected) =>
+                        _searchTextController.text = str.toString(),
+                    options: customGroupButtonOptions(),
+                    buttons: ["sushi", "breakfast", "seafood", "fried rice"],
                   ),
                 )
               ],
@@ -276,4 +237,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

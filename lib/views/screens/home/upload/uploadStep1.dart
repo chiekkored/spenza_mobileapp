@@ -149,6 +149,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: TextField(
+                        textCapitalization: TextCapitalization.sentences,
                         controller: _foodNameTextController,
                         style: customTextFieldTextStyle(),
                         decoration: customTextFieldInputDecoration(
@@ -166,6 +167,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: TextField(
                         controller: _descriptionTextController,
+                        textCapitalization: TextCapitalization.sentences,
                         maxLines: 3,
                         keyboardType: TextInputType.text,
                         style: customTextFieldTextStyle(),

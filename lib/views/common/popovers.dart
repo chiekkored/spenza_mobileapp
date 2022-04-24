@@ -123,7 +123,7 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                                 width: 78.0,
                               ),
                               CustomTextBold(
-                                  text: "Ingredient",
+                                  text: "Pantry",
                                   size: 15.0,
                                   color: CColors.PrimaryText),
                             ],

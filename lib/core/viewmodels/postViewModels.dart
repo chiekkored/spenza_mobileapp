@@ -79,6 +79,36 @@ class PostViewModel {
     });
   }
 
+  Future<List<dynamic>> getAllPosts() async {
+    // _list[0] = user collection
+    // _list[1] = user posts collection
+    List<dynamic> _list = [];
+
+    CollectionReference _users = FirebaseFirestore.instance.collection("users");
+
+    // Get following lists
+    return await _users.get().then((users) async {
+      // For loop following users and get its userData
+      for (var user in users.docs) {
+        await _users.doc(user["uid"]).get().then((userData) async {
+          // Get users' posts
+          return await _users
+              .doc(user["uid"])
+              .collection("posts")
+              .get()
+              .then((postsData) {
+            for (var post in postsData.docs) {
+              _list.add([userData.data(), post.data(), post.id]);
+            }
+          });
+        });
+      }
+      _list.sort(
+          (a, b) => b[1]["postDateCreated"].compareTo(a[1]["postDateCreated"]));
+      return _list;
+    });
+  }
+
   Future<bool> likePost(String profileUid, String postDocId, String userUid,
       String userName, String userDpUrl) async {
     DateTime now = new DateTime.now();

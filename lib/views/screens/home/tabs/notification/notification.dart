@@ -106,7 +106,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                       padding:
                                           const EdgeInsets.only(bottom: 24.0),
                                       child: CustomTextBold(
-                                          text: "Yesterday",
+                                          text: "Earlier",
                                           size: 17.0,
                                           color: CColors.PrimaryText),
                                     ),
@@ -305,7 +305,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                         padding:
                                             const EdgeInsets.only(bottom: 24.0),
                                         child: CustomTextBold(
-                                            text: "Yesterday",
+                                            text: "Earlier",
                                             size: 17.0,
                                             color: CColors.PrimaryText),
                                       ),
@@ -332,7 +332,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                         padding:
                                             const EdgeInsets.only(bottom: 24.0),
                                         child: CustomTextBold(
-                                            text: "Yesterday",
+                                            text: "Earlier",
                                             size: 17.0,
                                             color: CColors.PrimaryText),
                                       ),
