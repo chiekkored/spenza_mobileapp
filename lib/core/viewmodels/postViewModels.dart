@@ -112,11 +112,6 @@ class PostViewModel {
   Future<bool> likePost(String profileUid, String postDocId, String userUid,
       String userName, String userDpUrl) async {
     DateTime now = new DateTime.now();
-    print("profileUid: $profileUid");
-    print("postDocId: $postDocId");
-    print("userUid: $userUid");
-    print("userName: $userName");
-    print("userDpUrl: $userDpUrl");
     return await FirebaseFirestore.instance // Add document for posts likes
         .collection('users')
         .doc(profileUid)
@@ -167,8 +162,6 @@ class PostViewModel {
 
   Future<bool> unlikePost(String profileUid, String postDocId, String userUid,
       String likeDocId) async {
-    DateTime now = new DateTime.now();
-
     return await FirebaseFirestore.instance // Delete document for posts likes
         .collection('users')
         .doc(profileUid)

@@ -314,10 +314,9 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                                       padding: const EdgeInsets.only(top: 24.0),
                                       child: CustomPrimaryButton(
                                           text: "Back to Home",
-                                          doOnPressed: () => Navigator.popUntil(
-                                              context,
-                                              ModalRoute.withName(
-                                                  Navigator.defaultRouteName))),
+                                          doOnPressed: () =>
+                                              Navigator.of(context).popUntil(
+                                                  (route) => route.isFirst)),
                                     )
                                   ],
                                 ),

@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/recipeDetailViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -40,6 +42,7 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   late Future<QuerySnapshot> _getLikes;
   late Future<DocumentSnapshot> _getRecipeDetails;
+  late Future<DocumentSnapshot> _getIfPantryExist;
   RecipeDetailsViewModel _recipeDetailVM = RecipeDetailsViewModel();
 
   @override
@@ -52,6 +55,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var _userProvider = context.read<UserProvider>();
     return Scaffold(
       body: SlidingUpPanel(
         borderRadius: BorderRadius.all(Radius.circular(24.0)),
@@ -256,38 +260,69 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                               size: 15.0,
                                               color: CColors.SecondaryText);
                                         } else {
-                                          return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0),
-                                                child: Transform.scale(
-                                                  scale: 1.2,
-                                                  child: Checkbox(
-                                                    splashRadius: 0.0,
-                                                    checkColor:
-                                                        CColors.PrimaryColor,
-                                                    fillColor:
-                                                        MaterialStateProperty
-                                                            .all(CColors
-                                                                .AccentColor),
-                                                    value: true,
-                                                    shape: CircleBorder(),
-                                                    onChanged: (bool? value) {
-                                                      return null;
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                              CustomTextMedium(
-                                                  text: postDataIngredients[
-                                                      index],
-                                                  size: 15.0,
-                                                  color: CColors.MainText)
-                                            ],
-                                          );
+                                          return FutureBuilder<QuerySnapshot>(
+                                              future: _recipeDetailVM
+                                                  .getIfPantryExist(
+                                                      _userProvider
+                                                          .userInfo.uid,
+                                                      postDataIngredients[
+                                                          index]),
+                                              builder: (context, isExist) {
+                                                if (isExist.hasData) {
+                                                  return Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 8.0),
+                                                        child: Transform.scale(
+                                                          scale: 1.2,
+                                                          child: Checkbox(
+                                                            splashRadius: 0.0,
+                                                            checkColor: CColors
+                                                                .PrimaryColor,
+                                                            fillColor: isExist
+                                                                    .data!
+                                                                    .docs
+                                                                    .isNotEmpty
+                                                                ? MaterialStateProperty
+                                                                    .all(CColors
+                                                                        .AccentColor)
+                                                                : MaterialStateProperty
+                                                                    .all(CColors
+                                                                        .PrimaryColor),
+                                                            value: isExist
+                                                                .data!
+                                                                .docs
+                                                                .isNotEmpty,
+                                                            shape:
+                                                                CircleBorder(),
+                                                            onChanged:
+                                                                (bool? value) {
+                                                              return null;
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      CustomTextMedium(
+                                                          text:
+                                                              postDataIngredients[
+                                                                  index],
+                                                          size: 15.0,
+                                                          color:
+                                                              CColors.MainText)
+                                                    ],
+                                                  );
+                                                } else {
+                                                  return CustomTextMedium(
+                                                      text: "Checking pantry",
+                                                      size: 12.0,
+                                                      color: CColors.Form);
+                                                }
+                                              });
                                         }
                                       }),
                                 ),

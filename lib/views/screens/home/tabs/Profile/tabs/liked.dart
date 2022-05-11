@@ -50,7 +50,7 @@ class _LikedTabState extends State<LikedTab>
                   return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
-                          _loadLikes = _postVM.getPosts(widget.uid);
+                          _loadLikes = _postVM.getProfileLikes(widget.uid);
                         });
                       },
                       child: ListView(

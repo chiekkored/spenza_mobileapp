@@ -112,31 +112,52 @@ class UploadViewModel {
 
   Future<List<ImageLabel>> getSuggested(InputImage inputImage) async {
     List<ImageLabel> suggestedList = [];
-    FirebaseCustomModel objectLabelerModel =
-        await FirebaseModelDownloader.instance.getModel('Object-Labeler',
-            FirebaseModelDownloadType.localModelUpdateInBackground);
-    FirebaseCustomModel foodModel = await FirebaseModelDownloader.instance
-        .getModel(
-            'Food', FirebaseModelDownloadType.localModelUpdateInBackground);
+    final modelManager = FirebaseImageLabelerModelManager();
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    final objectLabelerModelName = "Object-Labeler";
+    final foodModelName = "Food";
 
-    final imagePDModel = GoogleMlKit.vision.imageLabeler();
-    final imageLabelerOLModel = GoogleMlKit.vision.imageLabeler(
-        CustomImageLabelerOptions(
-            customModel: CustomLocalModel.file,
-            customModelPath: objectLabelerModel.file.path));
-    final imageLabelerFModel = GoogleMlKit.vision.imageLabeler(
-        CustomImageLabelerOptions(
-            customModel: CustomLocalModel.file,
-            customModelPath: foodModel.file.path));
+    // TEXT RECOGNITION
+    final RecognizedText recognizedText =
+        await textRecognizer.processImage(inputImage);
+    List<ImageLabel> textToImageLabelModel = [];
+    for (TextBlock block in recognizedText.blocks) {
+      for (TextLine line in block.lines) {
+        textToImageLabelModel
+            .add(ImageLabel(confidence: 0, label: line.text, index: 0000));
+      }
+    }
 
+    // Image Labeling
+    // Download Custom Models
+    if (await modelManager.isModelDownloaded(objectLabelerModelName)) {
+      await modelManager.downloadModel("Object-Labeler");
+    }
+    if (await modelManager.isModelDownloaded(foodModelName)) {
+      await FirebaseImageLabelerModelManager().downloadModel("Food");
+    }
+    final objectLabelerModelOptions = FirebaseLabelerOption(
+        confidenceThreshold: 0.5, modelName: objectLabelerModelName);
+    final foodModelOptions = FirebaseLabelerOption(
+        confidenceThreshold: 0.5, modelName: foodModelName);
+
+    // Initialize Image Labeler
+    final imagePDModel = ImageLabeler(options: ImageLabelerOptions());
+    final imageLabelerOLModel =
+        ImageLabeler(options: objectLabelerModelOptions);
+    final imageLabelerFModel = ImageLabeler(options: foodModelOptions);
+
+    // Process Image Labeling
     final List<ImageLabel> mlKitLabels =
         await imagePDModel.processImage(inputImage);
     final List<ImageLabel> objectLabels =
         await imageLabelerOLModel.processImage(inputImage);
     final List<ImageLabel> foodLabels =
         await imageLabelerFModel.processImage(inputImage);
-    // suggestedList.add([mlKitLabels, objectLabels, foodLabels]);
+
+    // Combine into an array
     suggestedList = [
+      ...textToImageLabelModel,
       ...foodLabels,
       ...objectLabels,
       ...mlKitLabels,

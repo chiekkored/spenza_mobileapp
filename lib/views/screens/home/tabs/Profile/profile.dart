@@ -95,8 +95,9 @@ class _ProfileTabState extends State<ProfileTab> {
                               );
                             },
                             icon: Icon(
-                              Icons.share,
+                              Icons.shopping_bag,
                               color: CColors.MainText,
+                              size: 30.0,
                             ),
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
