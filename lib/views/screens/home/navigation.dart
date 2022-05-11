@@ -92,6 +92,8 @@ class _NavigationState extends State<Navigation> {
               inactiveColorPrimary: CColors.SecondaryText,
             ),
             PersistentBottomNavBarItem(
+              onSelectedTabPressWhenNoScreensPushed: () =>
+                  profileBottomSheet(context),
               icon: Icon(CIcons.profile),
               iconSize: 20,
               title: "Profile",

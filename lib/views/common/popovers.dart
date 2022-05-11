@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
@@ -131,6 +132,55 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      });
+}
+
+/// "Choose one option" Bottom Sheet
+Future<dynamic> profileBottomSheet(BuildContext context) {
+  AuthViewModel _authVM = AuthViewModel();
+  return showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(32.0),
+          topRight: const Radius.circular(32.0),
+        ),
+      ),
+      builder: (builder) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _authVM.logout();
+                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return SignInScreen();
+                      },
+                    ),
+                    (_) => false,
+                  );
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(Icons.logout),
+                    SizedBox(
+                      width: 16.0,
+                    ),
+                    CustomTextRegular(
+                        text: "Logout", size: 16.0, color: CColors.MainText)
                   ],
                 ),
               )

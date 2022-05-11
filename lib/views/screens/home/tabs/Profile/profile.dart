@@ -22,6 +22,7 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab> {
   ProfileViewModel _profileVM = ProfileViewModel();
+  AuthViewModel _authVM = AuthViewModel();
 
   late Future<DocumentSnapshot<Object?>> _getUserData;
   late Stream<QuerySnapshot<Object?>> _getRecipes;
@@ -41,7 +42,6 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     var _userProvider = context.read<UserProvider>();
-    AuthViewModel _authVM = AuthViewModel();
     return Material(
       type: MaterialType.transparency,
       child: DefaultTabController(
@@ -83,16 +83,16 @@ class _ProfileTabState extends State<ProfileTab> {
                           ),
                           IconButton(
                             onPressed: () {
-                              _authVM.logout();
-                              Navigator.of(context, rootNavigator: true)
-                                  .pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return SignInScreen();
-                                  },
-                                ),
-                                (_) => false,
-                              );
+                              // _authVM.logout();
+                              // Navigator.of(context, rootNavigator: true)
+                              //     .pushAndRemoveUntil(
+                              //   MaterialPageRoute(
+                              //     builder: (BuildContext context) {
+                              //       return SignInScreen();
+                              //     },
+                              //   ),
+                              //   (_) => false,
+                              // );
                             },
                             icon: Icon(
                               Icons.shopping_bag,
