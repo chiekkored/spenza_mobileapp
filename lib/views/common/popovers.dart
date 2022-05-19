@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/searchProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
@@ -190,9 +192,13 @@ Future<dynamic> profileBottomSheet(BuildContext context) {
       });
 }
 
+typedef ParentFunctionCallback = void Function(String value);
+
 /// Settings filter Bottom Sheet
 class ModalBottomSheet extends StatefulWidget {
-  const ModalBottomSheet({Key? key}) : super(key: key);
+  final ParentFunctionCallback setSearchFilter;
+  const ModalBottomSheet({Key? key, required this.setSearchFilter})
+      : super(key: key);
 
   @override
   _ModalBottomSheetState createState() => _ModalBottomSheetState();
@@ -203,7 +209,17 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
   double _cookingDurationSlider = 0.0;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    var searchProvider = context.read<SearchProvider>();
+    _ingredientsOnHandSlider = searchProvider.ingredientOnHand;
+    _cookingDurationSlider = searchProvider.cookingDuration;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var searchProvider = context.read<SearchProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 24.0),
       child: Column(
@@ -369,7 +385,12 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                 Expanded(
                   child: CustomPrimaryButton(
                       text: "Done",
-                      doOnPressed: () => Navigator.maybePop(context)),
+                      doOnPressed: () {
+                        searchProvider.filterSet("", _ingredientsOnHandSlider,
+                            _cookingDurationSlider);
+                        widget.setSearchFilter("Search Filter");
+                        Navigator.maybePop(context);
+                      }),
                 ),
               ],
             ),

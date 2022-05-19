@@ -14,24 +14,29 @@ class UploadViewModel {
       String foodName,
       String description,
       double cookingDuration,
-      List<TextEditingController> ingredientList,
+      List<dynamic> ingredientList,
       List<TextEditingController> stepsList,
-      List<XFile?> imagesList) async {
+      List<XFile?> imagesList,
+      List<String> tags) async {
     int stepsCount = 0;
-    List<String> _ingredientText = [];
+    List<Map<String, dynamic>> _ingredientText = [];
     List<String> _imagesPath = [];
     List<Map<String, dynamic>> _steps = [];
     String coverUrl;
 
     // Extract Texts from TextEditingController List
-    for (var item in ingredientList) {
-      _ingredientText.add(item.text);
+    for (List<TextEditingController> item in ingredientList) {
+      _ingredientText.add({
+        "ingredientQty": item[0].text,
+        "ingredientUnit": item[1].text,
+        "ingredientText": item[2].text
+      });
     }
+
     // Extract Paths from XFile List
     for (var item in imagesList) {
       _imagesPath.add(item!.path);
     }
-
     // Upload images to Firebase Storage
     final storageRef = FirebaseStorage.instance.ref();
     try {
@@ -130,11 +135,13 @@ class UploadViewModel {
 
     // Image Labeling
     // Download Custom Models
-    if (await modelManager.isModelDownloaded(objectLabelerModelName)) {
+    if (!await modelManager.isModelDownloaded(objectLabelerModelName)) {
       await modelManager.downloadModel("Object-Labeler");
+      print("Downloaded Object-Labaler Model");
     }
-    if (await modelManager.isModelDownloaded(foodModelName)) {
+    if (!await modelManager.isModelDownloaded(foodModelName)) {
       await FirebaseImageLabelerModelManager().downloadModel("Food");
+      print("Downloaded Food Model");
     }
     final objectLabelerModelOptions = FirebaseLabelerOption(
         confidenceThreshold: 0.5, modelName: objectLabelerModelName);
@@ -148,21 +155,25 @@ class UploadViewModel {
     final imageLabelerFModel = ImageLabeler(options: foodModelOptions);
 
     // Process Image Labeling
-    final List<ImageLabel> mlKitLabels =
-        await imagePDModel.processImage(inputImage);
-    final List<ImageLabel> objectLabels =
-        await imageLabelerOLModel.processImage(inputImage);
-    final List<ImageLabel> foodLabels =
-        await imageLabelerFModel.processImage(inputImage);
+    try {
+      final List<ImageLabel> mlKitLabels =
+          await imagePDModel.processImage(inputImage);
+      final List<ImageLabel> objectLabels =
+          await imageLabelerOLModel.processImage(inputImage);
+      final List<ImageLabel> foodLabels =
+          await imageLabelerFModel.processImage(inputImage);
 
-    // Combine into an array
-    suggestedList = [
-      ...textToImageLabelModel,
-      ...foodLabels,
-      ...objectLabels,
-      ...mlKitLabels,
-    ];
-
+      // Combine into an array
+      suggestedList = [
+        ...textToImageLabelModel,
+        ...foodLabels,
+        ...objectLabels,
+        ...mlKitLabels,
+      ];
+      print("Suggested lIST: $suggestedList");
+    } catch (e) {
+      print("Error processing image: ${e.toString()}");
+    }
     return suggestedList;
   }
 }

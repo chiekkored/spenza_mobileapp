@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
@@ -260,69 +261,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                               size: 15.0,
                                               color: CColors.SecondaryText);
                                         } else {
-                                          return FutureBuilder<QuerySnapshot>(
-                                              future: _recipeDetailVM
-                                                  .getIfPantryExist(
-                                                      _userProvider
-                                                          .userInfo.uid,
-                                                      postDataIngredients[
-                                                          index]),
-                                              builder: (context, isExist) {
-                                                if (isExist.hasData) {
-                                                  return Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 8.0),
-                                                        child: Transform.scale(
-                                                          scale: 1.2,
-                                                          child: Checkbox(
-                                                            splashRadius: 0.0,
-                                                            checkColor: CColors
-                                                                .PrimaryColor,
-                                                            fillColor: isExist
-                                                                    .data!
-                                                                    .docs
-                                                                    .isNotEmpty
-                                                                ? MaterialStateProperty
-                                                                    .all(CColors
-                                                                        .AccentColor)
-                                                                : MaterialStateProperty
-                                                                    .all(CColors
-                                                                        .PrimaryColor),
-                                                            value: isExist
-                                                                .data!
-                                                                .docs
-                                                                .isNotEmpty,
-                                                            shape:
-                                                                CircleBorder(),
-                                                            onChanged:
-                                                                (bool? value) {
-                                                              return null;
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      CustomTextMedium(
-                                                          text:
-                                                              postDataIngredients[
-                                                                  index],
-                                                          size: 15.0,
-                                                          color:
-                                                              CColors.MainText)
-                                                    ],
-                                                  );
-                                                } else {
-                                                  return CustomTextMedium(
-                                                      text: "Checking pantry",
-                                                      size: 12.0,
-                                                      color: CColors.Form);
-                                                }
-                                              });
+                                          return ingredientsSection(
+                                              _userProvider,
+                                              postDataIngredients,
+                                              index);
                                         }
                                       }),
                                 ),
@@ -493,5 +435,121 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         ),
       ),
     );
+  }
+
+  FutureBuilder<QuerySnapshot<Object?>> ingredientsSection(
+      UserProvider _userProvider,
+      List<dynamic> postDataIngredients,
+      int index) {
+    return FutureBuilder<QuerySnapshot>(
+        future: _recipeDetailVM.getIfPantryExist(_userProvider.userInfo.uid,
+            postDataIngredients[index]["ingredientText"]),
+        builder: (context, isExist) {
+          if (isExist.hasData) {
+            if (isExist.data!.docs.isNotEmpty) {
+              var pantryData = isExist.data!.docs[index];
+              int pantryQty = int.parse(pantryData["pantryQuantity"]);
+              int ingredientQty =
+                  int.parse(postDataIngredients[index]["ingredientQty"]);
+              if (pantryQty >= ingredientQty) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          splashRadius: 0.0,
+                          checkColor: CColors.PrimaryColor,
+                          fillColor:
+                              MaterialStateProperty.all(CColors.AccentColor),
+                          value: true,
+                          shape: CircleBorder(),
+                          onChanged: (bool? value) {
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    CustomTextMedium(
+                        text:
+                            "${postDataIngredients[index]["ingredientQty"]} ${postDataIngredients[index]["ingredientUnit"]} ${postDataIngredients[index]["ingredientText"]}",
+                        size: 15.0,
+                        color: CColors.MainText)
+                  ],
+                );
+              } else {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Tooltip(
+                      message:
+                          "You need ${(ingredientQty - pantryQty).toString()} more ${pantryData["pantryUnit"]}",
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 13.0, vertical: 12.0),
+                        child: Container(
+                          height: 22.0,
+                          width: 22.0,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.yellow[700]),
+                          child: Icon(
+                            Icons.question_mark,
+                            color: CColors.White,
+                            size: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: CustomTextMedium(
+                          text:
+                              "${postDataIngredients[index]["ingredientQty"]} ${postDataIngredients[index]["ingredientUnit"]} ${postDataIngredients[index]["ingredientText"]}",
+                          size: 15.0,
+                          color: CColors.MainText),
+                    )
+                  ],
+                );
+              }
+            } else {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Tooltip(
+                    message: "ada",
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          splashRadius: 0.0,
+                          checkColor: CColors.PrimaryColor,
+                          fillColor:
+                              MaterialStateProperty.all(CColors.PrimaryColor),
+                          value: false,
+                          shape: CircleBorder(),
+                          onChanged: (bool? value) {
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  CustomTextMedium(
+                      text:
+                          "${postDataIngredients[index]["ingredientQty"]} ${postDataIngredients[index]["ingredientUnit"]} ${postDataIngredients[index]["ingredientText"]}",
+                      size: 15.0,
+                      color: CColors.MainText)
+                ],
+              );
+            }
+          } else {
+            return CustomTextMedium(
+                text: "Checking pantry", size: 12.0, color: CColors.Form);
+          }
+        });
   }
 }

@@ -98,3 +98,35 @@ InputDecoration customTextFieldInputDecoration({required String hint}) {
     ),
   );
 }
+
+/// Outlined text fields: Text field decoration square
+///
+/// @param hint Text hint
+InputDecoration customTextFieldInputDecorationSquare({required String hint}) {
+  return InputDecoration(
+    hintText: hint,
+    hintStyle: TextStyle(
+        fontFamily: "Inter",
+        fontWeight: FontWeight.w500,
+        fontSize: 15,
+        letterSpacing: 0.5,
+        color: CColors.SecondaryText),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: const BorderSide(
+        color: CColors.Outline,
+        width: 1.0,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: const BorderSide(
+        color: CColors.PrimaryColor,
+        width: 2.0,
+      ),
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+  );
+}

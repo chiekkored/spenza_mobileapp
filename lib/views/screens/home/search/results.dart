@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/searchProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
@@ -32,6 +33,15 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     _loadSearch = _searchVM.getSearch(widget.searchText,
         _userProvider.userInfo.uid); // only create the future once.
     super.initState();
+  }
+
+  setSearchFilter(String result) {
+    var _userProvider = context.read<UserProvider>();
+    setState(() {
+      _loadSearch =
+          _searchVM.getSearch(widget.searchText, _userProvider.userInfo.uid);
+      print(result);
+    });
   }
 
   @override
@@ -135,7 +145,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                   ),
                                 ),
                                 builder: (BuildContext builder) {
-                                  return ModalBottomSheet();
+                                  return ModalBottomSheet(
+                                    setSearchFilter: setSearchFilter,
+                                  );
                                 }),
                             child: SvgPicture.asset(
                               "assets/svg/settings.svg",
@@ -210,20 +222,51 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                               );
                             } else {
                               print("-Search Results- has Data");
-                              print(snapshot.data);
-                              return RefreshIndicator(
-                                onRefresh: () async {
-                                  setState(() {
-                                    _loadSearch = _searchVM.getSearch(
-                                        widget.searchText,
-                                        _userProvider.userInfo.uid);
-                                  });
-                                },
-                                child: CustomGridView(
-                                  snapshot: snapshot,
-                                  fromScreen: "Search",
-                                ),
-                              );
+                              var searchProvider =
+                                  context.read<SearchProvider>();
+                              if (searchProvider.cookingDuration != 0.0 &&
+                                  searchProvider.ingredientOnHand != 0.0) {
+                                print("-----------in");
+                                return RefreshIndicator(
+                                  onRefresh: () async {
+                                    setState(() {
+                                      _loadSearch = _searchVM.getSearch(
+                                          widget.searchText,
+                                          _userProvider.userInfo.uid);
+                                    });
+                                  },
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    children: [
+                                      CustomGridViewWithFilter(
+                                        snapshot: snapshot,
+                                        fromScreen: "Search",
+                                      )
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                print("-----------out");
+                                return RefreshIndicator(
+                                  onRefresh: () async {
+                                    setState(() {
+                                      _loadSearch = _searchVM.getSearch(
+                                          widget.searchText,
+                                          _userProvider.userInfo.uid);
+                                    });
+                                  },
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    children: [
+                                      CustomGridView(
+                                        snapshot: snapshot,
+                                        fromScreen: "Search",
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              ;
                             }
                           default:
                             return Container();

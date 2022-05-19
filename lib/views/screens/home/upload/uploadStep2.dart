@@ -19,12 +19,14 @@ class UploadStep2Screen extends StatefulWidget {
   final String foodName;
   final String description;
   final double cookingDuration;
+  final List<String> tags;
   const UploadStep2Screen(
       {Key? key,
       required this.coverPath,
       required this.foodName,
       required this.description,
-      required this.cookingDuration})
+      required this.cookingDuration,
+      required this.tags})
       : super(key: key);
 
   @override
@@ -39,7 +41,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
   List<Widget> _inputIngredients = [];
   List<Widget> _inputSteps = [];
 
-  List<TextEditingController> _ingredientTextControllerList = [];
+  List<List<TextEditingController>> _ingredientTextControllerList = [];
   List<TextEditingController> _stepsTextControllerList = [];
   List<XFile?> _imagesList = [];
 
@@ -55,8 +57,11 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
   }
 
   void _addInputIngredients() {
-    TextEditingController controller = TextEditingController();
-    _ingredientTextControllerList.add(controller);
+    TextEditingController qtyController = TextEditingController();
+    TextEditingController unitController = TextEditingController();
+    TextEditingController ingController = TextEditingController();
+    _ingredientTextControllerList
+        .add([qtyController, unitController, ingController]);
     _inputIngredients = List.from(_inputIngredients)
       ..add(ListTile(
         dense: true,
@@ -70,14 +75,39 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
               padding: const EdgeInsets.only(right: 15.0),
               child: SvgPicture.asset("assets/svg/drag_icon.svg"),
             ),
+            Container(
+              width: 60.0,
+              child: TextField(
+                controller: qtyController,
+                textCapitalization: TextCapitalization.sentences,
+                keyboardType: TextInputType.number,
+                style: customTextFieldTextStyle(),
+                decoration: customTextFieldInputDecorationSquare(hint: "Qty"),
+              ),
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            Container(
+              width: 80.0,
+              child: TextField(
+                controller: unitController,
+                textCapitalization: TextCapitalization.sentences,
+                style: customTextFieldTextStyle(),
+                decoration: customTextFieldInputDecorationSquare(hint: "Unit"),
+              ),
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
             Flexible(
               fit: FlexFit.loose,
               child: TextField(
-                controller: controller,
+                controller: ingController,
                 textCapitalization: TextCapitalization.sentences,
                 style: customTextFieldTextStyle(),
-                decoration:
-                    customTextFieldInputDecoration(hint: "Enter ingredient"),
+                decoration: customTextFieldInputDecorationSquare(
+                    hint: "Enter ingredient"),
               ),
             ),
           ],
@@ -456,7 +486,8 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                               widget.cookingDuration,
                               _ingredientTextControllerList,
                               _stepsTextControllerList,
-                              _imagesList)
+                              _imagesList,
+                              widget.tags)
                           .then((value) {
                         Navigator.of(context).maybePop(context);
                         value

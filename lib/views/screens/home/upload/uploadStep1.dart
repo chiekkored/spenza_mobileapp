@@ -15,6 +15,7 @@ import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/upload/uploadStep2.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 
 class UploadStep1Screen extends StatefulWidget {
   const UploadStep1Screen({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
   double _cookingDurationSlider = 10.0;
   TextEditingController _foodNameTextController = TextEditingController();
   TextEditingController _descriptionTextController = TextEditingController();
+  TextfieldTagsController _tags = TextfieldTagsController();
   final ImagePicker _picker = ImagePicker();
   XFile image = XFile("");
   bool isCoverAttached = false;
@@ -253,6 +255,115 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                         });
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: CustomTextBold(
+                          text: "Tags", size: 17.0, color: CColors.PrimaryText),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: TextFieldTags(
+                        textfieldTagsController: _tags,
+                        initialTags: ["Food", "Drink"],
+                        inputfieldBuilder:
+                            (context, tec, fn, error, onChanged, onSubmitted) {
+                          return ((context, sc, tags, onTagDelete) {
+                            return TextField(
+                              textCapitalization: TextCapitalization.sentences,
+                              controller: tec,
+                              focusNode: fn,
+                              style: customTextFieldTextStyle(),
+                              decoration: InputDecoration(
+                                // isDense: true,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderSide: const BorderSide(
+                                    color: CColors.Outline,
+                                    width: 1.0,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderSide: const BorderSide(
+                                    color: CColors.PrimaryColor,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                hintText: _tags.hasTags ? '' : "Enter tags",
+                                hintStyle: TextStyle(
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    letterSpacing: 0.5,
+                                    color: CColors.SecondaryText),
+                                errorText: error,
+                                prefixIconConstraints: BoxConstraints(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.74),
+                                prefixIcon: tags.isNotEmpty
+                                    ? SingleChildScrollView(
+                                        controller: sc,
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                            children: tags.map((String tag) {
+                                          return Container(
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0),
+                                              ),
+                                              color: Color.fromARGB(
+                                                  255, 74, 137, 92),
+                                            ),
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10.0,
+                                                vertical: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                InkWell(
+                                                  child: Text(
+                                                    '$tag',
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onTap: () {
+                                                    print("$tag selected");
+                                                  },
+                                                ),
+                                                const SizedBox(width: 4.0),
+                                                InkWell(
+                                                  child: const Icon(
+                                                    Icons.cancel,
+                                                    size: 14.0,
+                                                    color: Color.fromARGB(
+                                                        255, 233, 233, 233),
+                                                  ),
+                                                  onTap: () {
+                                                    onTagDelete(tag);
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        }).toList()),
+                                      )
+                                    : null,
+                              ),
+                              onChanged: onChanged,
+                              onSubmitted: onSubmitted,
+                            );
+                          });
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -276,7 +387,8 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                           coverPath: image.path,
                           foodName: _foodNameTextController.text,
                           description: _descriptionTextController.text,
-                          cookingDuration: _cookingDurationSlider);
+                          cookingDuration: _cookingDurationSlider,
+                          tags: _tags.getTags!);
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (_) => page));
                     }

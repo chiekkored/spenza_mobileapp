@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/searchProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
@@ -66,6 +67,9 @@ class _SearchScreenState extends State<SearchScreen>
                               if (_searchTextController.text == "") {
                                 return null;
                               } else {
+                                var searchProvider =
+                                    context.read<SearchProvider>();
+                                searchProvider.filterSet("", 0.0, 0.0);
                                 pushNewScreen(context,
                                     screen: SearchResultScreen(
                                         searchText:
@@ -102,28 +106,28 @@ class _SearchScreenState extends State<SearchScreen>
                                 )),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24.0),
-                          child: GestureDetector(
-                            onTap: () => showModalBottomSheet(
-                                isScrollControlled: true,
-                                useRootNavigator: true,
-                                context: context,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: const Radius.circular(32.0),
-                                    topRight: const Radius.circular(32.0),
-                                  ),
-                                ),
-                                builder: (BuildContext builder) {
-                                  return ModalBottomSheet();
-                                }),
-                            child: SvgPicture.asset(
-                              "assets/svg/settings.svg",
-                              height: 24,
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 24.0),
+                        //   child: GestureDetector(
+                        //     onTap: () => showModalBottomSheet(
+                        //         isScrollControlled: true,
+                        //         useRootNavigator: true,
+                        //         context: context,
+                        //         shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.only(
+                        //             topLeft: const Radius.circular(32.0),
+                        //             topRight: const Radius.circular(32.0),
+                        //           ),
+                        //         ),
+                        //         builder: (BuildContext builder) {
+                        //           return ModalBottomSheet();
+                        //         }),
+                        //     child: SvgPicture.asset(
+                        //       "assets/svg/settings.svg",
+                        //       height: 24,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
