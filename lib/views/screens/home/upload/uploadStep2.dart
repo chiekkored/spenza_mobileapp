@@ -42,12 +42,13 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
   List<Widget> _inputSteps = [];
 
   List<List<TextEditingController>> _ingredientTextControllerList = [];
-  List<TextEditingController> _stepsTextControllerList = [];
+  List<List<TextEditingController>> _stepsTextControllerList = [];
   List<XFile?> _imagesList = [];
 
   int _countIngredients = 0;
   int _countSteps = 0;
   int _labelSteps = 1;
+  int index = 0;
 
   @override
   void initState() {
@@ -118,8 +119,9 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
 
   void _addInputSteps() {
     TextEditingController controller = TextEditingController();
-    _stepsTextControllerList.add(controller);
+    TextEditingController controller2 = TextEditingController();
     ImagePicker picker = ImagePicker();
+    _stepsTextControllerList.add([controller, controller2]);
     _inputSteps = List.from(_inputSteps)
       ..add(ListTile(
         dense: true,
@@ -193,34 +195,43 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                       )),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        print(_imagesList.iterator.current);
-                        if (_imagesList.asMap().containsKey(_countSteps - 1)) {
-                          return null;
-                        } else {
-                          var photo = await picker.pickImage(
-                              source: ImageSource.camera);
-                          if (photo == null) {
-                            return null;
-                          }
-                          _imagesList.insert(_countSteps - 1, photo);
-                          setState(() {});
-                        }
+                    child: StatefulBuilder(
+                      builder: (BuildContext context,
+                          void Function(void Function()) setState) {
+                        return OutlinedButton(
+                          key: Key("$_countSteps button"),
+                          onPressed: () async {
+                            print(_imagesList.iterator.current);
+                            if (_imagesList
+                                .asMap()
+                                .containsKey(_countSteps - 1)) {
+                              return null;
+                            } else {
+                              var photo = await picker.pickImage(
+                                  source: ImageSource.gallery);
+                              if (photo == null) {
+                                print("null");
+                                return null;
+                              }
+                              controller2.text = photo.path;
+                              setState(() {});
+                            }
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: CColors.Form,
+                            side: BorderSide.none,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 19.0),
+                            child: Center(
+                              child: SvgPicture.asset("assets/svg/camera.svg"),
+                            ),
+                          ),
+                        );
                       },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: CColors.Form,
-                        side: BorderSide.none,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 19.0),
-                        child: Center(
-                          child: SvgPicture.asset("assets/svg/camera.svg"),
-                        ),
-                      ),
                     ),
                   ),
                 ],
@@ -233,6 +244,8 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
       _countSteps++;
       _labelSteps++;
     });
+
+    index++;
   }
 
   @override
@@ -357,23 +370,7 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                           padding: const EdgeInsets.only(top: 32.0),
                           child: CustomTransparentButton(
                               text: "+ Steps",
-                              doOnPressed: () {
-                                if (_stepsTextControllerList[_countSteps - 1]
-                                            .text !=
-                                        '' &&
-                                    _imagesList
-                                        .asMap()
-                                        .containsKey(_countSteps - 1)) {
-                                  _addInputSteps();
-                                } else {
-                                  return showCustomDialog(
-                                      context,
-                                      "Fields Required",
-                                      "Please fill in Step $_countSteps first.",
-                                      "OK",
-                                      null);
-                                }
-                              }),
+                              doOnPressed: () => _addInputSteps()),
                         ),
                         _imagesList.isNotEmpty
                             ? Container(
@@ -455,16 +452,16 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                       //     return null;
                       //   }
                       // }
-                      for (var item in _stepsTextControllerList) {
-                        if (item.text == '') {
-                          return showCustomDialog(context, "Field Required",
-                              "Steps needs to be filled out", "OK", null);
-                        }
-                      }
-                      if (_imagesList.length < _countSteps) {
-                        return showCustomDialog(context, "Field Required",
-                            "Steps' images needs to be filled out", "OK", null);
-                      }
+                      // for (var item in _stepsTextControllerList) {
+                      //   if (item.text == '') {
+                      //     return showCustomDialog(context, "Field Required",
+                      //         "Steps needs to be filled out", "OK", null);
+                      //   }
+                      // }
+                      // if (_imagesList.length < _countSteps) {
+                      //   return showCustomDialog(context, "Field Required",
+                      //       "Steps' images needs to be filled out", "OK", null);
+                      // }
                       showCustomModal(
                           context,
                           Container(
@@ -486,7 +483,6 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                               widget.cookingDuration,
                               _ingredientTextControllerList,
                               _stepsTextControllerList,
-                              _imagesList,
                               widget.tags)
                           .then((value) {
                         Navigator.of(context).maybePop(context);

@@ -518,23 +518,20 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Tooltip(
-                    message: "ada",
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Transform.scale(
-                        scale: 1.2,
-                        child: Checkbox(
-                          splashRadius: 0.0,
-                          checkColor: CColors.PrimaryColor,
-                          fillColor:
-                              MaterialStateProperty.all(CColors.PrimaryColor),
-                          value: false,
-                          shape: CircleBorder(),
-                          onChanged: (bool? value) {
-                            return null;
-                          },
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Transform.scale(
+                      scale: 1.2,
+                      child: Checkbox(
+                        splashRadius: 0.0,
+                        checkColor: CColors.PrimaryColor,
+                        fillColor:
+                            MaterialStateProperty.all(CColors.PrimaryColor),
+                        value: false,
+                        shape: CircleBorder(),
+                        onChanged: (bool? value) {
+                          return null;
+                        },
                       ),
                     ),
                   ),

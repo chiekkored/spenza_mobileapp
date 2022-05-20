@@ -15,10 +15,8 @@ class UploadViewModel {
       String description,
       double cookingDuration,
       List<dynamic> ingredientList,
-      List<TextEditingController> stepsList,
-      List<XFile?> imagesList,
+      List<dynamic> stepsList,
       List<String> tags) async {
-    int stepsCount = 0;
     List<Map<String, dynamic>> _ingredientText = [];
     List<String> _imagesPath = [];
     List<Map<String, dynamic>> _steps = [];
@@ -32,28 +30,30 @@ class UploadViewModel {
         "ingredientText": item[2].text
       });
     }
-
-    // Extract Paths from XFile List
-    for (var item in imagesList) {
-      _imagesPath.add(item!.path);
-    }
     // Upload images to Firebase Storage
     final storageRef = FirebaseStorage.instance.ref();
     try {
       for (var item in stepsList) {
+        TextEditingController stepText = item[0];
+        // Extract Paths from XFile List
+        TextEditingController stepImage = item[1];
         DateTime now = DateTime.now();
         Reference storageRefDest = storageRef.child("posts/$uid/$now");
-        await storageRefDest.putFile(File(_imagesPath[stepsCount]));
-        String imageUrl = await storageRefDest.getDownloadURL();
-        _steps.add({"stepsText": item.text, "stepsImage": imageUrl});
-
-        stepsCount++;
+        if (stepImage.text != "") {
+          await storageRefDest.putFile(File(stepImage.text));
+          String imageUrl = await storageRefDest.getDownloadURL();
+          print("IMAGE URL: $imageUrl");
+          _steps.add({"stepsText": stepText.text, "stepsImage": imageUrl});
+        } else {
+          _steps.add({"stepsText": stepText.text, "stepsImage": ""});
+        }
       }
 
       DateTime now = DateTime.now();
       Reference storageRefDest = storageRef.child("posts/$uid/$now");
       await storageRefDest.putFile(File(coverPath));
       coverUrl = await storageRefDest.getDownloadURL();
+      print("COVER URL: $coverUrl");
 
       CollectionReference _usersPosts = FirebaseFirestore.instance
           .collection("users")
@@ -66,7 +66,6 @@ class UploadViewModel {
             "postDescription": description,
             "authorUid": uid,
             "postImageUrl": coverUrl,
-            "postPercent": "80%",
             "postDateCreated": now,
             "ingredients": _ingredientText,
             "steps": _steps

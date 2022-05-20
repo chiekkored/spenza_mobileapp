@@ -33,7 +33,7 @@ class PostViewModel {
               .then((postsData) {
             List ingredients = postsData.data()!["ingredients"];
             print("ingredients: $ingredients");
-            num postPercent = (pantries.docs.length / ingredients.length) * 100;
+            num postPercent = percentCalculate(pantries, ingredients);
             print("postPercent: $postPercent");
             postsData.data()!["postPercent"] =
                 "${postPercent.toStringAsFixed(0)}%";
@@ -68,7 +68,7 @@ class PostViewModel {
         .then((postsData) {
       for (var post in postsData.docs) {
         List ingredients = post["ingredients"];
-        num postPercent = (pantries.docs.length / ingredients.length) * 100;
+        num postPercent = percentCalculate(pantries, ingredients);
         Map<String, dynamic> postData = post.data();
         postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
         postData["id"] = post.id;
@@ -76,6 +76,19 @@ class PostViewModel {
       }
       return _list;
     });
+  }
+
+  double percentCalculate(
+      QuerySnapshot<Map<String, dynamic>> pantries, List<dynamic> ingredients) {
+    Iterable ingredient = ingredients.map(
+      (e) => e["ingredientText"],
+    );
+    Iterable pantry = pantries.docs.map((e) => e["pantryFoodTitle"]);
+    return (pantry
+                .where((pantryItem) => ingredient.contains(pantryItem))
+                .length /
+            ingredients.length) *
+        100;
   }
 
   Future<List<dynamic>> getPosts(String uid) async {
@@ -110,8 +123,8 @@ class PostViewModel {
               .then((postsData) {
             for (var post in postsData.docs) {
               List ingredients = post["ingredients"];
-              num postPercent =
-                  (pantries.docs.length / ingredients.length) * 100;
+              num postPercent = percentCalculate(pantries, ingredients);
+              print("aihdawoudhawoid: $postPercent");
               Map<String, dynamic> postData = post.data();
               postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
               _list.add([userData.data(), postData, post.id]);
@@ -150,8 +163,7 @@ class PostViewModel {
               .then((postsData) {
             for (var post in postsData.docs) {
               List ingredients = post["ingredients"];
-              num postPercent =
-                  (pantries.docs.length / ingredients.length) * 100;
+              num postPercent = percentCalculate(pantries, ingredients);
               Map<String, dynamic> postData = post.data();
               postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
               _list.add([userData.data(), postData, post.id]);
