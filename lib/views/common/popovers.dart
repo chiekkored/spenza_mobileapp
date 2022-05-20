@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:spenza/core/providers/searchProvider.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
@@ -211,7 +211,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
   @override
   void initState() {
     // TODO: implement initState
-    var searchProvider = context.read<SearchProvider>();
+    var searchProvider = context.read<FilterProvider>();
     _ingredientsOnHandSlider = searchProvider.ingredientOnHand;
     _cookingDurationSlider = searchProvider.cookingDuration;
     super.initState();
@@ -219,7 +219,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    var searchProvider = context.read<SearchProvider>();
+    var filterProvider = context.read<FilterProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 24.0),
       child: Column(
@@ -386,7 +386,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                   child: CustomPrimaryButton(
                       text: "Done",
                       doOnPressed: () {
-                        searchProvider.filterSet("", _ingredientsOnHandSlider,
+                        filterProvider.filterSet("", _ingredientsOnHandSlider,
                             _cookingDurationSlider);
                         widget.setSearchFilter("Search Filter");
                         Navigator.maybePop(context);

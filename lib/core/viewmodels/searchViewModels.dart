@@ -12,6 +12,12 @@ class SearchViewModel {
         .doc(uid)
         .collection("search");
 
+    QuerySnapshot<Map<String, dynamic>> pantries = await _users
+        .doc(uid)
+        .collection("pantries")
+        .get()
+        .then((pantryData) async => pantryData);
+
     // Get all users
     return await _users.get().then((usersData) async {
       // For loop all users and get its userData
@@ -32,10 +38,14 @@ class SearchViewModel {
               ])
               .get()
               .then((postsData) {
-                print("postsData.docs");
-                print(postsData.docs);
                 for (var post in postsData.docs) {
-                  _list.add([userData.data(), post.data(), post.id]);
+                  List ingredients = post["ingredients"];
+                  num postPercent =
+                      (pantries.docs.length / ingredients.length) * 100;
+                  Map<String, dynamic> postData = post.data();
+                  postData["postPercent"] =
+                      "${postPercent.toStringAsFixed(0)}%";
+                  _list.add([userData.data(), postData, post.id]);
                 }
               });
         });

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:spenza/core/providers/searchProvider.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
@@ -67,9 +67,9 @@ class _SearchScreenState extends State<SearchScreen>
                               if (_searchTextController.text == "") {
                                 return null;
                               } else {
-                                var searchProvider =
-                                    context.read<SearchProvider>();
-                                searchProvider.filterSet("", 0.0, 0.0);
+                                var filterProvider =
+                                    context.read<FilterProvider>();
+                                filterProvider.filterSet("", 0.0, 0.0);
                                 pushNewScreen(context,
                                     screen: SearchResultScreen(
                                         searchText:

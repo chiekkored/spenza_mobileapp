@@ -20,7 +20,7 @@ class RecipesTab extends StatefulWidget {
 class _RecipesTabState extends State<RecipesTab>
     with AutomaticKeepAliveClientMixin {
   PostViewModel _profileVM = PostViewModel();
-  late Future<QuerySnapshot> _loadRecipes;
+  late Future<List<Map<String, dynamic>>> _loadRecipes;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _RecipesTabState extends State<RecipesTab>
 
     return Container(
       color: CColors.White,
-      child: FutureBuilder<QuerySnapshot>(
+      child: FutureBuilder<List<Map<String, dynamic>>>(
           future: _loadRecipes,
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
@@ -46,7 +46,7 @@ class _RecipesTabState extends State<RecipesTab>
                 print("-Profile Recipes- waiting");
                 return CustomGridShimmerWithoutDp();
               case ConnectionState.done:
-                if (snapshot.data!.docs.isEmpty) {
+                if (snapshot.data!.isEmpty) {
                   print("-Profile Recipes- has Error");
                   print(snapshot.data);
                   // showCustomDialog(context, "Error",

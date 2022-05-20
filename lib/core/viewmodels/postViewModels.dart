@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 
 class PostViewModel {
   Future<List<dynamic>> getProfileLikes(String uid) async {
@@ -6,13 +7,17 @@ class PostViewModel {
     // _list[1] = user posts collection
     List<dynamic> _list = [];
 
-    print("UID: $uid");
-
     CollectionReference _users = FirebaseFirestore.instance.collection("users");
     CollectionReference _usersLikes = FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
         .collection("likes");
+
+    QuerySnapshot<Map<String, dynamic>> pantries = await _users
+        .doc(uid)
+        .collection("pantries")
+        .get()
+        .then((pantryData) async => pantryData);
 
     // Get following lists
     return await _usersLikes.get().then((likesData) async {
@@ -26,22 +31,51 @@ class PostViewModel {
               .doc(likes["postDocId"])
               .get()
               .then((postsData) {
-            _list.add([userData.data(), postsData.data(), postsData.id]);
+            List ingredients = postsData.data()!["ingredients"];
+            print("ingredients: $ingredients");
+            num postPercent = (pantries.docs.length / ingredients.length) * 100;
+            print("postPercent: $postPercent");
+            postsData.data()!["postPercent"] =
+                "${postPercent.toStringAsFixed(0)}%";
+
+            Map<String, dynamic>? postData = postsData.data();
+            postData!["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
+            print(postsData.data()!["postPercent"]);
+            _list.add([userData.data(), postData, postsData.id]);
           });
         });
       }
-      print(_list);
+      print("LIKES: $_list");
       return _list;
     });
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getProfilePosts(
-      String uid) async {
+  Future<List<Map<String, dynamic>>> getProfilePosts(String uid) async {
+    List<Map<String, dynamic>> _list = [];
+    CollectionReference _users = FirebaseFirestore.instance.collection("users");
+
+    QuerySnapshot<Map<String, dynamic>> pantries = await _users
+        .doc(uid)
+        .collection("pantries")
+        .get()
+        .then((pantryData) async => pantryData);
+
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection("posts")
-        .get();
+        .get()
+        .then((postsData) {
+      for (var post in postsData.docs) {
+        List ingredients = post["ingredients"];
+        num postPercent = (pantries.docs.length / ingredients.length) * 100;
+        Map<String, dynamic> postData = post.data();
+        postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
+        postData["id"] = post.id;
+        _list.add(postData);
+      }
+      return _list;
+    });
   }
 
   Future<List<dynamic>> getPosts(String uid) async {
@@ -57,6 +91,12 @@ class PostViewModel {
         .doc(uid)
         .collection("following");
 
+    QuerySnapshot<Map<String, dynamic>> pantries = await _users
+        .doc(uid)
+        .collection("pantries")
+        .get()
+        .then((pantryData) async => pantryData);
+
     // Get following lists
     return await _usersFollowing.get().then((followingData) async {
       // For loop following users and get its userData
@@ -69,7 +109,12 @@ class PostViewModel {
               .get()
               .then((postsData) {
             for (var post in postsData.docs) {
-              _list.add([userData.data(), post.data(), post.id]);
+              List ingredients = post["ingredients"];
+              num postPercent =
+                  (pantries.docs.length / ingredients.length) * 100;
+              Map<String, dynamic> postData = post.data();
+              postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
+              _list.add([userData.data(), postData, post.id]);
             }
           });
         });
@@ -79,12 +124,18 @@ class PostViewModel {
     });
   }
 
-  Future<List<dynamic>> getAllPosts() async {
+  Future<List<dynamic>> getAllPosts(String uid) async {
     // _list[0] = user collection
     // _list[1] = user posts collection
     List<dynamic> _list = [];
 
     CollectionReference _users = FirebaseFirestore.instance.collection("users");
+
+    QuerySnapshot<Map<String, dynamic>> pantries = await _users
+        .doc(uid)
+        .collection("pantries")
+        .get()
+        .then((pantryData) async => pantryData);
 
     // Get following lists
     return await _users.get().then((users) async {
@@ -98,7 +149,12 @@ class PostViewModel {
               .get()
               .then((postsData) {
             for (var post in postsData.docs) {
-              _list.add([userData.data(), post.data(), post.id]);
+              List ingredients = post["ingredients"];
+              num postPercent =
+                  (pantries.docs.length / ingredients.length) * 100;
+              Map<String, dynamic> postData = post.data();
+              postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
+              _list.add([userData.data(), postData, post.id]);
             }
           });
         });
@@ -160,8 +216,8 @@ class PostViewModel {
         });
   }
 
-  Future<bool> unlikePost(String profileUid, String postDocId, String userUid,
-      String likeDocId) async {
+  Future<bool> unlikePost(
+      String profileUid, String postDocId, String userUid) async {
     return await FirebaseFirestore.instance // Delete document for posts likes
         .collection('users')
         .doc(profileUid)

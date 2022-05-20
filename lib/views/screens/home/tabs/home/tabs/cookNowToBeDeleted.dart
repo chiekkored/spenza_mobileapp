@@ -14,6 +14,7 @@ import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
 
 class CookNowTab extends StatefulWidget {
+  setHomeTag(String tag, String uid) => createState().setHomeTag(tag, uid);
   const CookNowTab({Key? key}) : super(key: key);
 
   @override
@@ -34,6 +35,16 @@ class _CookNowTabState extends State<CookNowTab>
     super.initState();
   }
 
+  setHomeTag(String tag, String uid) {
+    print("string");
+    print(tag);
+    print("string");
+    setState(() {
+      _loadCookNow = _postVM.getPosts(uid);
+    });
+    print("done");
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -52,9 +63,6 @@ class _CookNowTabState extends State<CookNowTab>
               case ConnectionState.done:
                 if (snapshot.data!.isEmpty) {
                   print("-Cook Now Tab- has Error");
-                  print(snapshot.data);
-                  // showCustomDialog(context, "Error",
-                  //     "An error has occurred.", "Okay", null);
                   return RefreshIndicator(
                       onRefresh: () async {
                         var _userProvider = context.read<UserProvider>();
@@ -88,7 +96,6 @@ class _CookNowTabState extends State<CookNowTab>
                           ]));
                 } else {
                   print("-Cook Now Tab- has Data");
-                  print(snapshot.data);
                   return RefreshIndicator(
                     onRefresh: () async {
                       var _userProvider = context.read<UserProvider>();

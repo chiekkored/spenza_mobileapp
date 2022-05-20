@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:spenza/core/providers/searchProvider.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
@@ -18,13 +18,13 @@ import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
 class CustomGridViewWithoutDp extends StatelessWidget {
   const CustomGridViewWithoutDp({
     Key? key,
-    required AsyncSnapshot<QuerySnapshot<Object?>> snapshot,
+    required AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
     required String fromScreen,
   })  : snapshot = snapshot,
         fromScreen = fromScreen,
         super(key: key);
 
-  final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
+  final AsyncSnapshot<List<Map<String, dynamic>>> snapshot;
   // For hero widget tag combo
   final String fromScreen;
 
@@ -47,7 +47,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         padding: const EdgeInsets.all(24),
         shrinkWrap: true,
-        itemCount: snapshot.data!.docs.length,
+        itemCount: snapshot.data!.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 25.0,
@@ -55,7 +55,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
           childAspectRatio: _aspectRatio,
         ),
         itemBuilder: (BuildContext context, int index) {
-          var _postData = snapshot.data!.docs[index];
+          var _postData = snapshot.data![index];
           print("authorUid: ${_postData["authorUid"]}");
           String postRecipeTitle = _postData["postRecipeTitle"];
           postRecipeTitle = postRecipeTitle
@@ -81,13 +81,13 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                 postDuration: _postData["postDuration"],
                                 dpUrl: _userProvider.userInfo.dpUrl,
                                 name: _userProvider.userInfo.name,
-                                postDocId: _postData.id,
+                                postDocId: _postData["id"],
                                 fromScreen: fromScreen,
                                 profileUid: _postData["authorUid"],
                               ),
                               withNavBar: false)),
                           child: Hero(
-                            tag: _postData.id + fromScreen,
+                            tag: _postData["id"] + fromScreen,
                             child: CachedNetworkImage(
                               imageUrl: _postData["postImageUrl"],
                               placeholder: (context, s) => Container(
@@ -116,7 +116,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                             child: StreamBuilder<QuerySnapshot>(
                                 stream: _postVM.getIfPostLiked(
                                     _userProvider.userInfo.uid,
-                                    snapshot.data!.docs[index].id),
+                                    _postData["id"]),
                                 builder: (context, streamSnapshot) {
                                   print("is liked: ${streamSnapshot.data}");
                                   if (!streamSnapshot.hasData) {
@@ -153,9 +153,8 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                           bool result =
                                               await _postVM.unlikePost(
                                             _userProvider.userInfo.uid,
-                                            snapshot.data!.docs[index].id,
+                                            _postData["id"],
                                             _userProvider.userInfo.uid,
-                                            snapshot.data!.docs.first.id,
                                           );
                                           print("Unlike result: $result");
                                         },
@@ -180,7 +179,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                         onTap: () async {
                                           bool result = await _postVM.likePost(
                                               _postData["authorUid"],
-                                              _postData.id,
+                                              _postData["id"],
                                               _userProvider.userInfo.uid,
                                               _userProvider.userInfo.name,
                                               _userProvider.userInfo.dpUrl);
@@ -292,12 +291,14 @@ class CustomGridViewWithFilter extends StatelessWidget {
             .replaceFirst(postRecipeTitle[0], postRecipeTitle[0].toUpperCase())
             .toString();
 
-        var searchProvider = context.read<SearchProvider>();
+        var filterProvider = context.read<FilterProvider>();
+        List postPercent = _authorPostsData["postTags"];
         String postPercentToString = _authorPostsData["postPercent"];
         String postDurationToString = _authorPostsData["postDuration"];
-        if (searchProvider.ingredientOnHand >=
+        if (postPercent.contains(filterProvider.tag) &&
+            filterProvider.ingredientOnHand >=
                 double.parse(postPercentToString.replaceAll("%", "")) &&
-            searchProvider.cookingDuration >=
+            filterProvider.cookingDuration >=
                 double.parse(postDurationToString.replaceAll(" mins", ""))) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,6 +393,7 @@ class CustomGridViewWithFilter extends StatelessWidget {
                                 stream: _postVM.getIfPostLiked(
                                     _userProvider.userInfo.uid, _postDocId),
                                 builder: (context, snapshot) {
+                                  print("~~~~~~~~~~~~~$_postDocId");
                                   print("is liked: ${snapshot.data}");
                                   if (!snapshot.hasData) {
                                     return GestureDetector(
@@ -429,7 +431,6 @@ class CustomGridViewWithFilter extends StatelessWidget {
                                             _authorData["uid"],
                                             _postDocId,
                                             _userProvider.userInfo.uid,
-                                            snapshot.data!.docs.first.id,
                                           );
                                           print("Unlike result: $result");
                                         },
@@ -519,9 +520,7 @@ class CustomGridViewWithFilter extends StatelessWidget {
           );
         } else {
           return CustomTextMedium(
-              text: "No search results",
-              size: 18.0,
-              color: CColors.SecondaryText);
+              text: "No results", size: 18.0, color: CColors.SecondaryText);
         }
       },
     );
@@ -575,6 +574,8 @@ class CustomGridView extends StatelessWidget {
               .replaceFirst(
                   postRecipeTitle[0], postRecipeTitle[0].toUpperCase())
               .toString();
+
+          print("~~~~~~~~~~~~~${_authorPostsData["postPercent"]}");
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -705,7 +706,6 @@ class CustomGridView extends StatelessWidget {
                                             _authorData["uid"],
                                             _postDocId,
                                             _userProvider.userInfo.uid,
-                                            snapshot.data!.docs.first.id,
                                           );
                                           print("Unlike result: $result");
                                         },

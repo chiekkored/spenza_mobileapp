@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:spenza/core/providers/searchProvider.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/searchViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
@@ -222,10 +222,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                               );
                             } else {
                               print("-Search Results- has Data");
-                              var searchProvider =
-                                  context.read<SearchProvider>();
-                              if (searchProvider.cookingDuration != 0.0 &&
-                                  searchProvider.ingredientOnHand != 0.0) {
+                              var filterProvider =
+                                  context.read<FilterProvider>();
+                              if (filterProvider.cookingDuration != 0.0 &&
+                                  filterProvider.ingredientOnHand != 0.0) {
                                 print("-----------in");
                                 return RefreshIndicator(
                                   onRefresh: () async {

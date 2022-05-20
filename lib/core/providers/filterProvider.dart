@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SearchProvider extends ChangeNotifier {
+class FilterProvider extends ChangeNotifier {
   String _tag = "";
   double _ingredientsOnHand = 0.0;
   double _cookingDuration = 0.0;

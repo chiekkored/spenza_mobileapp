@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spenza/core/providers/searchProvider.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/config/firebase_config.dart';
@@ -37,8 +37,8 @@ Future<void> main() async {
       ChangeNotifierProvider<UserProvider>.value(
         value: UserProvider(),
       ),
-      ChangeNotifierProvider<SearchProvider>.value(
-        value: SearchProvider(),
+      ChangeNotifierProvider<FilterProvider>.value(
+        value: FilterProvider(),
       ),
     ],
     child: MyApp(),

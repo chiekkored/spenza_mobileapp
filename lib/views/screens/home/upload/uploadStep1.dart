@@ -377,8 +377,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
               child: CustomPrimaryButton(
                   text: "Next",
                   doOnPressed: () async {
-                    if (!isCoverAttached ||
-                        _foodNameTextController.text == '' ||
+                    if (_foodNameTextController.text == '' ||
                         _descriptionTextController.text == '') {
                       return showCustomDialog(context, "Fields Required",
                           "Please fill all fields.", "OK", null);

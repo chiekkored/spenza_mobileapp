@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/grids.dart';
@@ -16,13 +18,15 @@ class _RecipeTabState extends State<RecipeTab> {
   late Future<List> _loadRecipes;
   @override
   void initState() {
-    // var _userProvider = context.read<UserProvider>();
-    _loadRecipes = _postVM.getAllPosts(); // only create the future once.
+    var _userProvider = context.read<UserProvider>();
+    _loadRecipes = _postVM.getAllPosts(
+        _userProvider.userInfo.uid); // only create the future once.
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var _userProvider = context.read<UserProvider>();
     return Container(
       color: CColors.White,
       child: FutureBuilder<List>(
@@ -40,7 +44,8 @@ class _RecipeTabState extends State<RecipeTab> {
                   return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
-                          _loadRecipes = _postVM.getAllPosts();
+                          _loadRecipes =
+                              _postVM.getAllPosts(_userProvider.userInfo.uid);
                         });
                       },
                       child: ListView(
@@ -71,7 +76,8 @@ class _RecipeTabState extends State<RecipeTab> {
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {
-                        _loadRecipes = _postVM.getAllPosts();
+                        _loadRecipes =
+                            _postVM.getAllPosts(_userProvider.userInfo.uid);
                       });
                     },
                     child: ListView(
