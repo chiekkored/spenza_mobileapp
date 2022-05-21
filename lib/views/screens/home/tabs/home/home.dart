@@ -193,14 +193,14 @@ class _HomeTabState extends State<HomeTab> {
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
-                            print("-Cook Now Tab- No Connection");
+                            debugPrint("🚫 -Cook Now Tab- No Connection");
                             return Container();
                           case ConnectionState.waiting:
-                            print("-Cook Now Tab- waiting");
+                            debugPrint("⏳ -Cook Now Tab- waiting");
                             return CustomGridShimmer();
                           case ConnectionState.done:
                             if (snapshot.data!.isEmpty) {
-                              print("-Cook Now Tab- has Error");
+                              debugPrint("🚫 -Cook Now Tab- has Error");
                               return RefreshIndicator(
                                   onRefresh: () async {
                                     var _userProvider =
@@ -239,8 +239,7 @@ class _HomeTabState extends State<HomeTab> {
                                         )
                                       ]));
                             } else {
-                              print("-Cook Now Tab- has Data");
-
+                              debugPrint("🟢 -Cook Now Tab- has Data");
                               var filterProvider =
                                   context.read<FilterProvider>();
                               if (filterProvider.tag != "") {
@@ -276,7 +275,6 @@ class _HomeTabState extends State<HomeTab> {
                               }
                             }
                           default:
-                            print("-Cook Now Tab- default");
                             return Container();
                         }
                       }),

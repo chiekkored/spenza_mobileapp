@@ -36,17 +36,14 @@ class _LikedTabState extends State<LikedTab>
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
-                print("-Profile Likes- No Connection");
+                debugPrint("🚫-Profile Likes- No Connection");
                 return Container();
               case ConnectionState.waiting:
-                print("-Profile Likes- waiting");
+                debugPrint("⏳ -Profile Likes- waiting");
                 return CustomGridShimmerWithoutDp();
               case ConnectionState.done:
                 if (snapshot.data!.isEmpty) {
-                  print("-Profile Likes- has Error");
-                  print(snapshot.data);
-                  // showCustomDialog(context, "Error",
-                  //     "An error has occurred.", "Okay", null);
+                  debugPrint("🚫 -Profile Likes- has Error");
                   return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
@@ -76,8 +73,7 @@ class _LikedTabState extends State<LikedTab>
                             )
                           ]));
                 } else {
-                  print("-Profile Likes- has Data");
-                  print(snapshot.data);
+                  debugPrint("🟢 -Profile Likes- has Data");
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {

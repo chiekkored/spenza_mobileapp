@@ -30,7 +30,7 @@ Future<void> main() async {
     // Camera Initialization
     cameras = await availableCameras();
   } on CameraException catch (e) {
-    print('Error in fetching the cameras: $e');
+    debugPrint('Error in fetching the cameras: $e');
   }
   runApp(MultiProvider(
     providers: [
@@ -62,7 +62,6 @@ class MyApp extends StatelessWidget {
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, user) {
                   if (user.hasData) {
-                    print(user.data!.emailVerified);
                     if (user.data!.emailVerified) {
                       return FutureBuilder<bool>(
                           future: userProvider.getUserPreference(),

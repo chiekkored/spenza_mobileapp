@@ -143,14 +143,14 @@ class _SearchScreenState extends State<SearchScreen>
                         builder: (context, snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.none:
-                              print("-Search History- No Connection");
+                              debugPrint("🚫 -Search History- No Connection");
                               return Container();
                             case ConnectionState.waiting:
-                              print("-Search History- waiting");
+                              debugPrint("⏳ -Search History- waiting");
                               return CustomListShimmer();
                             case ConnectionState.done:
                               if (snapshot.data!.docs.isEmpty) {
-                                print("-Search History- has Error");
+                                debugPrint("🚫 -Search History- has Error");
                                 // showCustomDialog(context, "Error",
                                 //     "An error has occurred.", "Okay", null);
                                 return Row(
@@ -167,7 +167,7 @@ class _SearchScreenState extends State<SearchScreen>
                                   ],
                                 );
                               } else {
-                                print("-Search History- has Data");
+                                debugPrint("🟢 -Search History- has Data");
                                 return ListView.builder(
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),

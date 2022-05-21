@@ -40,7 +40,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     setState(() {
       _loadSearch =
           _searchVM.getSearch(widget.searchText, _userProvider.userInfo.uid);
-      print(result);
+      debugPrint(result);
     });
   }
 
@@ -167,15 +167,14 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
-                            print("-Search Results- No Connection");
+                            debugPrint("🚫 -Search Results- No Connection");
                             return Container();
                           case ConnectionState.waiting:
-                            print("-Search Results- waiting");
+                            debugPrint("⏳ -Search Results- waiting");
                             return CustomGridShimmer();
                           case ConnectionState.done:
                             if (snapshot.data!.isEmpty) {
-                              print("-Search Results- has Error");
-                              print(snapshot.data);
+                              debugPrint("🚫 -Search Results- has Error");
                               // return Container();
                               // showCustomDialog(context, "Error",
                               //     "An error has occurred.", "Okay", null);
@@ -221,12 +220,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                         ])),
                               );
                             } else {
-                              print("-Search Results- has Data");
+                              debugPrint("🟢 -Search Results- has Data");
                               var filterProvider =
                                   context.read<FilterProvider>();
                               if (filterProvider.cookingDuration != 0.0 &&
                                   filterProvider.ingredientOnHand != 0.0) {
-                                print("-----------in");
                                 return RefreshIndicator(
                                   onRefresh: () async {
                                     setState(() {
@@ -246,7 +244,6 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                   ),
                                 );
                               } else {
-                                print("-----------out");
                                 return RefreshIndicator(
                                   onRefresh: () async {
                                     setState(() {

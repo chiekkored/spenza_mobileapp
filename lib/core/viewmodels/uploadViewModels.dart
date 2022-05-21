@@ -18,7 +18,6 @@ class UploadViewModel {
       List<dynamic> stepsList,
       List<String> tags) async {
     List<Map<String, dynamic>> _ingredientText = [];
-    List<String> _imagesPath = [];
     List<Map<String, dynamic>> _steps = [];
     String coverUrl;
 
@@ -42,7 +41,6 @@ class UploadViewModel {
         if (stepImage.text != "") {
           await storageRefDest.putFile(File(stepImage.text));
           String imageUrl = await storageRefDest.getDownloadURL();
-          print("IMAGE URL: $imageUrl");
           _steps.add({"stepsText": stepText.text, "stepsImage": imageUrl});
         } else {
           _steps.add({"stepsText": stepText.text, "stepsImage": ""});
@@ -53,7 +51,6 @@ class UploadViewModel {
       Reference storageRefDest = storageRef.child("posts/$uid/$now");
       await storageRefDest.putFile(File(coverPath));
       coverUrl = await storageRefDest.getDownloadURL();
-      print("COVER URL: $coverUrl");
 
       CollectionReference _usersPosts = FirebaseFirestore.instance
           .collection("users")
@@ -72,12 +69,13 @@ class UploadViewModel {
           })
           .then((value) => true)
           .catchError((e) {
-            print(e.toString());
+            debugPrint(e.toString());
             return false;
           });
+      debugPrint("✅ [uploadRecipe] Success");
       return result;
     } on FirebaseException catch (e) {
-      print(e.message);
+      debugPrint("🛑 [uploadRecipe] Fail: ${e.message}");
       return false;
     }
   }
@@ -104,12 +102,13 @@ class UploadViewModel {
           })
           .then((value) => true)
           .catchError((e) {
-            print(e.toString());
+            debugPrint(e.toString());
             return false;
           });
+      debugPrint("✅ [uploadPantry] Success");
       return result;
     } on FirebaseException catch (e) {
-      print(e.message);
+      debugPrint("🛑 [uploadRecipe] Fail: ${e.message}");
       return false;
     }
   }
@@ -136,11 +135,11 @@ class UploadViewModel {
     // Download Custom Models
     if (!await modelManager.isModelDownloaded(objectLabelerModelName)) {
       await modelManager.downloadModel("Object-Labeler");
-      print("Downloaded Object-Labaler Model");
+      debugPrint("🗄 Downloaded Object-Labaler Model");
     }
     if (!await modelManager.isModelDownloaded(foodModelName)) {
       await FirebaseImageLabelerModelManager().downloadModel("Food");
-      print("Downloaded Food Model");
+      debugPrint("🗄 Downloaded Food Model");
     }
     final objectLabelerModelOptions = FirebaseLabelerOption(
         confidenceThreshold: 0.5, modelName: objectLabelerModelName);
@@ -169,9 +168,9 @@ class UploadViewModel {
         ...objectLabels,
         ...mlKitLabels,
       ];
-      print("Suggested lIST: $suggestedList");
+      debugPrint("📚 [getSuggested] Response: $suggestedList");
     } catch (e) {
-      print("Error processing image: ${e.toString()}");
+      debugPrint("🛑 [getSuggested] Error: ${e.toString()}");
     }
     return suggestedList;
   }

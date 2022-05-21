@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class ProfileViewModel {
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserData(String uid) async {
@@ -61,11 +62,11 @@ class ProfileViewModel {
                 .collection("notifications")
                 .add({"type": "follow", "dateCreated": now, "uid": uid}))
             .then((value) {
-              print("[Success] Follow: $profileName");
+              debugPrint("✅ [setFollow] Success: $profileName");
               return true;
             }))
         .catchError((error) {
-          print("Failed to add follwing: $error");
+          debugPrint("🛑 [setFollow] Fail: $error");
           return false;
         });
   }
@@ -94,11 +95,11 @@ class ProfileViewModel {
                     .get()
                     .then((value) => value.docs.first.reference.delete()))
                 .then((value) {
-              print("[Success] Unfollow: $profileUid");
+              debugPrint("✅ [setUnfollow] Success: $profileUid");
               return true;
             }))
         .catchError((error) {
-      print("Failed to unfollow: $error");
+      debugPrint("🛑 [setUnfollow] Fail: $error");
       return false;
     });
   }

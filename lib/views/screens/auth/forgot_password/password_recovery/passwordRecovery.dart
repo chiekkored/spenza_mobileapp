@@ -78,7 +78,6 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                                   builder: (context) => SignInScreen()),
                               (Route<dynamic> route) => false,
                             ));
-                        print("Password reset");
                       });
                     } on FirebaseAuthException catch (e) {
                       showCustomDialog(

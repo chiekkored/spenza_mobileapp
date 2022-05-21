@@ -17,6 +17,7 @@ class AuthViewModel {
           "name": document["name"],
           "dpUrl": document["dpUrl"]
         }));
+    debugPrint("✅ [setPreferences] Success");
   }
 
   Future<void> setNewPreferences(User user) async {
@@ -29,6 +30,7 @@ class AuthViewModel {
           "name": user.displayName ?? "",
           "dpUrl": user.photoURL ?? ""
         }));
+    debugPrint("✅ [setNewPreferences] Success");
   }
 
   Future signInEmailAndPassword(
@@ -41,23 +43,23 @@ class AuthViewModel {
           .signInWithEmailAndPassword(email: email, password: password);
       // });
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      debugPrint(e.code);
       if (e.code == 'user-not-found') {
         showCustomDialog(context, "User Not Found",
             "No user found for that email", "Okay", null);
-        print('No user found for that email.');
+        debugPrint('No user found for that email.');
       } else if (e.code == 'invalid-email') {
         showCustomDialog(context, "Invalid Email",
             "Wrong email provided for that user", "Okay", null);
-        print('Wrong password provided for that user.');
+        debugPrint('Wrong password provided for that user.');
       } else if (e.code == 'wrong-password') {
         showCustomDialog(context, "Invalid Password",
             "Wrong password provided for that user", "Okay", null);
-        print('Wrong password provided for that user.');
+        debugPrint('Wrong password provided for that user.');
       } else if (e.code == 'network-request-failed') {
         showCustomDialog(context, "Connection Error",
             "Please check connection and try again", "Okay", null);
-        print('No Connection.');
+        debugPrint('No Connection.');
       } else {}
       return null;
     }
@@ -71,17 +73,19 @@ class AuthViewModel {
         if (!userCredential.user!.emailVerified) {
           await userCredential.user!.sendEmailVerification();
         }
+
+        debugPrint("✅ [signUp] Success");
         return userCredential;
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showCustomDialog(context, "Weak Password",
             "The password provided is too weak.", "Okay", null);
-        print('The password provided is too weak.');
+        debugPrint('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         showCustomDialog(context, "Invalid Email",
             "The account already exists for that email.", "Okay", null);
-        print('The account already exists for that email.');
+        debugPrint('The account already exists for that email.');
       }
     }
   }
@@ -90,6 +94,6 @@ class AuthViewModel {
     final pref = await SharedPreferences.getInstance();
     pref.clear();
     await FirebaseAuth.instance.signOut();
-    print("logout");
+    debugPrint("✅ [logout] Success");
   }
 }

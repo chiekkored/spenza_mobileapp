@@ -106,8 +106,6 @@ class _SignInScreenState extends State<SignInScreen> {
                               emailTextController.text,
                               passwordTextController.text);
                           if (doc != null) {
-                            print("doc.user!.uid");
-                            print(doc.user!.uid);
                             await userProvider.setUser(doc.user!.uid);
                             Navigator.pushAndRemoveUntil(
                               context,

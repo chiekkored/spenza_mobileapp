@@ -39,13 +39,13 @@ class _PantryScreenState extends State<PantryScreen> {
               switch (snapshot.connectionState) {
                 case ConnectionState.done:
                   if (snapshot.hasError) {
-                    print("-Pantry- has Error");
+                    debugPrint("🚫 -Pantry- has Error");
                     return CustomTextBold(
                         text: "Something went wrong.",
                         size: 15.0,
                         color: CColors.PrimaryText);
                   } else {
-                    print("-Pantry- has Data");
+                    debugPrint("🟢 -Pantry- has Data");
                     return RefreshIndicator(
                       onRefresh: (() async {
                         setState(() {
@@ -108,7 +108,7 @@ class _PantryScreenState extends State<PantryScreen> {
                     );
                   }
                 case ConnectionState.waiting:
-                  print("-Pantry- waiting");
+                  debugPrint("⏳ -Pantry- waiting");
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24.0),
                     child: CustomListShimmer(),

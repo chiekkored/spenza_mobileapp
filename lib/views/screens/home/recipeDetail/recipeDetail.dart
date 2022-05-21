@@ -164,13 +164,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.done:
                                     if (snapshot.hasError) {
-                                      print("-Recipe Detail Count- has Error");
+                                      debugPrint(
+                                          "🚫-Recipe Detail Count- has Error");
                                       return CustomTextBold(
                                           text: "0 Likes",
                                           size: 15.0,
                                           color: CColors.PrimaryText);
                                     } else {
-                                      print("-Recipe Detail Count- has Data");
+                                      debugPrint(
+                                          "🟢-Recipe Detail Count- has Data");
                                       return CustomTextBold(
                                           text:
                                               "${snapshot.data!.docs.length.toString()} ${snapshot.data!.docs.length > 1 ? "likes" : "like"}",
@@ -178,7 +180,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                           color: CColors.PrimaryText);
                                     }
                                   case ConnectionState.waiting:
-                                    print("-Recipe Detail Count- waiting");
+                                    debugPrint(
+                                        "⏳-Recipe Detail Count- waiting");
                                     return Text("waiting");
                                   default:
                                     return CustomTextBold(
@@ -203,18 +206,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         case ConnectionState.done:
-                          print(snapshot.data!.data());
                           var postData = snapshot.data!;
                           List postDataIngredients = postData["ingredients"];
                           List postDataSteps = postData["steps"];
                           if (snapshot.hasError) {
-                            print("-Recipe Detail- has Error");
+                            debugPrint("🚫 -Recipe Detail- has Error");
                             return CustomTextBold(
                                 text: "Encountered an Error.",
                                 size: 17.0,
                                 color: CColors.PrimaryText);
                           } else {
-                            print("-Recipe Detail- has Data");
+                            debugPrint("🟢 -Recipe Detail- has Data");
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,9 +381,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             );
                           }
                         case ConnectionState.waiting:
+                          debugPrint("⏳ -Recipe Detail- waiting");
                           return CustomRecipeDetailListShimmer();
                         default:
-                          print("-Recipe Detail- no connection");
+                          debugPrint("🚫 -Recipe Detail- no connection");
                           return CustomTextBold(
                               text: "Please check internet connection.",
                               size: 17.0,

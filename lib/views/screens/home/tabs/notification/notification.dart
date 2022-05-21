@@ -87,8 +87,6 @@ class _NotificationTabState extends State<NotificationTab> {
                         DateTime _dateCreatedFormatted = DateTime.parse(
                             _notifData["dateCreated"].toDate().toString());
                         //Datetime
-                        // DateTime daysAgo= date.subtract(const Duration(days: 30));
-                        print(_dateCreatedFormatted);
 
                         if (_dateCreatedFormatted.isBefore(date)) {
                           // If data timestamp is before the day
@@ -198,7 +196,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                                 // switch (snapshot.connectionState) {
                                                 //   case ConnectionState.done:
                                                 if (!snapshot.hasData) {
-                                                  print(
+                                                  debugPrint(
                                                       "-Is Following- has Error");
                                                   return Container(
                                                     width: 100.0,
@@ -211,7 +209,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                                   if (snapshot
                                                           .data!.docs.length >
                                                       0) {
-                                                    print(
+                                                    debugPrint(
                                                         "-Is Following- has Data");
                                                     return Container(
                                                       width: 110.0,
@@ -240,7 +238,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                                               }),
                                                     );
                                                   } else {
-                                                    print(
+                                                    debugPrint(
                                                         "-Is Following- has No Data: Not Following");
                                                     return Container(
                                                       width: 100.0,
@@ -432,7 +430,8 @@ class _NotificationTabState extends State<NotificationTab> {
                                             // switch (snapshot.connectionState) {
                                             //   case ConnectionState.done:
                                             if (!snapshot.hasData) {
-                                              print("-Is Following- has Error");
+                                              debugPrint(
+                                                  "🚫 -Is Following- has Error");
                                               return Container(
                                                 width: 100.0,
                                                 height: 55.0,
@@ -443,8 +442,8 @@ class _NotificationTabState extends State<NotificationTab> {
                                             } else {
                                               if (snapshot.data!.docs.length >
                                                   0) {
-                                                print(
-                                                    "-Is Following- has Data");
+                                                debugPrint(
+                                                    "🟢 -Is Following- has Data");
                                                 return Container(
                                                   width: 110.0,
                                                   height: 55.0,
@@ -466,8 +465,8 @@ class _NotificationTabState extends State<NotificationTab> {
                                                       }),
                                                 );
                                               } else {
-                                                print(
-                                                    "-Is Following- has No Data: Not Following");
+                                                debugPrint(
+                                                    "🟢 -Is Following- has No Data: Not Following");
                                                 return Container(
                                                   width: 100.0,
                                                   height: 55.0,
@@ -647,7 +646,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                                 // switch (snapshot.connectionState) {
                                                 //   case ConnectionState.done:
                                                 if (!snapshot.hasData) {
-                                                  print(
+                                                  debugPrint(
                                                       "-Is Following- has Error");
                                                   return Container(
                                                     width: 100.0,
@@ -660,7 +659,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                                   if (snapshot
                                                           .data!.docs.length >
                                                       0) {
-                                                    print(
+                                                    debugPrint(
                                                         "-Is Following- has Data");
                                                     return Container(
                                                       width: 110.0,
@@ -689,7 +688,7 @@ class _NotificationTabState extends State<NotificationTab> {
                                                               }),
                                                     );
                                                   } else {
-                                                    print(
+                                                    debugPrint(
                                                         "-Is Following- has No Data: Not Following");
                                                     return Container(
                                                       width: 100.0,
@@ -745,7 +744,6 @@ class _NotificationTabState extends State<NotificationTab> {
                                 // If likes more than one
                                 // Name and dpUrl for 2nd liked user
                                 var _author2Data = snapshot.data![index][4];
-                                print("likes: $_likesLength");
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 24.0),
                                   child: Column(
@@ -883,7 +881,8 @@ class _NotificationTabState extends State<NotificationTab> {
                                             // switch (snapshot.connectionState) {
                                             //   case ConnectionState.done:
                                             if (!snapshot.hasData) {
-                                              print("-Is Following- has Error");
+                                              debugPrint(
+                                                  "🚫 -Is Following- has Error");
                                               return Container(
                                                 width: 100.0,
                                                 height: 55.0,
@@ -894,8 +893,8 @@ class _NotificationTabState extends State<NotificationTab> {
                                             } else {
                                               if (snapshot.data!.docs.length >
                                                   0) {
-                                                print(
-                                                    "-Is Following- has Data");
+                                                debugPrint(
+                                                    "🟢 -Is Following- has Data");
                                                 return Container(
                                                   width: 110.0,
                                                   height: 55.0,
@@ -917,8 +916,8 @@ class _NotificationTabState extends State<NotificationTab> {
                                                       }),
                                                 );
                                               } else {
-                                                print(
-                                                    "-Is Following- has No Data: Not Following");
+                                                debugPrint(
+                                                    "🚫 -Is Following- has No Data: Not Following");
                                                 return Container(
                                                   width: 100.0,
                                                   height: 55.0,
@@ -996,7 +995,7 @@ class _NotificationTabState extends State<NotificationTab> {
                       }),
                 );
               } else {
-                print("-Notification Tab- has No Data");
+                debugPrint("🚫 -Notification Tab- has No Data");
                 return RefreshIndicator(
                     onRefresh: () async {
                       var _userProvider = context.read<UserProvider>();

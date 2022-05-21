@@ -70,7 +70,6 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                                 .pickImage(source: ImageSource.gallery)
                                 .then((value) {
                               if (value!.path != '') {
-                                print(value);
                                 setState(() {
                                   image = value;
                                   isCoverAttached = true;
@@ -82,7 +81,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                               return null;
                             });
                           } catch (e) {
-                            print("No photos selected");
+                            debugPrint("No photos selected");
                           }
                         },
                         child: DottedBorder(
@@ -334,9 +333,6 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                                                     style: const TextStyle(
                                                         color: Colors.white),
                                                   ),
-                                                  onTap: () {
-                                                    print("$tag selected");
-                                                  },
                                                 ),
                                                 const SizedBox(width: 4.0),
                                                 InkWell(
@@ -432,13 +428,13 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.done:
                         if (snapshot.hasError) {
-                          print("-Get Suggested- has Error");
+                          debugPrint("🚫 -Get Suggested- has Error");
                           return CustomTextBold(
                               text: "Something went wrong.",
                               size: 15.0,
                               color: CColors.PrimaryText);
                         } else {
-                          print("-Get Suggested- has Data");
+                          debugPrint("🟢 -Get Suggested- has Data");
                           return Expanded(
                             child: SingleChildScrollView(
                               child: Padding(
@@ -458,7 +454,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                           );
                         }
                       case ConnectionState.waiting:
-                        print("-Get Suggested- waiting");
+                        debugPrint("⏳ -Get Suggested- waiting");
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()

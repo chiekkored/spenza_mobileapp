@@ -89,7 +89,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                               return null;
                             });
                           } catch (e) {
-                            print("No photos selected");
+                            debugPrint("No photos selected");
                           }
                         },
                         child: DottedBorder(
@@ -371,13 +371,13 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.done:
                         if (snapshot.hasError) {
-                          print("-Get Suggested- has Error");
+                          debugPrint("🚫 -Get Suggested- has Error");
                           return CustomTextBold(
                               text: "Something went wrong.",
                               size: 15.0,
                               color: CColors.PrimaryText);
                         } else {
-                          print("-Get Suggested- has Data");
+                          debugPrint("🟢 -Get Suggested- has Data");
                           return Expanded(
                             child: SingleChildScrollView(
                               child: Padding(
@@ -397,7 +397,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                           );
                         }
                       case ConnectionState.waiting:
-                        print("-Get Suggested- waiting");
+                        debugPrint("⏳ -Get Suggested- waiting");
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()

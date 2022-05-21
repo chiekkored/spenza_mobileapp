@@ -201,7 +201,6 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                         return OutlinedButton(
                           key: Key("$_countSteps button"),
                           onPressed: () async {
-                            print(_imagesList.iterator.current);
                             if (_imagesList
                                 .asMap()
                                 .containsKey(_countSteps - 1)) {
@@ -210,7 +209,6 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                               var photo = await picker.pickImage(
                                   source: ImageSource.gallery);
                               if (photo == null) {
-                                print("null");
                                 return null;
                               }
                               controller2.text = photo.path;
@@ -444,24 +442,6 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                     text: "Next",
                     doOnPressed: () async {
                       UserModel _user = context.read<UserProvider>().userInfo;
-
-                      // for (var item in _ingredientTextControllerList) {
-                      //   if (item.text == '') {
-                      //     print("all ingredient needs to be filled out");
-                      //     Navigator.maybePop(context);
-                      //     return null;
-                      //   }
-                      // }
-                      // for (var item in _stepsTextControllerList) {
-                      //   if (item.text == '') {
-                      //     return showCustomDialog(context, "Field Required",
-                      //         "Steps needs to be filled out", "OK", null);
-                      //   }
-                      // }
-                      // if (_imagesList.length < _countSteps) {
-                      //   return showCustomDialog(context, "Field Required",
-                      //       "Steps' images needs to be filled out", "OK", null);
-                      // }
                       showCustomModal(
                           context,
                           Container(

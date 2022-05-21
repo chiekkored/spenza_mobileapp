@@ -31,9 +31,6 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> setNewUser(User userCredential) async {
     AuthViewModel _authVM = AuthViewModel();
-    print("object");
-    print(userCredential.uid);
-    print("object");
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userCredential.uid)
@@ -59,24 +56,6 @@ class UserProvider extends ChangeNotifier {
     FirebaseCustomModel model = await FirebaseModelDownloader.instance.getModel(
         'Object-Labeler',
         FirebaseModelDownloadType.localModelUpdateInBackground);
-    // FirebaseCustomModel remoteModel =
-    //     FirebaseCustomModel(file: 'Object-Labeler');
-    // FirebaseModelDownloadConditions conditions =
-    //     FirebaseModelDownloadConditions(
-    //         androidWifiRequired: true,
-    //         androidDeviceIdleRequired: true,
-    //         androidChargingRequired: true,
-    //         iosAllowsCellularAccess: false,
-    //         iosAllowsBackgroundDownloading: true);
-    // FirebaseModelManager modelManager = FirebaseModelManager.instance;
-    // await modelManager.download(remoteModel, conditions);
-    // if (await modelManager.isModelDownloaded(remoteModel) == true) {
-    //   // do something with this model
-    //   print("Model Downloaded");
-    // } else {
-    //   // fall back on a locally-bundled model or do something else
-    //   print("Model Download Unsuccessful");
-    // }
     return await SharedPreferences.getInstance().then((pref) {
       if (pref.getString('user') != null) {
         final data = jsonDecode(pref.getString('user')!);
@@ -87,9 +66,6 @@ class UserProvider extends ChangeNotifier {
         return true;
       } else {
         return false;
-        // pref.clear();
-        // await FirebaseAuth.instance.signOut();
-        // print("logout from user preference");
       }
     });
   }

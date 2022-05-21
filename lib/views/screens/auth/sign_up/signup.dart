@@ -212,9 +212,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               passwordTextController.text)
                           .then((doc) async {
                         if (doc != null) {
-                          print("-----------");
-                          print(doc.user!.uid);
-                          print("-----------");
                           await userProvider.setNewUser(doc.user);
                           Navigator.pushAndRemoveUntil(
                             context,

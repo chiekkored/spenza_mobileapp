@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:spenza/core/viewmodels/postViewModels.dart';
 
 class SearchViewModel {
   Future<List<dynamic>> getSearch(String searchText, String uid) async {
@@ -50,7 +52,6 @@ class SearchViewModel {
               });
         });
       }
-      print(_list);
       // Add to firestore search document
       DateTime now = new DateTime.now();
       await _usersSearch
@@ -58,8 +59,10 @@ class SearchViewModel {
             'searchText': searchText,
             'date_created': now,
           })
-          .then((value) => print("Search Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .then((value) => debugPrint("✅ [getSearch] Search Added"))
+          .catchError((error) => debugPrint("🛑 [getSearch] Search Add Error"));
+
+      debugPrint("📚 [getSearch] Response: $_list");
       return _list;
     });
   }
@@ -70,6 +73,7 @@ class SearchViewModel {
         .doc(uid)
         .collection("search");
 
+    debugPrint("📚 [getSearchHistory] Response: $_usersSearch");
     return await _usersSearch.limit(10).get();
   }
 }

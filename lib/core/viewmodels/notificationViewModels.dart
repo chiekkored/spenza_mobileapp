@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class NotificationViewModel {
   Future<List<dynamic>> getNotificationPosts(String uid) async {
@@ -76,7 +77,7 @@ class NotificationViewModel {
         }
       }
       list.sort((a, b) => b[0]["dateCreated"].compareTo(a[0]["dateCreated"]));
-      print(list);
+      debugPrint("📚 [getNotificationPosts] Success: $list");
       return list;
     });
   }

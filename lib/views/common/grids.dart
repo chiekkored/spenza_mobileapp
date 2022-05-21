@@ -56,7 +56,6 @@ class CustomGridViewWithoutDp extends StatelessWidget {
         ),
         itemBuilder: (BuildContext context, int index) {
           var _postData = snapshot.data![index];
-          print("authorUid: ${_postData["authorUid"]}");
           String postRecipeTitle = _postData["postRecipeTitle"];
           postRecipeTitle = postRecipeTitle
               .replaceFirst(
@@ -118,7 +117,6 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                     _userProvider.userInfo.uid,
                                     _postData["id"]),
                                 builder: (context, streamSnapshot) {
-                                  print("is liked: ${streamSnapshot.data}");
                                   if (!streamSnapshot.hasData) {
                                     return GestureDetector(
                                       onTap: () async {
@@ -128,7 +126,6 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                             _userProvider.userInfo.uid,
                                             _userProvider.userInfo.name,
                                             _userProvider.userInfo.dpUrl);
-                                        print("Like result: $result");
                                       },
                                       child: Container(
                                         height: 35.0,
@@ -156,7 +153,6 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                             _postData["id"],
                                             _userProvider.userInfo.uid,
                                           );
-                                          print("Unlike result: $result");
                                         },
                                         child: Container(
                                           height: 35.0,
@@ -183,7 +179,6 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                               _userProvider.userInfo.uid,
                                               _userProvider.userInfo.name,
                                               _userProvider.userInfo.dpUrl);
-                                          print("Like result: $result");
                                         },
                                         child: Container(
                                           height: 35.0,
@@ -393,8 +388,6 @@ class CustomGridViewWithFilter extends StatelessWidget {
                                 stream: _postVM.getIfPostLiked(
                                     _userProvider.userInfo.uid, _postDocId),
                                 builder: (context, snapshot) {
-                                  print("~~~~~~~~~~~~~$_postDocId");
-                                  print("is liked: ${snapshot.data}");
                                   if (!snapshot.hasData) {
                                     return GestureDetector(
                                       onTap: () async {
@@ -404,7 +397,6 @@ class CustomGridViewWithFilter extends StatelessWidget {
                                             _userProvider.userInfo.uid,
                                             _userProvider.userInfo.name,
                                             _userProvider.userInfo.dpUrl);
-                                        print("Like result: $result");
                                       },
                                       child: Container(
                                         height: 35.0,
@@ -432,7 +424,6 @@ class CustomGridViewWithFilter extends StatelessWidget {
                                             _postDocId,
                                             _userProvider.userInfo.uid,
                                           );
-                                          print("Unlike result: $result");
                                         },
                                         child: Container(
                                           height: 35.0,
@@ -459,7 +450,6 @@ class CustomGridViewWithFilter extends StatelessWidget {
                                               _userProvider.userInfo.uid,
                                               _userProvider.userInfo.name,
                                               _userProvider.userInfo.dpUrl);
-                                          print("Like result: $result");
                                         },
                                         child: Container(
                                           height: 35.0,
@@ -574,8 +564,6 @@ class CustomGridView extends StatelessWidget {
               .replaceFirst(
                   postRecipeTitle[0], postRecipeTitle[0].toUpperCase())
               .toString();
-
-          print("~~~~~~~~~~~~~${_authorPostsData["postPercent"]}");
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -669,7 +657,6 @@ class CustomGridView extends StatelessWidget {
                                 stream: _postVM.getIfPostLiked(
                                     _userProvider.userInfo.uid, _postDocId),
                                 builder: (context, snapshot) {
-                                  print("is liked: ${snapshot.data}");
                                   if (!snapshot.hasData) {
                                     return GestureDetector(
                                       onTap: () async {
@@ -679,7 +666,6 @@ class CustomGridView extends StatelessWidget {
                                             _userProvider.userInfo.uid,
                                             _userProvider.userInfo.name,
                                             _userProvider.userInfo.dpUrl);
-                                        print("Like result: $result");
                                       },
                                       child: Container(
                                         height: 35.0,
@@ -707,7 +693,6 @@ class CustomGridView extends StatelessWidget {
                                             _postDocId,
                                             _userProvider.userInfo.uid,
                                           );
-                                          print("Unlike result: $result");
                                         },
                                         child: Container(
                                           height: 35.0,
@@ -734,7 +719,6 @@ class CustomGridView extends StatelessWidget {
                                               _userProvider.userInfo.uid,
                                               _userProvider.userInfo.name,
                                               _userProvider.userInfo.dpUrl);
-                                          print("Like result: $result");
                                         },
                                         child: Container(
                                           height: 35.0,

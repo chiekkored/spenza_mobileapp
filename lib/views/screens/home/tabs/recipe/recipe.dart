@@ -34,10 +34,10 @@ class _RecipeTabState extends State<RecipeTab> {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
-                print("-Cook Now Tab- No Connection");
+                debugPrint("🚫 -Cook Now Tab- No Connection");
                 return Container();
               case ConnectionState.waiting:
-                print("-Cook Now Tab- waiting");
+                debugPrint("⏳ -Cook Now Tab- waiting");
                 return CustomGridShimmer();
               case ConnectionState.done:
                 if (snapshot.data!.isEmpty) {
@@ -72,7 +72,6 @@ class _RecipeTabState extends State<RecipeTab> {
                             )
                           ]));
                 } else {
-                  print("----------------");
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {
@@ -96,7 +95,6 @@ class _RecipeTabState extends State<RecipeTab> {
                   );
                 }
               default:
-                print("-Cook Now Tab- default");
                 return Container();
             }
           }),

@@ -101,7 +101,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                     switch (snapshot.connectionState) {
                                       case ConnectionState.done:
                                         if (snapshot.hasError) {
-                                          print("-dpUrl- has Error");
+                                          debugPrint("🚫 -dpUrl- has Error");
                                           return SizedBox(
                                             height: 120.0,
                                             child: CachedNetworkImage(
@@ -117,7 +117,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                             ),
                                           );
                                         } else {
-                                          print("-dpUrl- has Data");
+                                          debugPrint("🟢 -dpUrl- has Data");
                                           return SizedBox(
                                             height: 120.0,
                                             child: snapshot.data!["dpUrl"] !=
@@ -155,8 +155,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                           );
                                         }
                                       default:
-                                        print(
-                                            "-dpUrl- maybe loading/no connection");
+                                        debugPrint(
+                                            "🚫 -dpUrl- maybe loading/no connection");
                                         return SizedBox(
                                           height: 120.0,
                                           child: CachedNetworkImage(
@@ -184,21 +184,21 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                     switch (snapshot.connectionState) {
                                       case ConnectionState.done:
                                         if (snapshot.hasError) {
-                                          print("-name- has Error");
+                                          debugPrint("🚫 -name- has Error");
                                           return CustomTextBold(
                                               text: widget.name,
                                               size: 17.0,
                                               color: CColors.PrimaryText);
                                         } else {
-                                          print("-name- has Data");
+                                          debugPrint("🟢 -name- has Data");
                                           return CustomTextBold(
                                               text: snapshot.data!["name"],
                                               size: 17.0,
                                               color: CColors.PrimaryText);
                                         }
                                       default:
-                                        print(
-                                            "-name- maybe loading/no connection");
+                                        debugPrint(
+                                            "🚫 -name- maybe loading/no connection");
                                         return CustomTextBold(
                                             text: widget.name,
                                             size: 17.0,
@@ -220,15 +220,15 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                         stream: _getRecipes,
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData) {
-                                            print(
-                                                "-Profile Recipe Count- has Error");
+                                            debugPrint(
+                                                "🚫 -Profile Recipe Count- has Error");
                                             return CustomTextBold(
                                                 text: "0",
                                                 size: 17.0,
                                                 color: CColors.PrimaryText);
                                           } else {
-                                            print(
-                                                "-Profile Recipe Count- has Data");
+                                            debugPrint(
+                                                "🟢 -Profile Recipe Count- has Data");
                                             return CustomTextBold(
                                                 text: snapshot.data!.docs.length
                                                     .toString(),
@@ -252,27 +252,21 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                           // switch (snapshot.connectionState) {
                                           //   case ConnectionState.done:
                                           if (!snapshot.hasData) {
-                                            print(
-                                                "-Profile Following Count- has Error");
+                                            debugPrint(
+                                                "🚫 -Profile Following Count- has Error");
                                             return CustomTextBold(
                                                 text: "0",
                                                 size: 17.0,
                                                 color: CColors.PrimaryText);
                                           } else {
-                                            print(
-                                                "-Profile Following Count- has Data");
+                                            debugPrint(
+                                                "🟢 -Profile Following Count- has Data");
                                             return CustomTextBold(
                                                 text: snapshot.data!.docs.length
                                                     .toString(),
                                                 size: 17.0,
                                                 color: CColors.PrimaryText);
                                           }
-                                          //   default:
-                                          //     return CustomTextBold(
-                                          //         text: "0",
-                                          //         size: 17.0,
-                                          //         color: CColors.PrimaryText);
-                                          // }
                                         }),
                                     CustomTextMedium(
                                         text: "Following",
@@ -290,27 +284,21 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                           // switch (snapshot.connectionState) {
                                           //   case ConnectionState.done:
                                           if (!snapshot.hasData) {
-                                            print(
-                                                "-Profile Followers Count- has Error");
+                                            debugPrint(
+                                                "🚫 -Profile Followers Count- has Error");
                                             return CustomTextBold(
                                                 text: "0",
                                                 size: 17.0,
                                                 color: CColors.PrimaryText);
                                           } else {
-                                            print(
-                                                "-Profile Followers Count- has Data");
+                                            debugPrint(
+                                                "🟢 -Profile Followers Count- has Data");
                                             return CustomTextBold(
                                                 text: snapshot.data!.docs.length
                                                     .toString(),
                                                 size: 17.0,
                                                 color: CColors.PrimaryText);
                                           }
-                                          //   default:
-                                          //     return CustomTextBold(
-                                          //         text: "0",
-                                          //         size: 17.0,
-                                          //         color: CColors.PrimaryText);
-                                          // }
                                         }),
                                     CustomTextMedium(
                                         text: "Followers",
@@ -332,12 +320,14 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                       // switch (snapshot.connectionState) {
                                       //   case ConnectionState.done:
                                       if (!snapshot.hasData) {
-                                        print("-Is Following- has Error");
+                                        debugPrint(
+                                            "🚫 -Is Following- has Error");
                                         return CustomPrimaryButton(
                                             text: "Follow", doOnPressed: () {});
                                       } else {
                                         if (snapshot.data!.docs.length > 0) {
-                                          print("-Is Following- has Data");
+                                          debugPrint(
+                                              "🟢 -Is Following- has Data");
                                           return CustomSecondaryButton(
                                               text: "Unfollow",
                                               doOnPressed: () async {
@@ -353,8 +343,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                                 });
                                               });
                                         } else {
-                                          print(
-                                              "-Is Following- has No Data: Not Following");
+                                          debugPrint(
+                                              "🚫 -Is Following- has No Data: Not Following");
                                           return CustomPrimaryButton(
                                               text: "Follow",
                                               doOnPressed: () async {
@@ -374,10 +364,6 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                               });
                                         }
                                       }
-                                      // default:
-                                      //   return CustomPrimaryButton(
-                                      //       text: "Follow", doOnPressed: () {});
-                                      // }
                                     }),
                               ))
                         ],

@@ -10,14 +10,9 @@ class FilterProvider extends ChangeNotifier {
   double get cookingDuration => _cookingDuration;
 
   void filterSet(String tag, double ioh, double cd) {
-    print("filter2: $ioh");
-    print("filter3: $cd");
     _tag = tag;
     _ingredientsOnHand = ioh;
     _cookingDuration = cd;
-
-    print("finish2: $_ingredientsOnHand");
-    print("finish3: $_cookingDuration");
     notifyListeners();
   }
 }

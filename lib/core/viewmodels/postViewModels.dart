@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 
 class PostViewModel {
@@ -32,20 +33,17 @@ class PostViewModel {
               .get()
               .then((postsData) {
             List ingredients = postsData.data()!["ingredients"];
-            print("ingredients: $ingredients");
             num postPercent = percentCalculate(pantries, ingredients);
-            print("postPercent: $postPercent");
             postsData.data()!["postPercent"] =
                 "${postPercent.toStringAsFixed(0)}%";
 
             Map<String, dynamic>? postData = postsData.data();
             postData!["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
-            print(postsData.data()!["postPercent"]);
             _list.add([userData.data(), postData, postsData.id]);
           });
         });
       }
-      print("LIKES: $_list");
+      debugPrint("📚 [getProfileLikes] Response: $_list");
       return _list;
     });
   }
@@ -74,6 +72,7 @@ class PostViewModel {
         postData["id"] = post.id;
         _list.add(postData);
       }
+      debugPrint("📚 [getProfilePosts] Response: $_list");
       return _list;
     });
   }
@@ -95,8 +94,6 @@ class PostViewModel {
     // _list[0] = user collection
     // _list[1] = user posts collection
     List<dynamic> _list = [];
-
-    print("UID: $uid");
 
     CollectionReference _users = FirebaseFirestore.instance.collection("users");
     CollectionReference _usersFollowing = FirebaseFirestore.instance
@@ -124,7 +121,6 @@ class PostViewModel {
             for (var post in postsData.docs) {
               List ingredients = post["ingredients"];
               num postPercent = percentCalculate(pantries, ingredients);
-              print("aihdawoudhawoid: $postPercent");
               Map<String, dynamic> postData = post.data();
               postData["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
               _list.add([userData.data(), postData, post.id]);
@@ -132,7 +128,7 @@ class PostViewModel {
           });
         });
       }
-      print(_list);
+      debugPrint("📚 [getPosts] Response: $_list");
       return _list;
     });
   }
@@ -173,6 +169,8 @@ class PostViewModel {
       }
       _list.sort(
           (a, b) => b[1]["postDateCreated"].compareTo(a[1]["postDateCreated"]));
+
+      debugPrint("📚 [getAllPosts] Response: $_list");
       return _list;
     });
   }
@@ -215,15 +213,15 @@ class PostViewModel {
                   "dateCreated": now,
                   "postDocId": postDocId
                 }).then((value) {
-                  print("[Success] Liked: $userName");
+                  debugPrint("✅ [likePost] Success: $userName");
                   return true;
                 }))
             .catchError((error) {
-              print("Failed to add like: $error");
+              debugPrint("🛑 [likePost] Fail: $error");
               return false;
             }))
         .catchError((error) {
-          print("Failed to add like: $error");
+          debugPrint("🛑 [likePost] Fail: $error");
           return false;
         });
   }
@@ -258,11 +256,11 @@ class PostViewModel {
                         .doc(postDocId)
                         .delete()
                         .then((value) {
-                      print("[Success] Unliked: $postDocId");
+                      debugPrint("✅ [unlikePost] Success: $postDocId");
                       return true;
                     }))
                 .catchError((error) {
-              print("Failed to add like: $error");
+              debugPrint("🛑 [unlikePost] Fail: $error");
               return false;
             }));
   }

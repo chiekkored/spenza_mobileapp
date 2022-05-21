@@ -36,13 +36,9 @@ class _CookNowTabState extends State<CookNowTab>
   }
 
   setHomeTag(String tag, String uid) {
-    print("string");
-    print(tag);
-    print("string");
     setState(() {
       _loadCookNow = _postVM.getPosts(uid);
     });
-    print("done");
   }
 
   @override
@@ -55,14 +51,14 @@ class _CookNowTabState extends State<CookNowTab>
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
-                print("-Cook Now Tab- No Connection");
+                debugPrint("🚫 -Cook Now Tab- No Connection");
                 return Container();
               case ConnectionState.waiting:
-                print("-Cook Now Tab- waiting");
+                debugPrint("⏳ -Cook Now Tab- waiting");
                 return CustomGridShimmer();
               case ConnectionState.done:
                 if (snapshot.data!.isEmpty) {
-                  print("-Cook Now Tab- has Error");
+                  debugPrint("🚫 -Cook Now Tab- has Error");
                   return RefreshIndicator(
                       onRefresh: () async {
                         var _userProvider = context.read<UserProvider>();
@@ -95,7 +91,7 @@ class _CookNowTabState extends State<CookNowTab>
                             )
                           ]));
                 } else {
-                  print("-Cook Now Tab- has Data");
+                  debugPrint("🟢 -Cook Now Tab- has Data");
                   return RefreshIndicator(
                     onRefresh: () async {
                       var _userProvider = context.read<UserProvider>();
@@ -111,7 +107,6 @@ class _CookNowTabState extends State<CookNowTab>
                   );
                 }
               default:
-                print("-Cook Now Tab- default");
                 return Container();
             }
           }),

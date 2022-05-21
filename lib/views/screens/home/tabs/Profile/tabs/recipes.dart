@@ -40,17 +40,14 @@ class _RecipesTabState extends State<RecipesTab>
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
-                print("-Profile Recipes- No Connection");
+                debugPrint("🚫 -Profile Recipes- No Connection");
                 return Container();
               case ConnectionState.waiting:
-                print("-Profile Recipes- waiting");
+                debugPrint("⏳ -Profile Recipes- waiting");
                 return CustomGridShimmerWithoutDp();
               case ConnectionState.done:
                 if (snapshot.data!.isEmpty) {
-                  print("-Profile Recipes- has Error");
-                  print(snapshot.data);
-                  // showCustomDialog(context, "Error",
-                  //     "An error has occurred.", "Okay", null);
+                  debugPrint("🚫 -Profile Recipes- has Error");
                   return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
@@ -80,8 +77,7 @@ class _RecipesTabState extends State<RecipesTab>
                             )
                           ]));
                 } else {
-                  print("-Profile Recipes- has Data");
-                  print(snapshot.data);
+                  debugPrint("🟢 -Profile Recipes- has Data");
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {

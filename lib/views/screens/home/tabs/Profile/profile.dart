@@ -113,7 +113,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.done:
                                     if (snapshot.hasError) {
-                                      print("-dpUrl- has Error");
+                                      debugPrint("🚫 -dpUrl- has Error");
                                       return SizedBox(
                                         height: 120.0,
                                         child: CachedNetworkImage(
@@ -130,7 +130,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                         ),
                                       );
                                     } else {
-                                      print("-dpUrl- has Data");
+                                      debugPrint("🟢 -dpUrl- has Data");
                                       return SizedBox(
                                         height: 120.0,
                                         child: snapshot.data!["dpUrl"] !=
@@ -157,8 +157,8 @@ class _ProfileTabState extends State<ProfileTab> {
                                       );
                                     }
                                   default:
-                                    print(
-                                        "-dpUrl- maybe loading/no connection");
+                                    debugPrint(
+                                        "🚫 -dpUrl- maybe loading/no connection");
                                     return SizedBox(
                                       height: 120.0,
                                       child: CachedNetworkImage(
@@ -197,15 +197,15 @@ class _ProfileTabState extends State<ProfileTab> {
                                     stream: _getRecipes,
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
-                                        print(
-                                            "-Profile Recipe Count- has Error");
+                                        debugPrint(
+                                            "🚫 -Profile Recipe Count- has Error");
                                         return CustomTextBold(
                                             text: "0",
                                             size: 17.0,
                                             color: CColors.PrimaryText);
                                       } else {
-                                        print(
-                                            "-Profile Recipe Count- has Data");
+                                        debugPrint(
+                                            "🟢 -Profile Recipe Count- has Data");
                                         return CustomTextBold(
                                             text: snapshot.data!.docs.length
                                                 .toString(),
@@ -226,30 +226,22 @@ class _ProfileTabState extends State<ProfileTab> {
                                 StreamBuilder<QuerySnapshot>(
                                     stream: _getFollowing,
                                     builder: (context, snapshot) {
-                                      // switch (snapshot.connectionState) {
-                                      //   case ConnectionState.done:
                                       if (!snapshot.hasData) {
-                                        print(
-                                            "-Profile Following Count- has Error");
+                                        debugPrint(
+                                            "🚫 -Profile Following Count- has Error");
                                         return CustomTextBold(
                                             text: "0",
                                             size: 17.0,
                                             color: CColors.PrimaryText);
                                       } else {
-                                        print(
-                                            "-Profile Following Count- has Data");
+                                        debugPrint(
+                                            "🟢 -Profile Following Count- has Data");
                                         return CustomTextBold(
                                             text: snapshot.data!.docs.length
                                                 .toString(),
                                             size: 17.0,
                                             color: CColors.PrimaryText);
                                       }
-                                      //   default:
-                                      //     return CustomTextBold(
-                                      //         text: "0",
-                                      //         size: 17.0,
-                                      //         color: CColors.PrimaryText);
-                                      // }
                                     }),
                                 CustomTextMedium(
                                     text: "Following",
@@ -267,27 +259,21 @@ class _ProfileTabState extends State<ProfileTab> {
                                       // switch (snapshot.connectionState) {
                                       //   case ConnectionState.done:
                                       if (!snapshot.hasData) {
-                                        print(
-                                            "-Profile Followers Count- has Error");
+                                        debugPrint(
+                                            "🚫 -Profile Followers Count- has Error");
                                         return CustomTextBold(
                                             text: "0",
                                             size: 17.0,
                                             color: CColors.PrimaryText);
                                       } else {
-                                        print(
-                                            "-Profile Followers Count- has Data");
+                                        debugPrint(
+                                            "🟢 -Profile Followers Count- has Data");
                                         return CustomTextBold(
                                             text: snapshot.data!.docs.length
                                                 .toString(),
                                             size: 17.0,
                                             color: CColors.PrimaryText);
                                       }
-                                      //   default:
-                                      //     return CustomTextBold(
-                                      //         text: "0",
-                                      //         size: 17.0,
-                                      //         color: CColors.PrimaryText);
-                                      // }
                                     }),
                                 CustomTextMedium(
                                     text: "Followers",
