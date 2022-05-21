@@ -1,9 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/viewmodels/postViewModels.dart';
 
 class SearchViewModel {
-  Future<List<dynamic>> getSearch(String searchText, String uid) async {
+  double percentCalculate(
+      QuerySnapshot<Map<String, dynamic>> pantries, List<dynamic> ingredients) {
+    Iterable ingredient = ingredients.map(
+      (e) => e["ingredientText"],
+    );
+    Iterable pantry = pantries.docs.map((e) => e["pantryFoodTitle"]);
+    return (pantry
+                .where((pantryItem) => ingredient.contains(pantryItem))
+                .length /
+            ingredients.length) *
+        100;
+  }
+
+  Future<List<dynamic>> getSearch(
+      String searchText, String uid, FilterProvider filterProvider) async {
     // _list[0] = user collection
     // _list[1] = user posts collection
     List<dynamic> _list = [];
@@ -42,8 +57,7 @@ class SearchViewModel {
               .then((postsData) {
                 for (var post in postsData.docs) {
                   List ingredients = post["ingredients"];
-                  num postPercent =
-                      (pantries.docs.length / ingredients.length) * 100;
+                  num postPercent = percentCalculate(pantries, ingredients);
                   Map<String, dynamic> postData = post.data();
                   postData["postPercent"] =
                       "${postPercent.toStringAsFixed(0)}%";
@@ -62,6 +76,26 @@ class SearchViewModel {
           .then((value) => debugPrint("✅ [getSearch] Search Added"))
           .catchError((error) => debugPrint("🛑 [getSearch] Search Add Error"));
 
+      if (filterProvider.cookingDuration != 0.0 &&
+          filterProvider.ingredientOnHand != 0.0) {
+        List _filtered = [];
+        for (List item in _list) {
+          List postTags = item[1]["postTags"];
+          String postPercentToString = item[1]["postPercent"];
+          String postDurationToString = item[1]["postDuration"];
+          if ((filterProvider.tag != ""
+                  ? postTags.contains(filterProvider.tag)
+                  : true) &&
+              filterProvider.ingredientOnHand >=
+                  double.parse(postPercentToString.replaceAll("%", "")) &&
+              filterProvider.cookingDuration >=
+                  double.parse(postDurationToString.replaceAll(" mins", ""))) {
+            _filtered.add(item);
+          }
+        }
+        _list.clear();
+        _list.addAll(_filtered);
+      }
       debugPrint("📚 [getSearch] Response: $_list");
       return _list;
     });

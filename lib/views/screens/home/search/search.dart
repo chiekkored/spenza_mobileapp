@@ -69,7 +69,7 @@ class _SearchScreenState extends State<SearchScreen>
                               } else {
                                 var filterProvider =
                                     context.read<FilterProvider>();
-                                filterProvider.filterSet("", 0.0, 0.0);
+                                filterProvider.filterSet("", 0, 0.0, 0.0);
                                 pushNewScreen(context,
                                     screen: SearchResultScreen(
                                         searchText:

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/uploadViewModels.dart';
+import 'package:spenza/utilities/config/units.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
@@ -50,6 +51,9 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
   int _labelSteps = 1;
   int index = 0;
 
+  // For Android unit
+  String unitValue = "tsp";
+
   @override
   void initState() {
     super.initState();
@@ -91,12 +95,65 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
             ),
             Container(
               width: 80.0,
-              child: TextField(
-                controller: unitController,
-                textCapitalization: TextCapitalization.sentences,
-                style: customTextFieldTextStyle(),
-                decoration: customTextFieldInputDecorationSquare(hint: "Unit"),
-              ),
+              child: Platform.isIOS
+                  ? TextField(
+                      readOnly: true,
+                      controller: unitController,
+                      style: customTextFieldTextStyle(),
+                      decoration:
+                          customTextFieldInputDecorationSquare(hint: "Unit"),
+                      onTap: () => showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24.0, vertical: 32.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 100.0,
+                                    child: CupertinoPicker(
+                                      children: Units.units
+                                          .map((e) => Text(e))
+                                          .toList(),
+                                      onSelectedItemChanged: (value) {
+                                        String text = Units.units[value];
+                                        unitController.text = text;
+                                      },
+                                      itemExtent: 25,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }))
+                  : Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(
+                            color: CColors.Outline,
+                            width: 1.0,
+                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: DropdownButton(
+                          isExpanded: true,
+                          menuMaxHeight: 200.0,
+                          value: unitValue,
+                          items: Units.units
+                              .map((e) =>
+                                  DropdownMenuItem(value: e, child: Text(e)))
+                              .toList(),
+                          onChanged: (value) {
+                            unitValue = value.toString();
+                            setState(() {});
+                          },
+                          underline: Container(),
+                        ),
+                      ),
+                    ),
             ),
             SizedBox(
               width: 10.0,
@@ -148,13 +205,13 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                             color: CColors.White),
                       )),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 18.0),
-                  child: Container(
-                    padding: const EdgeInsets.only(right: 15.0),
-                    child: SvgPicture.asset("assets/svg/drag_icon.svg"),
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(top: 18.0),
+                //   child: Container(
+                //     padding: const EdgeInsets.only(right: 15.0),
+                //     child: SvgPicture.asset("assets/svg/drag_icon.svg"),
+                //   ),
+                // ),
               ],
             ),
             Flexible(

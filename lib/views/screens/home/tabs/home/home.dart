@@ -40,13 +40,14 @@ class _HomeTabState extends State<HomeTab> {
   @override
   void initState() {
     // var _userProvider = context.read<UserProvider>();
-    _loadCookNow = _postVM
-        .getPosts(_user.currentUser!.uid); // only create the future once.
+    _loadCookNow = _postVM.getPosts(_user.currentUser!.uid,
+        context.read<FilterProvider>()); // only create the future once.
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var filterProvider = context.read<FilterProvider>();
     return Material(
       type: MaterialType.transparency,
       child: DefaultTabController(
@@ -119,18 +120,17 @@ class _HomeTabState extends State<HomeTab> {
                                         onSelected: (str, index, isSelected) {
                                           var _userProvider =
                                               context.read<UserProvider>();
-
-                                          var filterProvider =
-                                              context.read<FilterProvider>();
                                           filterProvider.filterSet(
                                               str.toString() == "All"
                                                   ? ""
                                                   : str.toString(),
+                                              0,
                                               100,
                                               60);
                                           setState(() {
                                             _loadCookNow = _postVM.getPosts(
-                                                _userProvider.userInfo.uid);
+                                                _userProvider.userInfo.uid,
+                                                filterProvider);
                                           });
                                         },
                                         options: customGroupButtonOptions(),
@@ -206,8 +206,9 @@ class _HomeTabState extends State<HomeTab> {
                                     var _userProvider =
                                         context.read<UserProvider>();
                                     setState(() {
-                                      _loadCookNow = _postVM
-                                          .getPosts(_userProvider.userInfo.uid);
+                                      _loadCookNow = _postVM.getPosts(
+                                          _userProvider.userInfo.uid,
+                                          filterProvider);
                                     });
                                   },
                                   child: ListView(
@@ -240,39 +241,21 @@ class _HomeTabState extends State<HomeTab> {
                                       ]));
                             } else {
                               debugPrint("🟢 -Cook Now Tab- has Data");
-                              var filterProvider =
-                                  context.read<FilterProvider>();
-                              if (filterProvider.tag != "") {
-                                return RefreshIndicator(
-                                  onRefresh: () async {
-                                    var _userProvider =
-                                        context.read<UserProvider>();
-                                    setState(() {
-                                      _loadCookNow = _postVM
-                                          .getPosts(_userProvider.userInfo.uid);
-                                    });
-                                  },
-                                  child: CustomGridViewWithFilter(
-                                    snapshot: snapshot,
-                                    fromScreen: "Home",
-                                  ),
-                                );
-                              } else {
-                                return RefreshIndicator(
-                                  onRefresh: () async {
-                                    var _userProvider =
-                                        context.read<UserProvider>();
-                                    setState(() {
-                                      _loadCookNow = _postVM
-                                          .getPosts(_userProvider.userInfo.uid);
-                                    });
-                                  },
-                                  child: CustomGridView(
-                                    snapshot: snapshot,
-                                    fromScreen: "Home",
-                                  ),
-                                );
-                              }
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  var _userProvider =
+                                      context.read<UserProvider>();
+                                  setState(() {
+                                    _loadCookNow = _postVM.getPosts(
+                                        _userProvider.userInfo.uid,
+                                        filterProvider);
+                                  });
+                                },
+                                child: CustomGridView(
+                                  snapshot: snapshot,
+                                  fromScreen: "Home",
+                                ),
+                              );
                             }
                           default:
                             return Container();

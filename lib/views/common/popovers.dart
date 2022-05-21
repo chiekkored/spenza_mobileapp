@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/filterProvider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
@@ -192,6 +194,10 @@ class ModalBottomSheet extends StatefulWidget {
 class _ModalBottomSheetState extends State<ModalBottomSheet> {
   double _ingredientsOnHandSlider = 0.0;
   double _cookingDurationSlider = 0.0;
+  GroupButtonController _tagSelectedController =
+      GroupButtonController(selectedIndex: 0);
+  String _selectedTag = "";
+  int _selectedTagIndex = 0;
 
   @override
   void initState() {
@@ -199,6 +205,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
     var searchProvider = context.read<FilterProvider>();
     _ingredientsOnHandSlider = searchProvider.ingredientOnHand;
     _cookingDurationSlider = searchProvider.cookingDuration;
+    _tagSelectedController.selectIndex(searchProvider.tagIndex);
     super.initState();
   }
 
@@ -220,33 +227,23 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
             child: CustomTextBold(
                 text: "Tags", size: 17.0, color: CColors.PrimaryText),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            scrollDirection: Axis.horizontal,
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 17.0),
-                  child: CustomRadioButton(
-                      doOnPressed: () {},
-                      text: "All",
-                      color: CColors.PrimaryColor,
-                      fontColor: CColors.White),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 17.0),
-                  child: CustomRadioButton(
-                      doOnPressed: () {},
-                      text: "Food",
-                      color: CColors.Form,
-                      fontColor: CColors.SecondaryText),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 17.0),
-                  child: CustomRadioButton(
-                      doOnPressed: () {},
-                      text: "Drink",
-                      color: CColors.Form,
-                      fontColor: CColors.SecondaryText),
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: GroupButton(
+                    controller: _tagSelectedController,
+                    isRadio: true,
+                    onSelected: (str, index, isSelected) {
+                      _selectedTag = str.toString();
+                      _selectedTagIndex = index;
+                    },
+                    options: customGroupButtonOptions(),
+                    buttons: ["All", "Food", "Drink"],
+                  ),
                 ),
               ],
             ),
@@ -371,7 +368,11 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                   child: CustomPrimaryButton(
                       text: "Done",
                       doOnPressed: () {
-                        filterProvider.filterSet("", _ingredientsOnHandSlider,
+                        print("_selectedTag $_selectedTag");
+                        filterProvider.filterSet(
+                            _selectedTag == "All" ? "" : _selectedTag,
+                            _selectedTagIndex,
+                            _ingredientsOnHandSlider,
                             _cookingDurationSlider);
                         widget.setSearchFilter("Search Filter");
                         Navigator.maybePop(context);

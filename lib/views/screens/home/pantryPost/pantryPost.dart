@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/uploadViewModels.dart';
+import 'package:spenza/utilities/config/units.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
@@ -34,6 +35,8 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
   final ImagePicker _picker = ImagePicker();
   XFile image = XFile("");
   bool isCoverAttached = false;
+  // For Android unitValue
+  String unitValue = "tsp";
 
   @override
   void initState() {
@@ -225,12 +228,54 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
-                      child: TextField(
-                        controller: _unitTextController,
-                        style: customTextFieldTextStyle(),
-                        decoration: customTextFieldInputDecoration(
-                            hint: "Enter quantity unit"),
-                      ),
+                      child: !Platform.isIOS
+                          ? TextField(
+                              readOnly: true,
+                              controller: _unitTextController,
+                              style: customTextFieldTextStyle(),
+                              decoration: customTextFieldInputDecoration(
+                                  hint: "Enter quantity unit"),
+                              onTap: () => showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24.0, vertical: 32.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 100.0,
+                                            child: CupertinoPicker(
+                                              children: Units.units
+                                                  .map((e) => Text(e))
+                                                  .toList(),
+                                              onSelectedItemChanged: (value) {
+                                                String text =
+                                                    Units.units[value];
+                                                _unitTextController.text = text;
+                                              },
+                                              itemExtent: 25,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }))
+                          : DropdownButton(
+                              isExpanded: true,
+                              menuMaxHeight: 200.0,
+                              value: unitValue,
+                              items: Units.units
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e)))
+                                  .toList(),
+                              onChanged: (value) {
+                                unitValue = value.toString();
+                                setState(() {});
+                              }),
                     ),
                   ],
                 ),

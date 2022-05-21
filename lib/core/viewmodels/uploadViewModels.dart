@@ -65,7 +65,8 @@ class UploadViewModel {
             "postImageUrl": coverUrl,
             "postDateCreated": now,
             "ingredients": _ingredientText,
-            "steps": _steps
+            "steps": _steps,
+            "postTags": tags
           })
           .then((value) => true)
           .catchError((e) {

@@ -83,7 +83,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: CustomTextBold(
-                      text: widget.postRecipeTitle,
+                      text: widget.postRecipeTitle.replaceFirst(
+                          widget.postRecipeTitle[0],
+                          widget.postRecipeTitle[0].toUpperCase()),
                       size: 17.0,
                       color: CColors.PrimaryText),
                 ),
@@ -317,60 +319,66 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                             ),
                                             Flexible(
                                               fit: FlexFit.loose,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  CustomTextMedium(
-                                                      text: postDataSteps[index]
-                                                          ["stepsText"],
-                                                      size: 15.0,
-                                                      color: CColors.MainText),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 12.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12.0),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    CustomTextMedium(
+                                                        text:
                                                             postDataSteps[index]
-                                                                ["stepsImage"],
-                                                        placeholder: (context,
-                                                                s) =>
-                                                            Container(
-                                                                color: CColors
-                                                                    .Form,
-                                                                height: 155,
-                                                                width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width),
-                                                        imageBuilder:
-                                                            (context, image) {
-                                                          return Image(
-                                                            image: image,
-                                                            height: 155,
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            fit: BoxFit.cover,
-                                                          );
-                                                        },
-                                                        errorWidget: (context,
-                                                            str, dyn) {
-                                                          return Center(
-                                                              child: Icon(
-                                                                  Icons.error));
-                                                        },
+                                                                ["stepsText"],
+                                                        size: 15.0,
+                                                        color:
+                                                            CColors.MainText),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 12.0),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12.0),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              postDataSteps[
+                                                                      index][
+                                                                  "stepsImage"],
+                                                          placeholder: (context,
+                                                                  s) =>
+                                                              Container(
+                                                                  color: CColors
+                                                                      .Form,
+                                                                  height: 155,
+                                                                  width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width),
+                                                          imageBuilder:
+                                                              (context, image) {
+                                                            return Image(
+                                                              image: image,
+                                                              height: 155,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              fit: BoxFit.cover,
+                                                            );
+                                                          },
+                                                          errorWidget: (context,
+                                                              str, dyn) {
+                                                            return Container();
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ],

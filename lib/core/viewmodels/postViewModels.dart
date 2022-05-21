@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 
 class PostViewModel {
@@ -34,11 +35,9 @@ class PostViewModel {
               .then((postsData) {
             List ingredients = postsData.data()!["ingredients"];
             num postPercent = percentCalculate(pantries, ingredients);
-            postsData.data()!["postPercent"] =
-                "${postPercent.toStringAsFixed(0)}%";
-
             Map<String, dynamic>? postData = postsData.data();
             postData!["postPercent"] = "${postPercent.toStringAsFixed(0)}%";
+
             _list.add([userData.data(), postData, postsData.id]);
           });
         });
@@ -90,7 +89,8 @@ class PostViewModel {
         100;
   }
 
-  Future<List<dynamic>> getPosts(String uid) async {
+  Future<List<dynamic>> getPosts(
+      String uid, FilterProvider filterProvider) async {
     // _list[0] = user collection
     // _list[1] = user posts collection
     List<dynamic> _list = [];
@@ -108,7 +108,7 @@ class PostViewModel {
         .then((pantryData) async => pantryData);
 
     // Get following lists
-    return await _usersFollowing.get().then((followingData) async {
+    await _usersFollowing.get().then((followingData) async {
       // For loop following users and get its userData
       for (var user in followingData.docs) {
         await _users.doc(user["uid"]).get().then((userData) async {
@@ -128,9 +128,30 @@ class PostViewModel {
           });
         });
       }
-      debugPrint("📚 [getPosts] Response: $_list");
-      return _list;
     });
+
+    if (filterProvider.tag != "" &&
+        filterProvider.cookingDuration != 0.0 &&
+        filterProvider.ingredientOnHand != 0.0) {
+      var _filtered = [];
+      for (List item in _list) {
+        List postTags = item[1]["postTags"];
+        String postPercentToString = item[1]["postPercent"];
+        String postDurationToString = item[1]["postDuration"];
+        if ((filterProvider.tag != ""
+                ? postTags.contains(filterProvider.tag)
+                : true) &&
+            filterProvider.ingredientOnHand >=
+                double.parse(postPercentToString.replaceAll("%", "")) &&
+            filterProvider.cookingDuration >=
+                double.parse(postDurationToString.replaceAll(" mins", ""))) {
+          _filtered.add(item);
+        }
+      }
+      _list.clear();
+      _list.addAll(_filtered);
+    }
+    return _list;
   }
 
   Future<List<dynamic>> getAllPosts(String uid) async {

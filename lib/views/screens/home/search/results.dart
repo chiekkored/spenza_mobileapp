@@ -30,22 +30,27 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   @override
   void initState() {
     var _userProvider = context.read<UserProvider>();
-    _loadSearch = _searchVM.getSearch(widget.searchText,
-        _userProvider.userInfo.uid); // only create the future once.
+    var filterProvider = context.read<FilterProvider>();
+    _loadSearch = _searchVM.getSearch(
+        widget.searchText,
+        _userProvider.userInfo.uid,
+        filterProvider); // only create the future once.
     super.initState();
   }
 
   setSearchFilter(String result) {
     var _userProvider = context.read<UserProvider>();
+    var filterProvider = context.read<FilterProvider>();
     setState(() {
-      _loadSearch =
-          _searchVM.getSearch(widget.searchText, _userProvider.userInfo.uid);
+      _loadSearch = _searchVM.getSearch(
+          widget.searchText, _userProvider.userInfo.uid, filterProvider);
       debugPrint(result);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    var filterProvider = context.read<FilterProvider>();
     var _userProvider = context.read<UserProvider>();
     TextEditingController _searchTextController =
         TextEditingController(text: widget.searchText);
@@ -186,7 +191,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                       setState(() {
                                         _loadSearch = _searchVM.getSearch(
                                             widget.searchText,
-                                            _userProvider.userInfo.uid);
+                                            _userProvider.userInfo.uid,
+                                            filterProvider);
                                       });
                                     },
                                     child: ListView(
@@ -221,49 +227,25 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                               );
                             } else {
                               debugPrint("🟢 -Search Results- has Data");
-                              var filterProvider =
-                                  context.read<FilterProvider>();
-                              if (filterProvider.cookingDuration != 0.0 &&
-                                  filterProvider.ingredientOnHand != 0.0) {
-                                return RefreshIndicator(
-                                  onRefresh: () async {
-                                    setState(() {
-                                      _loadSearch = _searchVM.getSearch(
-                                          widget.searchText,
-                                          _userProvider.userInfo.uid);
-                                    });
-                                  },
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    children: [
-                                      CustomGridViewWithFilter(
-                                        snapshot: snapshot,
-                                        fromScreen: "Search",
-                                      )
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return RefreshIndicator(
-                                  onRefresh: () async {
-                                    setState(() {
-                                      _loadSearch = _searchVM.getSearch(
-                                          widget.searchText,
-                                          _userProvider.userInfo.uid);
-                                    });
-                                  },
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    children: [
-                                      CustomGridView(
-                                        snapshot: snapshot,
-                                        fromScreen: "Search",
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                              ;
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  setState(() {
+                                    _loadSearch = _searchVM.getSearch(
+                                        widget.searchText,
+                                        _userProvider.userInfo.uid,
+                                        filterProvider);
+                                  });
+                                },
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    CustomGridView(
+                                      snapshot: snapshot,
+                                      fromScreen: "Search",
+                                    )
+                                  ],
+                                ),
+                              );
                             }
                           default:
                             return Container();
