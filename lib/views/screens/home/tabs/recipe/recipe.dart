@@ -82,10 +82,11 @@ class _RecipeTabState extends State<RecipeTab> {
                     child: ListView(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0, vertical: 16.0),
                           child: CustomTextBold(
                               text: "Recipe",
-                              size: 24.0,
+                              size: 32.0,
                               color: CColors.PrimaryText),
                         ),
                         CustomGridView(

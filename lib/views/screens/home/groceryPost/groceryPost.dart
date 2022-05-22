@@ -18,16 +18,15 @@ import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/home/upload/uploadStep2.dart';
 
-class PantryPostScreen extends StatefulWidget {
-  const PantryPostScreen({Key? key}) : super(key: key);
+class GroceryPostScreen extends StatefulWidget {
+  const GroceryPostScreen({Key? key}) : super(key: key);
 
   @override
-  State<PantryPostScreen> createState() => _PantryPostScreenState();
+  State<GroceryPostScreen> createState() => _GroceryPostScreenState();
 }
 
-class _PantryPostScreenState extends State<PantryPostScreen> {
+class _GroceryPostScreenState extends State<GroceryPostScreen> {
   UploadViewModel _uploadVM = UploadViewModel();
   TextEditingController _foodNameTextController = TextEditingController();
   TextEditingController _quantityTextController = TextEditingController();
@@ -152,7 +151,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 24.0),
                       child: CustomTextBold(
-                          text: "Food Name",
+                          text: "Item Name",
                           size: 17.0,
                           color: CColors.PrimaryText),
                     ),
@@ -286,94 +285,86 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: CustomPrimaryButton(
-                  text: "Add to pantry",
+                  text: "Add to grocery",
                   doOnPressed: () async {
-                    if (!isCoverAttached ||
-                        _foodNameTextController.text == '' ||
-                        _quantityTextController.text == '' ||
-                        _unitTextController.text == '') {
-                      return showCustomDialog(context, "Fields Required",
-                          "Please fill all fields.", "OK", null);
-                    } else {
-                      UserModel _user = context.read<UserProvider>().userInfo;
-                      showCustomModal(
-                          context,
-                          Container(
-                            padding: EdgeInsets.all(48.0),
-                            decoration: BoxDecoration(
-                              color: CColors.White,
-                              borderRadius: BorderRadius.circular(24.0),
-                            ),
-                            child: Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator(),
-                          ));
-                      bool value = await _uploadVM.uploadPantry(
-                          _user.uid,
-                          image.path,
-                          _foodNameTextController.text,
-                          _quantityTextController.text,
-                          _unitTextController.text);
-                      Navigator.of(context).maybePop(context);
-                      value
-                          ? showCustomModal(
-                              context,
-                              Container(
+                    UserModel _user = context.read<UserProvider>().userInfo;
+                    showCustomModal(
+                        context,
+                        Container(
+                          padding: EdgeInsets.all(48.0),
+                          decoration: BoxDecoration(
+                            color: CColors.White,
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                          child: Platform.isIOS
+                              ? CupertinoActivityIndicator()
+                              : CircularProgressIndicator(),
+                        ));
+                    bool value = await _uploadVM.uploadGrocery(
+                        _user.uid,
+                        image.path,
+                        _foodNameTextController.text,
+                        _quantityTextController.text,
+                        _unitTextController.text);
+                    Navigator.of(context).maybePop(context);
+                    value
+                        ? showCustomModal(
+                            context,
+                            Container(
+                              padding: EdgeInsets.all(48.0),
+                              decoration: BoxDecoration(
+                                color: CColors.White,
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24.0),
+                                    child: Image.asset(
+                                        "assets/images/upload-success.png"),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 32.0),
+                                    child: CustomTextBold(
+                                        text: "Successfully added",
+                                        size: 22.0,
+                                        color: CColors.MainText),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      "Your pantry has been added, you can see it on the Pantry Page",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15.0,
+                                          letterSpacing: 0.5,
+                                          color: CColors.MainText),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 24.0),
+                                    child: CustomPrimaryButton(
+                                        text: "Back to Home",
+                                        doOnPressed: () => Navigator.of(context)
+                                            .popUntil(
+                                                (route) => route.isFirst)),
+                                  )
+                                ],
+                              ),
+                            ))
+                        : showCustomModal(
+                            context,
+                            Container(
                                 padding: EdgeInsets.all(48.0),
                                 decoration: BoxDecoration(
                                   color: CColors.White,
                                   borderRadius: BorderRadius.circular(24.0),
                                 ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 24.0),
-                                      child: Image.asset(
-                                          "assets/images/upload-success.png"),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 32.0),
-                                      child: CustomTextBold(
-                                          text: "Successfully added",
-                                          size: 22.0,
-                                          color: CColors.MainText),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Text(
-                                        "Your pantry has been added, you can see it on the Pantry Page",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontFamily: "Inter",
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15.0,
-                                            letterSpacing: 0.5,
-                                            color: CColors.MainText),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 24.0),
-                                      child: CustomPrimaryButton(
-                                          text: "Back to Home",
-                                          doOnPressed: () =>
-                                              Navigator.of(context).popUntil(
-                                                  (route) => route.isFirst)),
-                                    )
-                                  ],
-                                ),
-                              ))
-                          : showCustomModal(
-                              context,
-                              Container(
-                                  padding: EdgeInsets.all(48.0),
-                                  decoration: BoxDecoration(
-                                    color: CColors.White,
-                                    borderRadius: BorderRadius.circular(24.0),
-                                  ),
-                                  child: Text("Error Adding")));
-                    }
+                                child: Text("Error Adding")));
                   }),
             ),
           ),

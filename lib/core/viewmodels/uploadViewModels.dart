@@ -114,6 +114,39 @@ class UploadViewModel {
     }
   }
 
+  Future<bool> uploadGrocery(String uid, String coverPath, String foodName,
+      String quantity, String unit) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    try {
+      DateTime now = DateTime.now();
+      Reference storageRefDest = storageRef.child("posts/$uid/$now");
+      await storageRefDest.putFile(File(coverPath));
+      String imageUrl = await storageRefDest.getDownloadURL();
+
+      CollectionReference _usersPantry = FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection("pantries");
+      bool result = await _usersPantry
+          .add({
+            "pantryFoodTitle": foodName,
+            "pantryQuantity": quantity,
+            "pantryUnit": unit,
+            "pantryImageUrl": imageUrl,
+          })
+          .then((value) => true)
+          .catchError((e) {
+            debugPrint(e.toString());
+            return false;
+          });
+      debugPrint("✅ [uploadGrocery] Success");
+      return result;
+    } on FirebaseException catch (e) {
+      debugPrint("🛑 [uploadGrocery] Fail: ${e.message}");
+      return false;
+    }
+  }
+
   Future<List<ImageLabel>> getSuggested(InputImage inputImage) async {
     List<ImageLabel> suggestedList = [];
     final modelManager = FirebaseImageLabelerModelManager();

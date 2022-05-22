@@ -6,6 +6,14 @@ class ProfileViewModel {
     return await FirebaseFirestore.instance.collection('users').doc(uid).get();
   }
 
+  Future<QuerySnapshot> getGroceries(String uid) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("groceries")
+        .get();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getRecipes(String uid) {
     return FirebaseFirestore.instance
         .collection('users')

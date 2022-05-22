@@ -1,30 +1,34 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/pantryViewModels.dart';
+import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
+import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/texts.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:spenza/views/screens/home/groceryPost/groceryPost.dart';
 
-class PantryScreen extends StatefulWidget {
-  const PantryScreen({Key? key}) : super(key: key);
+class GroceryScreen extends StatefulWidget {
+  const GroceryScreen({Key? key}) : super(key: key);
 
   @override
-  State<PantryScreen> createState() => _PantryScreenState();
+  State<GroceryScreen> createState() => _GroceryScreenState();
 }
 
-class _PantryScreenState extends State<PantryScreen> {
-  PantryViewModel _pantryVM = PantryViewModel();
-  late Future<QuerySnapshot> _getPantries;
+class _GroceryScreenState extends State<GroceryScreen> {
+  ProfileViewModel _groceryVM = ProfileViewModel();
+  late Future<QuerySnapshot> _getGrocery;
 
   @override
   void initState() {
     UserModel _user = context.read<UserProvider>().userInfo;
-    _getPantries = _pantryVM.getPantries(_user.uid);
+    _getGrocery = _groceryVM.getGroceries(_user.uid);
 
     super.initState();
   }
@@ -35,7 +39,7 @@ class _PantryScreenState extends State<PantryScreen> {
       child: Container(
         color: CColors.White,
         child: FutureBuilder<QuerySnapshot>(
-            future: _getPantries,
+            future: _getGrocery,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.done:
@@ -50,9 +54,9 @@ class _PantryScreenState extends State<PantryScreen> {
                     return RefreshIndicator(
                       onRefresh: (() async {
                         setState(() {
-                          UserModel _user =
-                              context.read<UserProvider>().userInfo;
-                          _getPantries = _pantryVM.getPantries(_user.uid);
+                          // UserModel _user =
+                          //     context.read<UserProvider>().userInfo;
+                          // _getPantries = _pantryVM.getPantries(_user.uid);
                         });
                       }),
                       child: ListView.separated(
@@ -72,10 +76,38 @@ class _PantryScreenState extends State<PantryScreen> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 24.0, vertical: 16.0),
-                              child: new CustomTextBold(
-                                  text: "Pantry",
-                                  size: 32.0,
-                                  color: CColors.PrimaryText),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CustomTextBold(
+                                      text: "Grocery",
+                                      size: 32.0,
+                                      color: CColors.PrimaryText),
+                                  TextButton(
+                                    onPressed: () => pushNewScreen(context,
+                                        withNavBar: false,
+                                        screen: GroceryPostScreen()),
+                                    child: Container(
+                                      height: 35.0,
+                                      width: 35.0,
+                                      decoration: BoxDecoration(
+                                          color: CColors.PrimaryColor,
+                                          shape: BoxShape.circle),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: CColors.White,
+                                      ),
+                                    ),
+                                    style: ButtonStyle(
+                                      overlayColor: MaterialStateProperty.all(
+                                          Colors.transparent),
+                                    ),
+                                  )
+                                ],
+                              ),
                             );
                           }
                           index -= 1;

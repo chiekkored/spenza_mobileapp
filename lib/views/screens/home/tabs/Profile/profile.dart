@@ -9,6 +9,7 @@ import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
+import 'package:spenza/views/screens/home/grocery/grocery.dart';
 import 'package:spenza/views/screens/home/pantry/pantry.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/liked.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/recipes.dart';
@@ -93,6 +94,8 @@ class _ProfileTabState extends State<ProfileTab> {
                               //   ),
                               //   (_) => false,
                               // );
+
+                              pushNewScreen(context, screen: GroceryScreen());
                             },
                             icon: Icon(
                               Icons.shopping_bag,
