@@ -44,7 +44,7 @@ class SearchViewModel {
           var searchTextCapFirst = searchText
               .replaceFirst(searchText[0], searchText[0].toUpperCase())
               .toString();
-          // Get users' posts
+          // Get users' posts based on search query
           return await _users
               .doc(user["uid"])
               .collection("posts")
@@ -76,8 +76,8 @@ class SearchViewModel {
           .then((value) => debugPrint("✅ [getSearch] Search Added"))
           .catchError((error) => debugPrint("🛑 [getSearch] Search Add Error"));
 
-      if (filterProvider.cookingDuration != 0.0 &&
-          filterProvider.ingredientOnHand != 0.0) {
+      // Filter search based on given filter
+      if (true) {
         List _filtered = [];
         for (List item in _list) {
           List postTags = item[1]["postTags"];
@@ -86,10 +86,14 @@ class SearchViewModel {
           if ((filterProvider.tag != ""
                   ? postTags.contains(filterProvider.tag)
                   : true) &&
-              filterProvider.ingredientOnHand >=
-                  double.parse(postPercentToString.replaceAll("%", "")) &&
-              filterProvider.cookingDuration >=
-                  double.parse(postDurationToString.replaceAll(" mins", ""))) {
+              (filterProvider.cookingDuration != 0.0
+                  ? filterProvider.ingredientOnHand >=
+                      double.parse(postPercentToString.replaceAll("%", ""))
+                  : true) &&
+              (filterProvider.ingredientOnHand != 0.0
+                  ? filterProvider.cookingDuration >=
+                      double.parse(postDurationToString.replaceAll(" mins", ""))
+                  : true)) {
             _filtered.add(item);
           }
         }

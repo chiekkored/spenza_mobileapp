@@ -152,7 +152,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 24.0),
                       child: CustomTextBold(
-                          text: "Food Name",
+                          text: "Ingredient Name",
                           size: 17.0,
                           color: CColors.PrimaryText),
                     ),
@@ -160,9 +160,10 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: TextField(
                         controller: _foodNameTextController,
+                        textCapitalization: TextCapitalization.sentences,
                         style: customTextFieldTextStyle(),
                         decoration: customTextFieldInputDecoration(
-                            hint: "Enter food name"),
+                            hint: "Enter ingredient name"),
                       ),
                     ),
                     Padding(
@@ -288,8 +289,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
               child: CustomPrimaryButton(
                   text: "Add to pantry",
                   doOnPressed: () async {
-                    if (!isCoverAttached ||
-                        _foodNameTextController.text == '' ||
+                    if (_foodNameTextController.text == '' ||
                         _quantityTextController.text == '' ||
                         _unitTextController.text == '') {
                       return showCustomDialog(context, "Fields Required",

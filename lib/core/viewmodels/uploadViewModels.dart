@@ -86,17 +86,22 @@ class UploadViewModel {
     final storageRef = FirebaseStorage.instance.ref();
     try {
       DateTime now = DateTime.now();
-      Reference storageRefDest = storageRef.child("posts/$uid/$now");
-      await storageRefDest.putFile(File(coverPath));
-      String imageUrl = await storageRefDest.getDownloadURL();
+      String imageUrl = "";
+      if (coverPath != "") {
+        Reference storageRefDest = storageRef.child("posts/$uid/$now");
+        await storageRefDest.putFile(File(coverPath));
+        imageUrl = await storageRefDest.getDownloadURL();
+      }
 
       CollectionReference _usersPantry = FirebaseFirestore.instance
           .collection("users")
           .doc(uid)
           .collection("pantries");
+      foodName = foodName.toLowerCase();
       bool result = await _usersPantry
           .add({
-            "pantryFoodTitle": foodName,
+            "pantryFoodTitle":
+                foodName.replaceFirst(foodName[0], foodName[0].toUpperCase()),
             "pantryQuantity": quantity,
             "pantryUnit": unit,
             "pantryImageUrl": imageUrl,
@@ -127,6 +132,8 @@ class UploadViewModel {
           .collection("users")
           .doc(uid)
           .collection("pantries");
+      foodName.toLowerCase();
+      foodName.replaceFirst(foodName[0], foodName[0].toUpperCase());
       bool result = await _usersPantry
           .add({
             "pantryFoodTitle": foodName,

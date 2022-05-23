@@ -44,6 +44,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   late Future<QuerySnapshot> _getLikes;
   late Future<DocumentSnapshot> _getRecipeDetails;
   late Future<DocumentSnapshot> _getIfPantryExist;
+  bool _isGroceryAdded = false;
   RecipeDetailsViewModel _recipeDetailVM = RecipeDetailsViewModel();
 
   @override
@@ -255,17 +256,53 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                         text: "Ingredients",
                                         size: 17.0,
                                         color: CColors.PrimaryText),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.add,
-                                          color: CColors.PrimaryColor,
-                                        ),
-                                        Icon(
-                                          Icons.shopping_cart,
-                                          color: CColors.PrimaryColor,
-                                        ),
-                                      ],
+                                    StatefulBuilder(
+                                      builder: (BuildContext context,
+                                          void Function(void Function())
+                                              setState) {
+                                        return TextButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isGroceryAdded = true;
+                                            });
+                                            _isGroceryAdded =
+                                                await _recipeDetailVM
+                                                    .addToGrocery(
+                                                        _userProvider
+                                                            .userInfo.uid,
+                                                        postDataIngredients);
+                                            if (_isGroceryAdded) {
+                                              const snackBar = SnackBar(
+                                                content: Text('Grocery Added'),
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            }
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            height: 35.0,
+                                            width: 50.0,
+                                            decoration: BoxDecoration(
+                                                color: _isGroceryAdded
+                                                    ? CColors.Form
+                                                    : CColors.PrimaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0)),
+                                            child: Icon(
+                                              _isGroceryAdded
+                                                  ? Icons.check
+                                                  : Icons.add_shopping_cart,
+                                              color: CColors.White,
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                            overlayColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.transparent),
+                                          ),
+                                        );
+                                      },
                                     )
                                   ],
                                 ),
@@ -476,7 +513,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         builder: (context, isExist) {
           if (isExist.hasData) {
             if (isExist.data!.docs.isNotEmpty) {
-              var pantryData = isExist.data!.docs[index];
+              var pantryData = isExist.data!.docs.first;
               int pantryQty = int.parse(pantryData["pantryQuantity"]);
               int ingredientQty =
                   int.parse(postDataIngredients[index]["ingredientQty"]);

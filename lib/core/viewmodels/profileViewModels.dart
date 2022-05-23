@@ -6,12 +6,62 @@ class ProfileViewModel {
     return await FirebaseFirestore.instance.collection('users').doc(uid).get();
   }
 
-  Future<QuerySnapshot> getGroceries(String uid) async {
+  Future<bool> deletePantry(String uid, String docId) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("pantries")
+        .doc(docId)
+        .delete()
+        .then((value) => true)
+        .catchError((error) {
+      debugPrint("🛑 [deletePantry] Fail: $error");
+      return false;
+    });
+  }
+
+  Future<bool> deleteGrocery(String uid, String docId) {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection("groceries")
-        .get();
+        .doc(docId)
+        .delete()
+        .then((value) => true)
+        .catchError((error) {
+      debugPrint("🛑 [deleteGrocery] Fail: $error");
+      return false;
+    });
+  }
+
+  Future<bool> toggleGroceryItem(String uid, String docId, bool value) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("groceries")
+        .doc(docId)
+        .update({"groceryIsDone": value})
+        .then((value) => true)
+        .catchError((error) {
+          debugPrint("🛑 [checkGroceryItem] Fail: $error");
+          return false;
+        });
+  }
+
+  Stream<QuerySnapshot> getGroceries(String uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("groceries")
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getPantries(String uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("pantries")
+        .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getRecipes(String uid) {
