@@ -24,9 +24,12 @@ class SpenzaFirebaseConfig {
           storageBucket: "spenza-recipe-app.appspot.com");
     } else {
       // Android
-      log("Analytics Dart-only initializer doesn't work on Android, please make sure to add the config file.");
-
-      return null;
+      return const FirebaseOptions(
+          appId: '1:1002872122808:android:603bf4f47cb90bd0ad334d',
+          apiKey: 'AIzaSyCg-xLLjwqZFX23wtR7JcFhiDz5cD0c4m4',
+          projectId: 'spenza-recipe-app',
+          messagingSenderId: '1002872122808',
+          storageBucket: "spenza-recipe-app.appspot.com");
     }
     return null;
   }
