@@ -9,6 +9,7 @@ class CustomAuthInput extends StatelessWidget {
   final IconData icon;
   final String hintText;
   final TextEditingController controller;
+  final TextInputAction textInputAction;
   const CustomAuthInput({
     Key? key,
     required this.obscureText,
@@ -16,6 +17,7 @@ class CustomAuthInput extends StatelessWidget {
     required this.icon,
     required this.hintText,
     required this.controller,
+    required this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class CustomAuthInput extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32.0),

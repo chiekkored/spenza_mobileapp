@@ -50,6 +50,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                 obscureText: false,
                 keyboardType: TextInputType.emailAddress,
                 icon: Icons.email_outlined,
+                textInputAction: TextInputAction.done,
                 hintText: "Email or phone number"),
           ),
           Padding(

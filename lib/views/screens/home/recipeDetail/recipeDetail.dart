@@ -247,10 +247,28 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                     thickness: 1.0,
                                   ),
                                 ),
-                                CustomTextBold(
-                                    text: "Ingredients",
-                                    size: 17.0,
-                                    color: CColors.PrimaryText),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomTextBold(
+                                        text: "Ingredients",
+                                        size: 17.0,
+                                        color: CColors.PrimaryText),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          color: CColors.PrimaryColor,
+                                        ),
+                                        Icon(
+                                          Icons.shopping_cart,
+                                          color: CColors.PrimaryColor,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 16.0),
                                   child: ListView.builder(

@@ -45,6 +45,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     icon: Icons.lock_outline,
+                    textInputAction: TextInputAction.done,
                     hintText: "Password"),
               ),
               Align(

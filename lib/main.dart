@@ -24,6 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Firebase Initialization
   await Firebase.initializeApp(
+    name: "spenza-recipe-app",
     options: SpenzaFirebaseConfig.platformOptions,
   );
   try {

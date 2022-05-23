@@ -77,6 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: false,
                     keyboardType: TextInputType.emailAddress,
                     icon: Icons.email_outlined,
+                    textInputAction: TextInputAction.next,
                     hintText: "Email or phone number"),
               ),
               Padding(

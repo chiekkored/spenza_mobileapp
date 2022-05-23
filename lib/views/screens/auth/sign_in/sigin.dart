@@ -26,6 +26,38 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
   bool _isLoading = false;
+
+  dynamic loginAttempt() async {
+    if (emailTextController.text == "" && passwordTextController.text == "") {
+      return null;
+    }
+    if (!_isLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+      dynamic doc = await _authVM.signInEmailAndPassword(
+          context, emailTextController.text, passwordTextController.text);
+      if (doc != null) {
+        var userProvider = context.read<UserProvider>();
+        await userProvider.setUser(doc.user!.uid);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => doc.user!.emailVerified
+                  ? Navigation()
+                  : VerificationEmailScreen()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var userProvider = context.read<UserProvider>();
@@ -59,6 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       obscureText: false,
                       keyboardType: TextInputType.emailAddress,
                       icon: Icons.email_outlined,
+                      textInputAction: TextInputAction.next,
                       hintText: "Email or phone number"),
                 ),
                 Padding(
@@ -68,6 +101,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
                       icon: Icons.lock_outline,
+                      textInputAction: TextInputAction.done,
                       hintText: "Password"),
                 ),
                 Align(
@@ -92,38 +126,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: CustomPrimaryButtonWIthLoading(
                       text: "Login",
                       loading: _isLoading,
-                      doOnPressed: () async {
-                        if (emailTextController.text == "" &&
-                            passwordTextController.text == "") {
-                          return null;
-                        }
-                        if (!_isLoading) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          dynamic doc = await _authVM.signInEmailAndPassword(
-                              context,
-                              emailTextController.text,
-                              passwordTextController.text);
-                          if (doc != null) {
-                            await userProvider.setUser(doc.user!.uid);
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => doc.user!.emailVerified
-                                      ? Navigation()
-                                      : VerificationEmailScreen()),
-                              (Route<dynamic> route) => false,
-                            );
-                          } else {
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          }
-                        } else {
-                          return null;
-                        }
-                      },
+                      doOnPressed: loginAttempt,
                     )),
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
@@ -135,8 +138,23 @@ class _SignInScreenState extends State<SignInScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
                   child: OutlinedButton(
-                    onPressed: () {
-                      _authVM.logout();
+                    onPressed: () async {
+                      dynamic doc = await _authVM.signInWithGoogle();
+                      if (doc != null) {
+                        await userProvider.setUser(doc.user!.uid);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => doc.user!.emailVerified
+                                  ? Navigation()
+                                  : VerificationEmailScreen()),
+                          (Route<dynamic> route) => false,
+                        );
+                      } else {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
                     },
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.blue,
