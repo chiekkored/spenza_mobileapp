@@ -68,6 +68,11 @@ class AuthViewModel {
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
+    try {
+      await GoogleSignIn().disconnect();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request

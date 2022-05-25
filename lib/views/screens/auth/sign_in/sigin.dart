@@ -26,9 +26,12 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
 
   dynamic loginAttempt() async {
-    if (emailTextController.text == "" && passwordTextController.text == "") {
+    if (emailTextController.text == "" &&
+        passwordTextController.text == "" &&
+        _isGoogleLoading) {
       return null;
     }
     if (!_isLoading) {
@@ -139,21 +142,33 @@ class _SignInScreenState extends State<SignInScreen> {
                   padding: const EdgeInsets.only(top: 24.0),
                   child: OutlinedButton(
                     onPressed: () async {
-                      dynamic doc = await _authVM.signInWithGoogle();
-                      if (doc != null) {
-                        await userProvider.setUser(doc.user!.uid);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => doc.user!.emailVerified
-                                  ? Navigation()
-                                  : VerificationEmailScreen()),
-                          (Route<dynamic> route) => false,
-                        );
-                      } else {
+                      if (!_isGoogleLoading) {
+                        dynamic doc = await _authVM.signInWithGoogle();
                         setState(() {
-                          _isLoading = false;
+                          _isGoogleLoading = true;
                         });
+                        if (doc != null) {
+                          // doc as UserCredential;
+                          if (doc.additionalUserInfo!.isNewUser) {
+                            await userProvider.setNewUser(doc.user);
+                          } else {
+                            await userProvider.setUser(doc.user!.uid);
+                          }
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => doc.user!.emailVerified
+                                    ? Navigation()
+                                    : VerificationEmailScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                        } else {
+                          setState(() {
+                            _isGoogleLoading = false;
+                          });
+                        }
+                      } else {
+                        return null;
                       }
                     },
                     style: OutlinedButton.styleFrom(
