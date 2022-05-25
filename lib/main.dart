@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
-import 'package:spenza/utilities/config/firebase_config.dart';
+import 'package:spenza/utilities/config/firebase_options.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
 import 'package:spenza/views/screens/auth/verification/verificationEmail.dart';
@@ -25,7 +25,7 @@ Future<void> main() async {
   // Firebase Initialization
   await Firebase.initializeApp(
     name: "spenza-recipe-app",
-    options: SpenzaFirebaseConfig.platformOptions,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   try {
     // Camera Initialization

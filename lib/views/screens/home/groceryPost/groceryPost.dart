@@ -270,8 +270,11 @@ class _GroceryPostScreenState extends State<GroceryPostScreen> {
                                       value: e, child: Text(e)))
                                   .toList(),
                               onChanged: (value) {
-                                unitValue = value.toString();
-                                setState(() {});
+                                setState(() {
+                                  unitValue = value.toString();
+                                });
+
+                                _unitTextController.text = value.toString();
                               }),
                     ),
                   ],
@@ -287,84 +290,100 @@ class _GroceryPostScreenState extends State<GroceryPostScreen> {
               child: CustomPrimaryButton(
                   text: "Add to grocery",
                   doOnPressed: () async {
-                    UserModel _user = context.read<UserProvider>().userInfo;
-                    showCustomModal(
-                        context,
-                        Container(
-                          padding: EdgeInsets.all(48.0),
-                          decoration: BoxDecoration(
-                            color: CColors.White,
-                            borderRadius: BorderRadius.circular(24.0),
-                          ),
-                          child: Platform.isIOS
-                              ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
-                        ));
-                    bool value = await _uploadVM.uploadGrocery(
-                        _user.uid,
-                        image.path,
-                        _foodNameTextController.text,
-                        _quantityTextController.text,
-                        _unitTextController.text);
-                    Navigator.of(context).maybePop(context);
-                    value
-                        ? showCustomModal(
-                            context,
-                            Container(
-                              padding: EdgeInsets.all(48.0),
-                              decoration: BoxDecoration(
-                                color: CColors.White,
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24.0),
-                                    child: Image.asset(
-                                        "assets/images/upload-success.png"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 32.0),
-                                    child: CustomTextBold(
-                                        text: "Successfully added",
-                                        size: 22.0,
-                                        color: CColors.MainText),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      "Your pantry has been added, you can see it on the Pantry Page",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: "Inter",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15.0,
-                                          letterSpacing: 0.5,
-                                          color: CColors.MainText),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 24.0),
-                                    child: CustomPrimaryButton(
-                                        text: "Back to Home",
-                                        doOnPressed: () => Navigator.of(context)
-                                            .popUntil(
-                                                (route) => route.isFirst)),
-                                  )
-                                ],
-                              ),
-                            ))
-                        : showCustomModal(
-                            context,
-                            Container(
+                    if (_foodNameTextController.text == '' ||
+                        _quantityTextController.text == '0') {
+                      return showCustomDialog(context, "Fields Required",
+                          "Please fill all fields.", "OK", null);
+                    } else {
+                      UserModel _user = context.read<UserProvider>().userInfo;
+                      showCustomModal(
+                          context,
+                          Container(
+                            padding: EdgeInsets.all(48.0),
+                            decoration: BoxDecoration(
+                              color: CColors.White,
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Platform.isIOS
+                                    ? CupertinoActivityIndicator()
+                                    : Center(
+                                        child: CircularProgressIndicator()),
+                              ],
+                            ),
+                          ));
+                      bool value = await _uploadVM.uploadGrocery(
+                          _user.uid,
+                          image.path,
+                          _foodNameTextController.text,
+                          _quantityTextController.text,
+                          _unitTextController.text == ""
+                              ? Units.units[0]
+                              : _unitTextController.text);
+                      Navigator.of(context).maybePop(context);
+                      value
+                          ? showCustomModal(
+                              context,
+                              Container(
                                 padding: EdgeInsets.all(48.0),
                                 decoration: BoxDecoration(
                                   color: CColors.White,
                                   borderRadius: BorderRadius.circular(24.0),
                                 ),
-                                child: Text("Error Adding")));
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24.0),
+                                      child: Image.asset(
+                                          "assets/images/upload-success.png"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 32.0),
+                                      child: CustomTextBold(
+                                          text: "Successfully added",
+                                          size: 22.0,
+                                          color: CColors.MainText),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        "Your pantry has been added, you can see it on the Pantry Page",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: "Inter",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15.0,
+                                            letterSpacing: 0.5,
+                                            color: CColors.MainText),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 24.0),
+                                      child: CustomPrimaryButton(
+                                          text: "Back to Home",
+                                          doOnPressed: () =>
+                                              Navigator.of(context).popUntil(
+                                                  (route) => route.isFirst)),
+                                    )
+                                  ],
+                                ),
+                              ))
+                          : showCustomModal(
+                              context,
+                              Container(
+                                  padding: EdgeInsets.all(48.0),
+                                  decoration: BoxDecoration(
+                                    color: CColors.White,
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                  child: Text("Error Adding")));
+                    }
                   }),
             ),
           ),
@@ -435,13 +454,13 @@ class _GroceryPostScreenState extends State<GroceryPostScreen> {
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
+                              : Center(child: CircularProgressIndicator()),
                         );
                       default:
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
+                              : Center(child: CircularProgressIndicator()),
                         );
                     }
                   }),

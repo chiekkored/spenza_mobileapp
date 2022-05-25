@@ -272,8 +272,11 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                                       value: e, child: Text(e)))
                                   .toList(),
                               onChanged: (value) {
-                                unitValue = value.toString();
-                                setState(() {});
+                                setState(() {
+                                  unitValue = value.toString();
+                                });
+
+                                _unitTextController.text = value.toString();
                               }),
                     ),
                   ],
@@ -290,8 +293,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                   text: "Add to pantry",
                   doOnPressed: () async {
                     if (_foodNameTextController.text == '' ||
-                        _quantityTextController.text == '' ||
-                        _unitTextController.text == '') {
+                        _quantityTextController.text == '0') {
                       return showCustomDialog(context, "Fields Required",
                           "Please fill all fields.", "OK", null);
                     } else {
@@ -304,16 +306,26 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                               color: CColors.White,
                               borderRadius: BorderRadius.circular(24.0),
                             ),
-                            child: Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Platform.isIOS
+                                    ? CupertinoActivityIndicator()
+                                    : Center(
+                                        child: CircularProgressIndicator()),
+                              ],
+                            ),
                           ));
                       bool value = await _uploadVM.uploadPantry(
                           _user.uid,
                           image.path,
                           _foodNameTextController.text,
                           _quantityTextController.text,
-                          _unitTextController.text);
+                          _unitTextController.text == ""
+                              ? Units.units[0]
+                              : _unitTextController.text);
                       Navigator.of(context).maybePop(context);
                       value
                           ? showCustomModal(
@@ -444,13 +456,13 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
+                              : Center(child: CircularProgressIndicator()),
                         );
                       default:
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
+                              : Center(child: CircularProgressIndicator()),
                         );
                     }
                   }),

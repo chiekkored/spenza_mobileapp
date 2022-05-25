@@ -42,7 +42,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
     PostViewModel _postVM = PostViewModel();
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(bottom: 0.0),
       child: GridView.builder(
         physics: BouncingScrollPhysics(),
         padding: const EdgeInsets.all(24),

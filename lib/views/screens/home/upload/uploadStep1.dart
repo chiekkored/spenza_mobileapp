@@ -458,13 +458,13 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
+                              : Center(child: CircularProgressIndicator()),
                         );
                       default:
                         return Expanded(
                           child: Platform.isIOS
                               ? CupertinoActivityIndicator()
-                              : CircularProgressIndicator(),
+                              : Center(child: CircularProgressIndicator()),
                         );
                     }
                   }),

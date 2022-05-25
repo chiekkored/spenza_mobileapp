@@ -129,31 +129,36 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                               ),
                             );
                           }))
-                  : Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          border: Border.all(
-                            color: CColors.Outline,
-                            width: 1.0,
-                          )),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                        child: DropdownButton(
-                          isExpanded: true,
-                          menuMaxHeight: 200.0,
-                          value: unitValue,
-                          items: Units.units
-                              .map((e) =>
-                                  DropdownMenuItem(value: e, child: Text(e)))
-                              .toList(),
-                          onChanged: (value) {
-                            unitValue = value.toString();
-                            setState(() {});
-                          },
-                          underline: Container(),
+                  : StatefulBuilder(builder: (context, setState) {
+                      return Container(
+                        height: 57.5,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(
+                              color: CColors.Outline,
+                              width: 1.0,
+                            )),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                          child: DropdownButton(
+                            isExpanded: true,
+                            menuMaxHeight: 200.0,
+                            value: unitValue,
+                            items: Units.units
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                unitValue = value.toString();
+                              });
+                              unitController.text = value.toString();
+                            },
+                            underline: Container(),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
             ),
             SizedBox(
               width: 10.0,
@@ -255,14 +260,11 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                     child: StatefulBuilder(
                       builder: (BuildContext context,
                           void Function(void Function()) setState) {
-                        return OutlinedButton(
-                          key: Key("$_countSteps button"),
-                          onPressed: () async {
-                            if (_imagesList
-                                .asMap()
-                                .containsKey(_countSteps - 1)) {
-                              return null;
-                            } else {
+                        return Container(
+                          height: 60.0,
+                          child: OutlinedButton(
+                            key: Key("$_countSteps button"),
+                            onPressed: () async {
                               var photo = await picker.pickImage(
                                   source: ImageSource.gallery);
                               if (photo == null) {
@@ -270,19 +272,44 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                               }
                               controller2.text = photo.path;
                               setState(() {});
-                            }
-                          },
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: CColors.Form,
-                            side: BorderSide.none,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.all(0.0),
+                              backgroundColor: CColors.Form,
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 19.0),
-                            child: Center(
-                              child: SvgPicture.asset("assets/svg/camera.svg"),
+                            child: Stack(
+                              children: [
+                                controller2.text == ""
+                                    ? Container()
+                                    : Container(
+                                        height: 60.0,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(
+                                                    File(controller2.text)),
+                                                colorFilter: ColorFilter.mode(
+                                                  Colors.white.withOpacity(0.8),
+                                                  BlendMode.modulate,
+                                                )),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0)),
+                                      ),
+                                Center(
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 19.0),
+                                    child: SvgPicture.asset(
+                                        "assets/svg/camera.svg"),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -507,9 +534,17 @@ class _UploadStep2ScreenState extends State<UploadStep2Screen> {
                               color: CColors.White,
                               borderRadius: BorderRadius.circular(24.0),
                             ),
-                            child: Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Platform.isIOS
+                                    ? CupertinoActivityIndicator()
+                                    : Center(
+                                        child: CircularProgressIndicator()),
+                              ],
+                            ),
                           ));
                       await _uploadVM
                           .uploadRecipe(

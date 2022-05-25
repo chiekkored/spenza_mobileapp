@@ -6,6 +6,7 @@ import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:spenza/utilities/config/units.dart';
 
 class UploadViewModel {
   Future<bool> uploadRecipe(
@@ -25,7 +26,7 @@ class UploadViewModel {
     for (List<TextEditingController> item in ingredientList) {
       _ingredientText.add({
         "ingredientQty": item[0].text,
-        "ingredientUnit": item[1].text,
+        "ingredientUnit": item[1].text == "" ? Units.units[0] : item[1].text,
         "ingredientText": item[2].text
       });
     }
@@ -103,7 +104,7 @@ class UploadViewModel {
             "pantryFoodTitle":
                 foodName.replaceFirst(foodName[0], foodName[0].toUpperCase()),
             "pantryQuantity": quantity,
-            "pantryUnit": unit,
+            "pantryUnit": unit == "" ? Units.units[0] : unit,
             "pantryImageUrl": imageUrl,
           })
           .then((value) => true)
@@ -131,15 +132,16 @@ class UploadViewModel {
       CollectionReference _usersPantry = FirebaseFirestore.instance
           .collection("users")
           .doc(uid)
-          .collection("pantries");
+          .collection("groceries");
       foodName.toLowerCase();
       foodName.replaceFirst(foodName[0], foodName[0].toUpperCase());
       bool result = await _usersPantry
           .add({
-            "pantryFoodTitle": foodName,
-            "pantryQuantity": quantity,
-            "pantryUnit": unit,
-            "pantryImageUrl": imageUrl,
+            "groceryFoodTitle": foodName,
+            "groceryQuantity": quantity,
+            "groceryUnit": unit,
+            "groceryIsDone": false,
+            "groceryImageUrl": imageUrl,
           })
           .then((value) => true)
           .catchError((e) {

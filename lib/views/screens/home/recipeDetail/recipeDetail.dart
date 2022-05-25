@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -11,6 +12,7 @@ import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/texts.dart';
+import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String imgUrl;
@@ -138,10 +140,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                               ),
                             ),
                           ),
-                          CustomTextBold(
-                              text: widget.name,
-                              size: 15.0,
-                              color: CColors.PrimaryText),
+                          GestureDetector(
+                            onTap: () => pushNewScreen(context,
+                                screen: UserProfileScreen(
+                                    uid: widget.profileUid,
+                                    name: widget.name,
+                                    dpUrl: widget.dpUrl)),
+                            child: CustomTextBold(
+                                text: widget.name,
+                                size: 15.0,
+                                color: CColors.PrimaryText),
+                          ),
                         ],
                       ),
                       Row(

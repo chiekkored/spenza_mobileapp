@@ -53,7 +53,8 @@ class RecipeDetailsViewModel {
             await getIfPantryExist(uid, ingredient["ingredientText"]);
         QuerySnapshot groceryData =
             await getIfGroceryExist(uid, ingredient["ingredientText"]);
-        if (groceryData.docs.isNotEmpty) {
+        if (groceryData.docs.isNotEmpty &&
+            groceryData.docs.first["groceryIsDone"] == false) {
           QueryDocumentSnapshot grocery = groceryData.docs.first;
           if (pantryData.docs.isNotEmpty) {
             QueryDocumentSnapshot pantry = pantryData.docs.first;
@@ -61,10 +62,9 @@ class RecipeDetailsViewModel {
                 int.parse(ingredient["ingredientQty"])) {
               _userGrocery
                   .doc(grocery.id)
-                  .set({
+                  .update({
                     'groceryFoodTitle': ingredient["ingredientText"],
                     'groceryImageUrl': pantry["pantryImageUrl"],
-                    'groceryIsDone': false,
                     'groceryQuantity':
                         "${int.parse(grocery["groceryQuantity"]) + (int.parse(ingredient["ingredientQty"]) - int.parse(pantry["pantryQuantity"]))}",
                     'groceryUnit': ingredient["ingredientUnit"],
@@ -78,10 +78,9 @@ class RecipeDetailsViewModel {
           } else {
             _userGrocery
                 .doc(grocery.id)
-                .set({
+                .update({
                   'groceryFoodTitle': ingredient["ingredientText"],
                   'groceryImageUrl': grocery["groceryImageUrl"],
-                  'groceryIsDone': false,
                   'groceryQuantity':
                       "${int.parse(grocery["groceryQuantity"]) + (int.parse(ingredient["ingredientQty"]))}",
                   'groceryUnit': ingredient["ingredientUnit"],
