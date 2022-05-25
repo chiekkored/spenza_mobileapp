@@ -8,7 +8,6 @@ import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
-import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/groceryPost/groceryPost.dart';
@@ -23,7 +22,6 @@ class GroceryScreen extends StatefulWidget {
 class _GroceryScreenState extends State<GroceryScreen> {
   ProfileViewModel _profileVM = ProfileViewModel();
   late Stream<QuerySnapshot> _getGrocery;
-  bool _value = false;
 
   @override
   void initState() {
@@ -133,7 +131,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                           // ),
                           SlidableAction(
                             onPressed: (context) async {
-                              dynamic result = await _profileVM.deleteGrocery(
+                              await _profileVM.deleteGrocery(
                                   _user.uid, pantryData.id);
                             },
                             backgroundColor: CColors.SecondaryColor,

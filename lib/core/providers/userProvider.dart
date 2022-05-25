@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
-import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel _users = UserModel(uid: "", email: "", name: "", dpUrl: "");
@@ -53,9 +52,6 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<bool> getUserPreference() async {
-    FirebaseCustomModel model = await FirebaseModelDownloader.instance.getModel(
-        'Object-Labeler',
-        FirebaseModelDownloadType.localModelUpdateInBackground);
     return await SharedPreferences.getInstance().then((pref) {
       if (pref.getString('user') != null) {
         final data = jsonDecode(pref.getString('user')!);

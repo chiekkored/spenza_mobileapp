@@ -28,7 +28,6 @@ class _NotificationTabState extends State<NotificationTab> {
   ProfileViewModel _profileVM = ProfileViewModel();
 
   late Future<List> _loadNotification;
-  late Stream<QuerySnapshot<Object?>> _getIsFollowing;
 
   @override
   void initState() {

@@ -35,8 +35,6 @@ class UploadStep2Screen extends StatefulWidget {
 }
 
 class _UploadStep2ScreenState extends State<UploadStep2Screen> {
-  final _formKey = GlobalKey<FormState>();
-
   UploadViewModel _uploadVM = UploadViewModel();
 
   List<Widget> _inputIngredients = [];

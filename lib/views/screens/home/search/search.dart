@@ -11,11 +11,8 @@ import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/list.dart';
-import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/search/results.dart';
-import 'package:spenza/views/screens/home/tabs/home/home.dart';
-import 'package:spenza/views/screens/home/upload/uploadStep1.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);

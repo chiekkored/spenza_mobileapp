@@ -1,20 +1,16 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/filterProvider.dart';
-import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
 import 'package:spenza/views/screens/home/pantryPost/pantryPost.dart';
-import 'package:spenza/views/screens/home/scan/camera.dart';
 import 'package:spenza/views/screens/home/upload/uploadStep1.dart';
 
 import 'buttons.dart';
@@ -201,7 +197,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
 
   @override
   void initState() {
-    // TODO: implement initState
     var searchProvider = context.read<FilterProvider>();
     _ingredientsOnHandSlider = searchProvider.ingredientOnHand;
     _cookingDurationSlider = searchProvider.cookingDuration;

@@ -3,13 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/recipeDetailViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
-import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
@@ -45,7 +43,6 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   late Future<QuerySnapshot> _getLikes;
   late Future<DocumentSnapshot> _getRecipeDetails;
-  late Future<DocumentSnapshot> _getIfPantryExist;
   bool _isGroceryAdded = false;
   RecipeDetailsViewModel _recipeDetailVM = RecipeDetailsViewModel();
 

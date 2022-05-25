@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
@@ -119,14 +116,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                 builder: (context, streamSnapshot) {
                                   if (!streamSnapshot.hasData) {
                                     return GestureDetector(
-                                      onTap: () async {
-                                        bool result = await _postVM.likePost(
-                                            _postData["authorUid"],
-                                            streamSnapshot.data!.docs[index].id,
-                                            _userProvider.userInfo.uid,
-                                            _userProvider.userInfo.name,
-                                            _userProvider.userInfo.dpUrl);
-                                      },
+                                      onTap: () async {},
                                       child: Container(
                                         height: 35.0,
                                         width: 35.0,
@@ -146,14 +136,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                   } else {
                                     if (streamSnapshot.data!.docs.length > 0) {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          bool result =
-                                              await _postVM.unlikePost(
-                                            _userProvider.userInfo.uid,
-                                            _postData["id"],
-                                            _userProvider.userInfo.uid,
-                                          );
-                                        },
+                                        onTap: () async {},
                                         child: Container(
                                           height: 35.0,
                                           width: 35.0,
@@ -172,14 +155,7 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                                       );
                                     } else {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          bool result = await _postVM.likePost(
-                                              _postData["authorUid"],
-                                              _postData["id"],
-                                              _userProvider.userInfo.uid,
-                                              _userProvider.userInfo.name,
-                                              _userProvider.userInfo.dpUrl);
-                                        },
+                                        onTap: () async {},
                                         child: Container(
                                           height: 35.0,
                                           width: 35.0,
@@ -383,14 +359,7 @@ class CustomGridView extends StatelessWidget {
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return GestureDetector(
-                                      onTap: () async {
-                                        bool result = await _postVM.likePost(
-                                            _authorData["uid"],
-                                            _postDocId,
-                                            _userProvider.userInfo.uid,
-                                            _userProvider.userInfo.name,
-                                            _userProvider.userInfo.dpUrl);
-                                      },
+                                      onTap: () async {},
                                       child: Container(
                                         height: 35.0,
                                         width: 35.0,
@@ -410,14 +379,7 @@ class CustomGridView extends StatelessWidget {
                                   } else {
                                     if (snapshot.data!.docs.length > 0) {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          bool result =
-                                              await _postVM.unlikePost(
-                                            _authorData["uid"],
-                                            _postDocId,
-                                            _userProvider.userInfo.uid,
-                                          );
-                                        },
+                                        onTap: () async {},
                                         child: Container(
                                           height: 35.0,
                                           width: 35.0,
@@ -436,14 +398,7 @@ class CustomGridView extends StatelessWidget {
                                       );
                                     } else {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          bool result = await _postVM.likePost(
-                                              _authorData["uid"],
-                                              _postDocId,
-                                              _userProvider.userInfo.uid,
-                                              _userProvider.userInfo.name,
-                                              _userProvider.userInfo.dpUrl);
-                                        },
+                                        onTap: () async {},
                                         child: Container(
                                           height: 35.0,
                                           width: 35.0,

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
@@ -8,7 +7,6 @@ import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
 
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/auth/verification/verification.dart';
 import 'package:spenza/views/screens/auth/verification/verificationEmail.dart';
 
 class SignUpScreen extends StatefulWidget {

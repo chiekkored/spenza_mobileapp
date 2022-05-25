@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
@@ -12,7 +9,6 @@ import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/grids.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/home/userProfile/userProfile.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final String searchText;

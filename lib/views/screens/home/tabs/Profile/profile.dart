@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
-import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/core/viewmodels/profileViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
 import 'package:spenza/views/screens/home/grocery/grocery.dart';
 import 'package:spenza/views/screens/home/pantry/pantry.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/tabs/liked.dart';
@@ -23,7 +21,6 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab> {
   ProfileViewModel _profileVM = ProfileViewModel();
-  AuthViewModel _authVM = AuthViewModel();
 
   late Future<DocumentSnapshot<Object?>> _getUserData;
   late Stream<QuerySnapshot<Object?>> _getRecipes;

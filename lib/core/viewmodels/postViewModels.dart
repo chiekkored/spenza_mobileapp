@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/core/providers/filterProvider.dart';
-import 'package:spenza/core/providers/userProvider.dart';
 
 class PostViewModel {
   Future<List<dynamic>> getProfileLikes(String uid) async {

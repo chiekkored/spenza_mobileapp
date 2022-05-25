@@ -18,7 +18,6 @@ import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/home/upload/uploadStep2.dart';
 
 class PantryPostScreen extends StatefulWidget {
   const PantryPostScreen({Key? key}) : super(key: key);

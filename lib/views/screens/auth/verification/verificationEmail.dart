@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
-import 'package:spenza/views/screens/home/navigation.dart';
 
 class VerificationEmailScreen extends StatefulWidget {
   const VerificationEmailScreen({Key? key}) : super(key: key);

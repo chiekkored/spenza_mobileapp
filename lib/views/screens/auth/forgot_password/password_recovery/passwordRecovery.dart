@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/buttons.dart';
@@ -7,7 +6,6 @@ import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/popovers.dart';
 
 import 'package:spenza/views/common/texts.dart';
-import 'package:spenza/views/screens/auth/forgot_password/password_verification/passwordVerification.dart';
 import 'package:spenza/views/screens/auth/sign_in/sigin.dart';
 
 class PasswordRecoveryScreen extends StatefulWidget {

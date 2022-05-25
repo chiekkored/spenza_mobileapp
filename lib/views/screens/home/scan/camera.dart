@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:spenza/main.dart';
-import 'package:spenza/utilities/constants/colors.dart';
 
 class ScanCameraScreen extends StatefulWidget {
   const ScanCameraScreen({Key? key}) : super(key: key);
@@ -23,24 +22,6 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> {
       }
       setState(() {});
     });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    final CameraController? cameraController = controller;
-
-    // App state changed before we got the chance to initialize.
-    if (cameraController == null || !cameraController.value.isInitialized) {
-      return;
-    }
-
-    if (state == AppLifecycleState.inactive) {
-      // Free up memory when camera not active
-      cameraController.dispose();
-    } else if (state == AppLifecycleState.resumed) {
-      // Reinitialize the camera with same properties
-      // onNewCameraSelected(cameraController.description);
-    }
   }
 
   @override

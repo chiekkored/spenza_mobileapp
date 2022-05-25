@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/popovers.dart';
-
-import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/tabs/Profile/profile.dart';
 import 'package:spenza/views/screens/home/tabs/home/home.dart';
 import 'package:spenza/views/screens/home/tabs/notification/notification.dart';

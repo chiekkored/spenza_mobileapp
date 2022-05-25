@@ -1,16 +1,10 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spenza/core/providers/filterProvider.dart';
 import 'package:spenza/core/providers/userProvider.dart';
-import 'package:spenza/core/viewmodels/authViewModels.dart';
 import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/utilities/constants/icons.dart';
@@ -18,7 +12,6 @@ import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/grids.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/search/search.dart';
-import 'package:spenza/views/screens/home/tabs/home/tabs/cookNowToBeDeleted.dart';
 import 'package:spenza/views/screens/home/tabs/home/tabs/plan.dart';
 
 class HomeTab extends StatefulWidget {
@@ -35,7 +28,6 @@ class _HomeTabState extends State<HomeTab> {
   FirebaseAuth _user = FirebaseAuth.instance;
   GroupButtonController _tagSelectedController =
       GroupButtonController(selectedIndex: 0);
-  String _tagFilter = "";
 
   @override
   void initState() {

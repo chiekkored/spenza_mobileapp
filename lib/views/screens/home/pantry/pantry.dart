@@ -101,7 +101,7 @@ class _PantryScreenState extends State<PantryScreen> {
                           // ),
                           SlidableAction(
                             onPressed: (context) async {
-                              dynamic result = await _profileVM.deletePantry(
+                              await _profileVM.deletePantry(
                                   _user.uid, pantryData.id);
                             },
                             backgroundColor: CColors.SecondaryColor,
