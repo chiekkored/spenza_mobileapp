@@ -49,7 +49,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                 keyboardType: TextInputType.emailAddress,
                 icon: Icons.email_outlined,
                 textInputAction: TextInputAction.done,
-                hintText: "Email or phone number"),
+                hintText: "Email"),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 32.0),

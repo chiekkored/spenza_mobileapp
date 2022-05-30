@@ -1,7 +1,23 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 /// Custom Color Constants
 class CColors {
+  static ThemeData lightTheme = ThemeData(
+      scaffoldBackgroundColor: Colors.white,
+      colorScheme: ColorScheme.light(),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.blue,
+      ));
+
+  static ThemeData darkTheme = ThemeData(
+      scaffoldBackgroundColor: Colors.black,
+      colorScheme: ColorScheme.dark(),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.black,
+      ));
+
   static const PrimaryColor = Color.fromRGBO(84, 130, 53, 1);
   static const SecondaryColor = Color.fromRGBO(237, 69, 69, 1);
   static const PrimaryText = Color.fromRGBO(62, 84, 129, 1);

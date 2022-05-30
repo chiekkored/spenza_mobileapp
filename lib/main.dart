@@ -49,8 +49,12 @@ class MyApp extends StatelessWidget {
     var userProvider = context.read<UserProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.system,
       theme:
           ThemeData(primarySwatch: Colors.green, splashColor: CColors.MainText),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       home: Container(
         color: CColors.White,
         child: SafeArea(

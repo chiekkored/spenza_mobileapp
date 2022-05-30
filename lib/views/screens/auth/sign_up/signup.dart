@@ -76,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     keyboardType: TextInputType.emailAddress,
                     icon: Icons.email_outlined,
                     textInputAction: TextInputAction.next,
-                    hintText: "Email or phone number"),
+                    hintText: "Email"),
               ),
               Padding(
                   padding: const EdgeInsets.only(top: 16.0),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:spenza/core/providers/userProvider.dart';
 import 'package:spenza/core/viewmodels/postViewModels.dart';
 import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/grids.dart';
@@ -19,15 +21,15 @@ class _RecipesTabState extends State<RecipesTab>
 
   @override
   void initState() {
-    _loadRecipes =
-        _profileVM.getProfilePosts(widget.uid); // only create the future once.
+    var _userProvider = context.read<UserProvider>().userInfo;
+    _loadRecipes = _profileVM.getProfilePosts(_userProvider.uid, widget.uid);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
+    var _userProvider = context.read<UserProvider>().userInfo;
     return Container(
       color: CColors.White,
       child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -46,7 +48,8 @@ class _RecipesTabState extends State<RecipesTab>
                   return RefreshIndicator(
                       onRefresh: () async {
                         setState(() {
-                          _loadRecipes = _profileVM.getProfilePosts(widget.uid);
+                          _loadRecipes = _profileVM.getProfilePosts(
+                              _userProvider.uid, widget.uid);
                         });
                       },
                       child: ListView(
@@ -76,7 +79,8 @@ class _RecipesTabState extends State<RecipesTab>
                   return RefreshIndicator(
                     onRefresh: () async {
                       setState(() {
-                        _loadRecipes = _profileVM.getProfilePosts(widget.uid);
+                        _loadRecipes = _profileVM.getProfilePosts(
+                            _userProvider.uid, widget.uid);
                       });
                     },
                     child: CustomGridViewWithoutDp(

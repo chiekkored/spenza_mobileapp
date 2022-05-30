@@ -46,7 +46,8 @@ class PostViewModel {
     });
   }
 
-  Future<List<Map<String, dynamic>>> getProfilePosts(String uid) async {
+  Future<List<Map<String, dynamic>>> getProfilePosts(
+      String uid, String profileUid) async {
     List<Map<String, dynamic>> _list = [];
     CollectionReference _users = FirebaseFirestore.instance.collection("users");
 
@@ -58,7 +59,7 @@ class PostViewModel {
 
     return await FirebaseFirestore.instance
         .collection('users')
-        .doc(uid)
+        .doc(profileUid)
         .collection("posts")
         .get()
         .then((postsData) {
@@ -292,6 +293,14 @@ class PostViewModel {
         .collection("likes")
         .where("postDocId", isEqualTo: postDocId)
         .limit(1)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getPlans(String uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection("plans")
         .snapshots();
   }
 }
