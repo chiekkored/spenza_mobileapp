@@ -45,6 +45,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   late Future<DocumentSnapshot> _getRecipeDetails;
   bool _isGroceryAdded = false;
   RecipeDetailsViewModel _recipeDetailVM = RecipeDetailsViewModel();
+  int _isAllIngredientsCount = 0;
 
   @override
   void initState() {
@@ -268,23 +269,41 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                               setState) {
                                         return TextButton(
                                           onPressed: () async {
-                                            setState(() {
-                                              _isGroceryAdded = true;
-                                            });
-                                            _isGroceryAdded =
-                                                await _recipeDetailVM
-                                                    .addToGrocery(
-                                                        _userProvider
-                                                            .userInfo.uid,
-                                                        postDataIngredients);
-                                            if (_isGroceryAdded) {
-                                              const snackBar = SnackBar(
-                                                content: Text('Grocery Added'),
+                                            if (_isAllIngredientsCount ==
+                                                postDataIngredients.length) {
+                                              setState(() {
+                                                _isGroceryAdded = true;
+                                              });
+                                              bool _isGroceryAddedResponse =
+                                                  await _recipeDetailVM
+                                                      .addToGrocery(
+                                                          _userProvider
+                                                              .userInfo.uid,
+                                                          postDataIngredients);
+                                              if (_isGroceryAddedResponse) {
+                                                const snackBar = SnackBar(
+                                                  content:
+                                                      Text('Grocery Added'),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+
+                                                setState(() {});
+                                              } else {
+                                                setState(() {
+                                                  _isGroceryAdded = false;
+                                                });
+                                              }
+                                            } else {
+                                              SnackBar snackBar = SnackBar(
+                                                backgroundColor:
+                                                    Colors.yellow[700],
+                                                content: Text(
+                                                    'Pantry already existed'),
                                               );
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(snackBar);
                                             }
-                                            setState(() {});
                                           },
                                           child: Container(
                                             height: 35.0,
@@ -587,6 +606,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 );
               }
             } else {
+              // Counter if all ingredients are in the pantry. Add grocery checker
+              _isAllIngredientsCount++;
               return Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

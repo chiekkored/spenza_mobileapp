@@ -76,6 +76,13 @@ class PostViewModel {
     });
   }
 
+  Stream<QuerySnapshot> testGet() async* {
+    CollectionReference _users = FirebaseFirestore.instance.collection("users");
+
+    var doc = _users.doc("").collection("collectionPath").snapshots();
+    yield* _users.doc().collection("collectionPath").snapshots();
+  }
+
   double percentCalculate(
       QuerySnapshot<Map<String, dynamic>> pantries, List<dynamic> ingredients) {
     Iterable ingredient = ingredients.map(

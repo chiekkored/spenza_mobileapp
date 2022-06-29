@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -69,19 +70,22 @@ class CustomGridViewWithoutDp extends StatelessWidget {
                     child: Stack(
                       children: [
                         GestureDetector(
-                          onTap: (() => pushNewScreen(context,
-                              screen: RecipeDetailScreen(
-                                imgUrl: _postData["postImageUrl"],
-                                postRecipeTitle: _postData["postRecipeTitle"],
-                                postPercent: _postData["postPercent"],
-                                postDuration: _postData["postDuration"],
-                                dpUrl: _userProvider.userInfo.dpUrl,
-                                name: _userProvider.userInfo.name,
-                                postDocId: _postData["id"],
-                                fromScreen: fromScreen,
-                                profileUid: _postData["authorUid"],
-                              ),
-                              withNavBar: false)),
+                          onTap: (() {
+                            HapticFeedback.mediumImpact();
+                            pushNewScreen(context,
+                                screen: RecipeDetailScreen(
+                                  imgUrl: _postData["postImageUrl"],
+                                  postRecipeTitle: _postData["postRecipeTitle"],
+                                  postPercent: _postData["postPercent"],
+                                  postDuration: _postData["postDuration"],
+                                  dpUrl: _userProvider.userInfo.dpUrl,
+                                  name: _userProvider.userInfo.name,
+                                  postDocId: _postData["id"],
+                                  fromScreen: fromScreen,
+                                  profileUid: _postData["authorUid"],
+                                ),
+                                withNavBar: false);
+                          }),
                           child: Hero(
                             tag: _postData["id"] + fromScreen,
                             child: CachedNetworkImage(
@@ -308,19 +312,22 @@ class CustomGridView extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: (() => pushNewScreen(context,
-                    screen: RecipeDetailScreen(
-                      imgUrl: _authorPostsData["postImageUrl"],
-                      postRecipeTitle: _authorPostsData["postRecipeTitle"],
-                      postPercent: _authorPostsData["postPercent"],
-                      postDuration: _authorPostsData["postDuration"],
-                      dpUrl: _authorData["dpUrl"],
-                      name: _authorData["name"],
-                      postDocId: _postDocId,
-                      fromScreen: fromScreen,
-                      profileUid: _authorData["uid"],
-                    ),
-                    withNavBar: false)),
+                onTap: (() {
+                  HapticFeedback.mediumImpact();
+                  pushNewScreen(context,
+                      screen: RecipeDetailScreen(
+                        imgUrl: _authorPostsData["postImageUrl"],
+                        postRecipeTitle: _authorPostsData["postRecipeTitle"],
+                        postPercent: _authorPostsData["postPercent"],
+                        postDuration: _authorPostsData["postDuration"],
+                        dpUrl: _authorData["dpUrl"],
+                        name: _authorData["name"],
+                        postDocId: _postDocId,
+                        fromScreen: fromScreen,
+                        profileUid: _authorData["uid"],
+                      ),
+                      withNavBar: false);
+                }),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: ClipRRect(

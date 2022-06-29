@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:group_button/group_button.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,7 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
+                          HapticFeedback.mediumImpact();
                           final page = UploadStep1Screen();
                           pushNewScreen(context,
                               withNavBar: false, screen: page);
@@ -89,8 +91,11 @@ Future<dynamic> scanTabBottomSheet(BuildContext context) {
                       child: GestureDetector(
                         // onTap: () => pushNewScreen(context,
                         //     withNavBar: false, screen: ScanCameraScreen()),
-                        onTap: () => pushNewScreen(context,
-                            withNavBar: false, screen: PantryPostScreen()),
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                          pushNewScreen(context,
+                              withNavBar: false, screen: PantryPostScreen());
+                        },
                         child: Container(
                           height: 186.0,
                           decoration: BoxDecoration(
