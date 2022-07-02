@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +20,26 @@ import 'package:spenza/views/common/inputs.dart';
 import 'package:spenza/views/common/popovers.dart';
 import 'package:spenza/views/common/texts.dart';
 
-class PantryPostScreen extends StatefulWidget {
-  const PantryPostScreen({Key? key}) : super(key: key);
+class PantryPostEditScreen extends StatefulWidget {
+  final String docId;
+  final String image;
+  final String foodNameText;
+  final String quanitityText;
+  final String unitText;
+  const PantryPostEditScreen(
+      {Key? key,
+      required this.docId,
+      required this.image,
+      required this.foodNameText,
+      required this.quanitityText,
+      required this.unitText})
+      : super(key: key);
 
   @override
-  State<PantryPostScreen> createState() => _PantryPostScreenState();
+  State<PantryPostEditScreen> createState() => _PantryPostEditScreenState();
 }
 
-class _PantryPostScreenState extends State<PantryPostScreen> {
+class _PantryPostEditScreenState extends State<PantryPostEditScreen> {
   UploadViewModel _uploadVM = UploadViewModel();
   TextEditingController _foodNameTextController = TextEditingController();
   TextEditingController _quantityTextController = TextEditingController();
@@ -40,7 +53,9 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
   @override
   void initState() {
     super.initState();
-    _quantityTextController.text = "0";
+    _foodNameTextController.text = widget.foodNameText;
+    _quantityTextController.text = widget.quanitityText;
+    _unitTextController.text = widget.unitText;
   }
 
   @override
@@ -124,6 +139,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                             height: 161.0,
                             width: MediaQuery.of(context).size.width,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 if (isCoverAttached) ...[
                                   ClipRRect(
@@ -136,33 +152,29 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                                     ),
                                   )
                                 ] else ...[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 22.0, bottom: 16.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        SvgPicture.asset(
-                                            "assets/svg/image.svg"),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 22.0),
-                                          child: CustomTextBold(
-                                              text: "Add Cover Photo",
-                                              size: 15.0,
-                                              color: CColors.PrimaryText),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: CustomTextMedium(
-                                              text: "(up to 12 Mb)",
-                                              size: 12.0,
-                                              color: CColors.SecondaryText),
-                                        ),
-                                      ],
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.image,
+                                      progressIndicatorBuilder:
+                                          (context, s, chunk) => Expanded(
+                                        child: Platform.isIOS
+                                            ? CupertinoActivityIndicator()
+                                            : Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                      ),
+                                      imageBuilder: (context, image) {
+                                        return Image(
+                                          image: image,
+                                          fit: BoxFit.cover,
+                                          height: 161.0,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        );
+                                      },
                                     ),
-                                  ),
+                                  )
                                 ],
                               ],
                             ),
@@ -311,7 +323,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: CustomPrimaryButton(
-                  text: "Add to pantry",
+                  text: "Update pantry",
                   doOnPressed: () async {
                     if (_foodNameTextController.text == '' ||
                         _quantityTextController.text == '0') {
@@ -339,14 +351,16 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                               ],
                             ),
                           ));
-                      bool value = await _uploadVM.uploadPantry(
+                      bool value = await _uploadVM.updatePantry(
+                          widget.docId,
                           _user.uid,
                           image.path,
                           _foodNameTextController.text,
                           _quantityTextController.text,
                           _unitTextController.text == ""
                               ? Units.units[0]
-                              : _unitTextController.text);
+                              : _unitTextController.text,
+                          widget.image);
                       Navigator.of(context).maybePop(context);
                       value
                           ? showCustomModal(
@@ -369,14 +383,14 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 32.0),
                                       child: CustomTextBold(
-                                          text: "Successfully added",
+                                          text: "Successfully updated",
                                           size: 22.0,
                                           color: CColors.MainText),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Text(
-                                        "Your pantry has been added, you can see it on the Pantry Page",
+                                        "Your pantry has been updated, you can see it on the Pantry Page",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontFamily: "Inter",
@@ -405,7 +419,7 @@ class _PantryPostScreenState extends State<PantryPostScreen> {
                                     color: CColors.White,
                                     borderRadius: BorderRadius.circular(24.0),
                                   ),
-                                  child: Text("Error Adding")));
+                                  child: Text("Error Updating")));
                     }
                   }),
             ),

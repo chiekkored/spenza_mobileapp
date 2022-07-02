@@ -12,6 +12,8 @@ import 'package:spenza/utilities/constants/icons.dart';
 import 'package:spenza/views/common/buttons.dart';
 import 'package:spenza/views/common/grids.dart';
 import 'package:spenza/views/common/texts.dart';
+import 'package:spenza/views/screens/home/grocery/grocery.dart';
+import 'package:spenza/views/screens/home/pantry/pantry.dart';
 import 'package:spenza/views/screens/home/search/search.dart';
 import 'package:spenza/views/screens/home/tabs/home/tabs/plan.dart';
 
@@ -58,32 +60,64 @@ class _HomeTabState extends State<HomeTab> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: GestureDetector(
-                            onTap: () =>
-                                pushNewScreen(context, screen: SearchScreen()),
-                            child: Container(
-                              height: 56.0,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: CColors.Form,
-                                borderRadius: BorderRadius.circular(32.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  pushNewScreen(context,
+                                      screen: PantryScreen());
+                                },
+                                icon: Icon(
+                                  Icons.food_bank,
+                                  size: 35.0,
+                                  color: CColors.MainText,
+                                ),
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
                               ),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 27.0, right: 11.0),
-                                      child: Icon(
-                                        CIcons.search,
-                                        color: CColors.SecondaryText,
-                                      )),
-                                  CustomTextMedium(
-                                      text: "Search",
-                                      size: 15,
-                                      color: CColors.SecondaryText)
-                                ],
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () => pushNewScreen(context,
+                                      screen: SearchScreen()),
+                                  child: Container(
+                                    height: 56.0,
+                                    decoration: BoxDecoration(
+                                      color: CColors.Form,
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 27.0, right: 11.0),
+                                            child: Icon(
+                                              CIcons.search,
+                                              color: CColors.SecondaryText,
+                                            )),
+                                        CustomTextMedium(
+                                            text: "Search",
+                                            size: 15,
+                                            color: CColors.SecondaryText)
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              IconButton(
+                                onPressed: () {
+                                  pushNewScreen(context,
+                                      screen: GroceryScreen());
+                                },
+                                icon: Icon(
+                                  Icons.add_shopping_cart,
+                                  color: CColors.MainText,
+                                  size: 35.0,
+                                ),
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                              )
+                            ],
                           ),
                         ),
                         Padding(
@@ -111,7 +145,7 @@ class _HomeTabState extends State<HomeTab> {
                                         controller: _tagSelectedController,
                                         isRadio: true,
                                         onSelected: (str, index, isSelected) {
-                                          HapticFeedback.lightImpact();
+                                          HapticFeedback.selectionClick();
                                           var _userProvider =
                                               context.read<UserProvider>();
                                           filterProvider.filterSet(

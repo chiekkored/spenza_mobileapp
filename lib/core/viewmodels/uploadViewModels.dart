@@ -18,7 +18,7 @@ class UploadViewModel {
       List<String> tags) async {
     List<Map<String, dynamic>> _ingredientText = [];
     List<Map<String, dynamic>> _steps = [];
-    String coverUrl;
+    String coverUrl = "";
 
     // Extract Texts from TextEditingController List
     for (List<TextEditingController> item in ingredientList) {
@@ -47,9 +47,11 @@ class UploadViewModel {
       }
 
       DateTime now = DateTime.now();
-      Reference storageRefDest = storageRef.child("posts/$uid/$now");
-      await storageRefDest.putFile(File(coverPath));
-      coverUrl = await storageRefDest.getDownloadURL();
+      if (coverPath != "") {
+        Reference storageRefDest = storageRef.child("posts/$uid/$now");
+        await storageRefDest.putFile(File(coverPath));
+        coverUrl = await storageRefDest.getDownloadURL();
+      }
 
       CollectionReference _usersPosts = FirebaseFirestore.instance
           .collection("users")
@@ -61,7 +63,9 @@ class UploadViewModel {
             "postDuration": "${cookingDuration.round().toString()} mins",
             "postDescription": description,
             "authorUid": uid,
-            "postImageUrl": coverUrl,
+            "postImageUrl": coverUrl == ""
+                ? "https://firebasestorage.googleapis.com/v0/b/spenza-recipe-app.appspot.com/o/placeholders%2Ficon.png?alt=media&token=18603a2b-2386-48e3-ae79-d11d8adaef52"
+                : coverUrl,
             "postDateCreated": now,
             "ingredients": _ingredientText,
             "steps": _steps,
@@ -118,14 +122,62 @@ class UploadViewModel {
     }
   }
 
+  Future<bool> updatePantry(
+      String docId,
+      String uid,
+      String coverPath,
+      String foodName,
+      String quantity,
+      String unit,
+      String beforeCoverPath) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    try {
+      DateTime now = DateTime.now();
+      String imageUrl = "";
+      if (coverPath != "") {
+        Reference storageRefDest = storageRef.child("posts/$uid/$now");
+        await storageRefDest.putFile(File(coverPath));
+        imageUrl = await storageRefDest.getDownloadURL();
+      }
+
+      CollectionReference _usersPantry = FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection("pantries");
+      foodName = foodName.toLowerCase();
+      bool result = await _usersPantry
+          .doc(docId)
+          .update({
+            "pantryFoodTitle":
+                foodName.replaceFirst(foodName[0], foodName[0].toUpperCase()),
+            "pantryQuantity": quantity,
+            "pantryUnit": unit == "" ? Units.units[0] : unit,
+            "pantryImageUrl": imageUrl == "" ? beforeCoverPath : imageUrl,
+          })
+          .then((value) => true)
+          .catchError((e) {
+            debugPrint(e.toString());
+            return false;
+          });
+      debugPrint("✅ [updatePantry] Success");
+      return result;
+    } on FirebaseException catch (e) {
+      debugPrint("🛑 [updatePantry] Fail: ${e.message}");
+      return false;
+    }
+  }
+
   Future<bool> uploadGrocery(String uid, String coverPath, String foodName,
       String quantity, String unit) async {
     final storageRef = FirebaseStorage.instance.ref();
     try {
       DateTime now = DateTime.now();
-      Reference storageRefDest = storageRef.child("posts/$uid/$now");
-      await storageRefDest.putFile(File(coverPath));
-      String imageUrl = await storageRefDest.getDownloadURL();
+      String imageUrl = "";
+      if (coverPath != "") {
+        Reference storageRefDest = storageRef.child("posts/$uid/$now");
+        await storageRefDest.putFile(File(coverPath));
+        imageUrl = await storageRefDest.getDownloadURL();
+      }
 
       CollectionReference _usersPantry = FirebaseFirestore.instance
           .collection("users")
@@ -150,6 +202,52 @@ class UploadViewModel {
       return result;
     } on FirebaseException catch (e) {
       debugPrint("🛑 [uploadGrocery] Fail: ${e.message}");
+      return false;
+    }
+  }
+
+  Future<bool> updateGrocery(
+      String docId,
+      String uid,
+      String coverPath,
+      String foodName,
+      String quantity,
+      String unit,
+      String beforeCoverPath) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    try {
+      DateTime now = DateTime.now();
+      String imageUrl = "";
+      if (coverPath != "") {
+        Reference storageRefDest = storageRef.child("posts/$uid/$now");
+        await storageRefDest.putFile(File(coverPath));
+        imageUrl = await storageRefDest.getDownloadURL();
+      }
+
+      CollectionReference _usersPantry = FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection("groceries");
+      foodName.toLowerCase();
+      foodName.replaceFirst(foodName[0], foodName[0].toUpperCase());
+      bool result = await _usersPantry
+          .doc(docId)
+          .update({
+            "groceryFoodTitle": foodName,
+            "groceryQuantity": quantity,
+            "groceryUnit": unit,
+            "groceryIsDone": false,
+            "groceryImageUrl": imageUrl == "" ? beforeCoverPath : imageUrl,
+          })
+          .then((value) => true)
+          .catchError((e) {
+            debugPrint(e.toString());
+            return false;
+          });
+      debugPrint("✅ [updateGrocery] Success");
+      return result;
+    } on FirebaseException catch (e) {
+      debugPrint("🛑 [updateGrocery] Fail: ${e.message}");
       return false;
     }
   }

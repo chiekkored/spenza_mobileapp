@@ -59,16 +59,6 @@ class _ProfileTabState extends State<ProfileTab> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              // _authVM.logout();
-                              // Navigator.of(context, rootNavigator: true)
-                              //     .pushAndRemoveUntil(
-                              //   MaterialPageRoute(
-                              //     builder: (BuildContext context) {
-                              //       return SignInScreen();
-                              //     },
-                              //   ),
-                              //   (_) => false,
-                              // );
                               pushNewScreen(context, screen: PantryScreen());
                             },
                             icon: Icon(
@@ -81,23 +71,12 @@ class _ProfileTabState extends State<ProfileTab> {
                           ),
                           IconButton(
                             onPressed: () {
-                              // _authVM.logout();
-                              // Navigator.of(context, rootNavigator: true)
-                              //     .pushAndRemoveUntil(
-                              //   MaterialPageRoute(
-                              //     builder: (BuildContext context) {
-                              //       return SignInScreen();
-                              //     },
-                              //   ),
-                              //   (_) => false,
-                              // );
-
                               pushNewScreen(context, screen: GroceryScreen());
                             },
                             icon: Icon(
-                              Icons.shopping_bag,
+                              Icons.add_shopping_cart,
                               color: CColors.MainText,
-                              size: 30.0,
+                              size: 35.0,
                             ),
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,

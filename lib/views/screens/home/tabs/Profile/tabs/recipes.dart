@@ -31,6 +31,7 @@ class _RecipesTabState extends State<RecipesTab>
     super.build(context);
     var _userProvider = context.read<UserProvider>().userInfo;
     return Container(
+      padding: const EdgeInsets.only(bottom: 28.0),
       color: CColors.White,
       child: FutureBuilder<List<Map<String, dynamic>>>(
           future: _loadRecipes,

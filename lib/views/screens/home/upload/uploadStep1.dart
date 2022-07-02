@@ -65,20 +65,42 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                       child: GestureDetector(
                         onTap: () async {
                           try {
-                            await _picker
-                                .pickImage(source: ImageSource.gallery)
-                                .then((value) {
-                              if (value!.path != '') {
-                                setState(() {
-                                  image = value;
-                                  isCoverAttached = true;
-                                });
-                                showSuggested(context);
-                              } else {
-                                return null;
-                              }
-                              return null;
-                            });
+                            showDialog<ImageSource>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                  title: Text("Choose Source"),
+                                  titleTextStyle: TextStyle(
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.0,
+                                      letterSpacing: 0.5,
+                                      color: CColors.PrimaryText),
+                                  actions: [
+                                    TextButton(
+                                      child: Text("Camera"),
+                                      onPressed: () => Navigator.pop(
+                                          context, ImageSource.camera),
+                                    ),
+                                    TextButton(
+                                      child: Text("Gallery"),
+                                      onPressed: () => Navigator.pop(
+                                          context, ImageSource.gallery),
+                                    ),
+                                  ]),
+                            ).then((source) async => await _picker
+                                    .pickImage(source: source!)
+                                    .then((value) {
+                                  if (value!.path != '') {
+                                    setState(() {
+                                      image = value;
+                                      isCoverAttached = true;
+                                    });
+                                    showSuggested(context);
+                                  } else {
+                                    return null;
+                                  }
+                                  return null;
+                                }));
                           } catch (e) {
                             debugPrint("No photos selected");
                           }
@@ -372,8 +394,7 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
               child: CustomPrimaryButton(
                   text: "Next",
                   doOnPressed: () async {
-                    if (!isCoverAttached ||
-                        _foodNameTextController.text == '' ||
+                    if (_foodNameTextController.text == '' ||
                         _descriptionTextController.text == '') {
                       return showCustomDialog(context, "Fields Required",
                           "Please fill all fields.", "OK", null);
@@ -442,7 +463,8 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                                 child: GroupButton(
                                   isRadio: true,
                                   buttons: snapshot.data!
-                                      .map((e) => e.label)
+                                      .map((e) =>
+                                          "${e.label[0].toUpperCase()}${e.label.substring(1).toLowerCase()}")
                                       .toList(),
                                   onSelected: (str, index, isSelected) =>
                                       foodName = str.toString(),
@@ -473,7 +495,8 @@ class _UploadStep1ScreenState extends State<UploadStep1Screen> {
                 child: CustomPrimaryButton(
                     text: "Confirm",
                     doOnPressed: () {
-                      _foodNameTextController.text = foodName;
+                      if (foodName != "")
+                        _foodNameTextController.text = foodName;
                       Navigator.maybePop(context);
                     }),
               )

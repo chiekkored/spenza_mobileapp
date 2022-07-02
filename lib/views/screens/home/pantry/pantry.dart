@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:spenza/core/models/userModel.dart';
 import 'package:spenza/core/providers/userProvider.dart';
@@ -9,6 +10,7 @@ import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:spenza/views/screens/home/pantryPost/pantryPostEdit.dart';
 
 class PantryScreen extends StatefulWidget {
   const PantryScreen({Key? key}) : super(key: key);
@@ -90,15 +92,22 @@ class _PantryScreenState extends State<PantryScreen> {
                       endActionPane: ActionPane(
                         motion: ScrollMotion(),
                         children: [
-                          // SlidableAction(
-                          //   // An action can be bigger than the others.
-                          //   flex: 2,
-                          //   onPressed: (context) {},
-                          //   backgroundColor: CColors.PrimaryColor,
-                          //   foregroundColor: Colors.white,
-                          //   icon: Icons.edit,
-                          //   label: 'Edit',
-                          // ),
+                          SlidableAction(
+                            // An action can be bigger than the others.
+                            flex: 2,
+                            onPressed: (context) => pushNewScreen(context,
+                                screen: PantryPostEditScreen(
+                                    docId: pantryData.id,
+                                    image: pantryData["pantryImageUrl"],
+                                    foodNameText: pantryData["pantryFoodTitle"],
+                                    quanitityText: pantryData["pantryQuantity"],
+                                    unitText: pantryData["pantryUnit"]),
+                                withNavBar: false),
+                            backgroundColor: CColors.PrimaryColor,
+                            foregroundColor: Colors.white,
+                            icon: Icons.edit,
+                            label: 'Edit',
+                          ),
                           SlidableAction(
                             onPressed: (context) async {
                               await _profileVM.deletePantry(

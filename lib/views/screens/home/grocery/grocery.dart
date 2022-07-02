@@ -11,6 +11,7 @@ import 'package:spenza/utilities/constants/colors.dart';
 import 'package:spenza/views/common/list.dart';
 import 'package:spenza/views/common/texts.dart';
 import 'package:spenza/views/screens/home/groceryPost/groceryPost.dart';
+import 'package:spenza/views/screens/home/groceryPost/groceryPostEdit.dart';
 
 class GroceryScreen extends StatefulWidget {
   const GroceryScreen({Key? key}) : super(key: key);
@@ -115,24 +116,33 @@ class _GroceryScreenState extends State<GroceryScreen> {
                       );
                     }
                     index -= 1;
-                    var pantryData = snapshot.data!.docs[index];
+                    var groceryData = snapshot.data!.docs[index];
                     return Slidable(
                       endActionPane: ActionPane(
                         motion: ScrollMotion(),
                         children: [
-                          // SlidableAction(
-                          //   // An action can be bigger than the others.
-                          //   flex: 2,
-                          //   onPressed: (context) {},
-                          //   backgroundColor: CColors.PrimaryColor,
-                          //   foregroundColor: Colors.white,
-                          //   icon: Icons.edit,
-                          //   label: 'Edit',
-                          // ),
+                          SlidableAction(
+                            // An action can be bigger than the others.
+                            flex: 2,
+                            onPressed: (context) => pushNewScreen(context,
+                                screen: GroceryPostEditScreen(
+                                    docId: groceryData.id,
+                                    image: groceryData["groceryImageUrl"],
+                                    foodNameText:
+                                        groceryData["groceryFoodTitle"],
+                                    quanitityText:
+                                        groceryData["groceryQuantity"],
+                                    unitText: groceryData["groceryUnit"]),
+                                withNavBar: false),
+                            backgroundColor: CColors.PrimaryColor,
+                            foregroundColor: Colors.white,
+                            icon: Icons.edit,
+                            label: 'Edit',
+                          ),
                           SlidableAction(
                             onPressed: (context) async {
                               await _profileVM.deleteGrocery(
-                                  _user.uid, pantryData.id);
+                                  _user.uid, groceryData.id);
                             },
                             backgroundColor: CColors.SecondaryColor,
                             foregroundColor: Colors.white,
@@ -142,10 +152,10 @@ class _GroceryScreenState extends State<GroceryScreen> {
                         ],
                       ),
                       child: CheckboxListTile(
-                        value: pantryData["groceryIsDone"],
+                        value: groceryData["groceryIsDone"],
                         onChanged: (value) async {
                           dynamic result = await _profileVM.toggleGroceryItem(
-                              _user.uid, pantryData.id, value!);
+                              _user.uid, groceryData.id, value!);
                           print(result);
                         },
                         contentPadding:
@@ -155,7 +165,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                           height: 50.0,
                           width: 50.0,
                           child: CachedNetworkImage(
-                            imageUrl: pantryData["groceryImageUrl"],
+                            imageUrl: groceryData["groceryImageUrl"],
                             imageBuilder: (context, image) {
                               return ClipRRect(
                                 borderRadius: BorderRadius.circular(16.0),
@@ -168,12 +178,12 @@ class _GroceryScreenState extends State<GroceryScreen> {
                           ),
                         ),
                         title: CustomTextMedium(
-                            text: pantryData["groceryFoodTitle"],
+                            text: groceryData["groceryFoodTitle"],
                             size: 16.0,
                             color: CColors.MainText),
                         subtitle: CustomTextRegular(
                             text:
-                                "${pantryData["groceryQuantity"]} ${pantryData["groceryUnit"]}",
+                                "${groceryData["groceryQuantity"]} ${groceryData["groceryUnit"]}",
                             size: 14.0,
                             color: CColors.SecondaryText),
                         dense: true,
